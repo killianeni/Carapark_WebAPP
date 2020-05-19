@@ -8,25 +8,27 @@
 
   display: flex;
   justify-content: space-between;
-}
 
-.menu-header .current-title-page {
-  display: flex;
-  align-items: center;
-  height: 100%;
-  h1 {
-    margin: 0;
+  .current-title-page {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    h1 {
+      margin: 0;
+    }
+
+    p {
+      margin: 0;
+    }
   }
 
-  p {
-    margin: 0;
+  .menu {
+    background-color: green;
+    position: fixed;
+    height: 100%;
+    width: 150px;
   }
 }
 
 
-.menu {
-  background-color: green;
-  position: fixed;
-  height: 100%;
-  width: 150px;
-}
+
