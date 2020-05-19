@@ -1,0 +1,43 @@
+@media screen and (min-width: 1280px) {
+
+    .home {
+        h1 {
+            font-size: 3rem;
+
+            span {
+                margin-top: 1rem;
+            }
+        }
+
+        h2 {
+            font-size: 2.5rem;
+        }
+
+        h3 {
+            font-size: 2rem;
+        }
+
+        p {
+            font-size: 1.6rem;
+        }
+    }
+
+    .page {
+        h1 {
+            font-size: $page_h1_1366;
+        }
+
+        h2 {
+            font-size: $page_h2_1366;
+        }
+
+        h3 {
+            font-size: $page_h3_1366;
+        }
+
+        p {
+            font-size: $page_p_1366;
+        }
+    }
+
+}

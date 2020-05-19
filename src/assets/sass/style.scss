@@ -1,0 +1,31 @@
+/*
+Configuration Bootstrap
+*/
+
+@import "_partials/variables";
+@import "_partials/typography";
+@import "_partials/global";
+
+@import "_header/320xs";
+@import "_header/576sm";
+@import "_header/768md";
+@import "_header/992md";
+@import "_header/1280lg";
+@import "_header/1366lg";
+@import "_header/1600xl";
+
+@import "_main/320xs";
+@import "_main/576sm";
+@import "_main/768md";
+@import "_main/992md";
+@import "_main/1280lg";
+@import "_main/1366lg";
+@import "_main/1600xl";
+
+@import "_footer/320xs";
+@import "_footer/576sm";
+@import "_footer/768md";
+@import "_footer/992md";
+@import "_footer/1280lg";
+@import "_footer/1366lg";
+@import "_footer/1600xl";

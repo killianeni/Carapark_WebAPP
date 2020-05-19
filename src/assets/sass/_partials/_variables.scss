@@ -1,0 +1,83 @@
+// ------------
+// Page Headers
+// ------------
+
+$page_h1_320: 2rem;
+$page_h2_320: 1.8rem;
+$page_h3_320: 1.6rem;
+$page_h4_320: 1.4rem;
+$page_p_320: 0.9rem;
+
+$page_h1_768: 2.2rem;
+$page_h2_768: 2rem;
+$page_h3_768: 1.8rem;
+$page_p_768: $page_p_320;
+
+$page_h1_1366: 2.4rem;
+$page_h2_1366: 2.2rem;
+$page_h3_1366: 2rem;
+$page_p_1366: 1rem;
+
+// ------
+// Colors
+// ------
+
+$couleurPrimary: #364652;
+$colorSecondary: #df4c0d;
+$colorWhite: #fff;
+$colorBlack: #000;
+$strong: #000;
+
+// Couleur du menu
+
+$nav-icon-height: 5px;
+
+
+$colorMenuFond: #ffffff;
+$colorMenuBorder: #e8e8e8;
+$colorMenuFondNav: #e8e8e8;
+$colorMenuBurger: #e95114;
+$colorMenuBurgerIcon: #000000;
+$colorMenuTransparent: transparent;
+$colorMenuFondDropdown: #ffffff;
+$colorMenuTexte: #575454;
+$colorMenuActive: #ff6600;
+
+// ----------------
+// Grid breakpoints
+// ----------------
+
+// Define the minimum dimensions at which your layout will change,
+// adapting to different screen sizes, for use in media queries.
+
+// $grid-breakpoints: (
+//   xs: 0,
+//   sm: 768px,
+//   md: 1280px,
+//   lg: 1366px,
+//   xl: 1600px
+// ) !default;
+
+
+// ---------------
+// Grid containers
+// ---------------
+
+// Define the maximum width of `.container` for different screen sizes.
+
+// $container-max-widths: (
+//   sm: 750px,
+//   md: 970px,
+//   lg: 1000px,
+//   xl: 1140px
+// ) !default;
+
+
+// ------------
+// Grid columns
+// ------------
+// Set the number of columns and specify the width of the gutters.
+
+// $grid-columns:                12 !default;
+// $grid-gutter-width:           30px !default;
+

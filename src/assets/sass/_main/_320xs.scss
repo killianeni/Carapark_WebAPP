@@ -1,0 +1,87 @@
+.home {
+	h1 {
+		font-size: 2rem;
+		font-family: "Roboto";
+		font-weight: bold;
+		color: $colorSecondary;
+		text-align: center;
+
+		span {
+			display: block;
+			margin-top: .5rem;
+			font-size: 1rem;
+		}
+	}
+
+	h2 {
+		font-size: 1.8rem;
+		margin-bottom: 1.3rem;
+		//margin: 10px 10px;
+	}
+
+	h3 {
+		font-size: 1.6rem;
+		//margin: 10px 0;
+	}
+
+	p {
+		
+	}
+
+}
+
+.page {
+
+	h1 {
+		font-size: $page_h1_320;
+		// font-family: Arizonia;
+		color: $colorSecondary;
+		text-align: center;
+		display: inline-block;
+
+		span {
+			display: block;
+			margin-top: .5rem;
+			font-family: Raleway;
+			font-size: 1rem;
+		}
+	}
+
+	h2 {
+		font-size: $page_h2_320;
+		padding: 1rem 0;
+	}
+
+	h3 {
+		font-size: $page_h3_320;
+		padding: 1rem 0;
+	}
+
+	h4 {
+		font-size: $page_h4_320;
+		//margin: 10px 0;
+	}
+
+	p {
+		line-height: 1.5rem;
+	}
+
+}
+
+.btn {
+	display: inline-block;
+	margin: 2rem 0;
+	font-weight: 700;
+	letter-spacing: .3rem;
+	text-transform: uppercase;
+	padding: .7rem 2.2rem;
+	background-color: #fff;
+	transition: all .4s;
+	align-self: flex-end;
+	border: 1px solid transparent;
+
+	&:hover {
+		border: 1px solid $colorSecondary;
+
+	}
+}
