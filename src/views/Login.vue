@@ -1,7 +1,7 @@
 <template>
   <div>
     <b-card class="container">
-      <img class="logo" src="../assets/img/kmap_logo.svg" alt="kmap_logo.svg"/>
+      <img class="logo" src="../assets/img/kmap_logo.svg" alt="kmap_logo.svg" />
       <b-form>
         <b-form-group
           label="Identifiant"
@@ -34,7 +34,11 @@
           </router-link>
         </p>
 
-        <b-button type="submit" variant="primary">
+        <b-button
+          type="submit"
+          variant="primary"
+          @click="hashMdp()"
+        >
           Connexion
         </b-button>
       </b-form>
@@ -43,6 +47,8 @@
 </template>
 
 <script>
+  import bcrypt from 'bcryptjs';
+
   export default {
     name: 'LoginVue',
     data() {
@@ -52,6 +58,14 @@
           password: ''
         }
       };
+    },
+    methods: {
+      async hashMdp() {
+        await bcrypt.hash(this.form.password, 8, function(err, hash) {
+          // store password in db
+          console.log(hash);
+        });
+      }
     }
   };
 </script>
