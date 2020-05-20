@@ -1,5 +1,5 @@
 // ------------
-// Page Headers
+// Page
 // ------------
 
 $page_h1_320: 2rem;
@@ -19,29 +19,32 @@ $page_h3_1366: 2rem;
 $page_p_1366: 1rem;
 
 // ------
-// Colors
+// Couleurs
 // ------
+$colorBlue: #364652;
+$colorGrey: #f0f5f6;
+$colorGreen: #1c7c54;
+$colorDark: #2e2e2e;
+$colorOrange: #df4c0d;
+$colorWhite: #ffffff;
+$colorBlack: #000000;
 
-$couleurPrimary: #364652;
-$colorSecondary: #df4c0d;
-$colorWhite: #fff;
-$colorBlack: #000;
-$strong: #000;
+$colorPrimary: $colorBlue;
+$colorSecondary: $colorOrange;
 
-// Couleur du menu
+// ----------------
+// Menu
+// ----------------
 
 $nav-icon-height: 5px;
-
-
-$colorMenuFond: #ffffff;
-$colorMenuBorder: #e8e8e8;
-$colorMenuFondNav: #e8e8e8;
-$colorMenuBurger: #e95114;
-$colorMenuBurgerIcon: #000000;
-$colorMenuTransparent: transparent;
-$colorMenuFondDropdown: #ffffff;
-$colorMenuTexte: #575454;
-$colorMenuActive: #ff6600;
+$colorMenuFond: #f0f5f6;
+$colorMenuFondNav: #364652;
+$colorMenuBurgerIcon: #364652;
+$colorMenuBorder: #ffffff;
+$colorMenuBgDefault: #575454;
+$colorMenuTextDefault: #ffffff;
+$colorMenuTextActive: #575454;
+$colorMenuBgActive: #ffffff;
 
 // ----------------
 // Grid breakpoints

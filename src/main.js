@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
+import './assets/fonts/icons/kmap-icons.css'
 import './assets/sass/style.scss'
 import 'bootstrap/scss/bootstrap.scss'
 import 'jquery/dist/jquery.min'

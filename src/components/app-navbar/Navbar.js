@@ -1,3 +1,11 @@
 export default {
-  name: 'Navbar'
+  name: 'Navbar',
+  data: () =>({
+    isBurgerActive: false
+  }),
+  methods: {
+    toggle() {
+      this.isBurgerActive = !this.isBurgerActive
+    }
+  }
 }

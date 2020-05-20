@@ -6,13 +6,15 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "build:fontagon": "node src/assets/js/icons.js"
   },
   "dependencies": {
     "axios": "^0.19.2",
     "bootstrap": "^4.4.1",
     "bootstrap-vue": "^2.10.0",
     "core-js": "^3.6.4",
+    "fontagon": "^1.0.9",
     "jquery": "^3.5.1",
     "vue": "^2.6.11",
     "vue-router": "^3.1.5"
