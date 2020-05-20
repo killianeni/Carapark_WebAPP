@@ -1,36 +1,44 @@
 <template>
   <div>
-    <b-form>
-      <b-form-group
-        label="Identifiant"
-        label-for="username"
-      >
-        <b-form-input
-          id="username"
-          v-model="form.username"
-          required
-          placeholder="Veuillez entrer votre identifiant"
-        />
-      </b-form-group>
+    <b-card class="container">
+      <img class="logo" src="../assets/img/kmap_logo.svg" alt="kmap_logo.svg"/>
+      <b-form>
+        <b-form-group
+          label="Identifiant"
+          label-for="username"
+        >
+          <b-form-input
+            id="username"
+            v-model="form.username"
+            required
+            placeholder="Veuillez entrer votre identifiant"
+          />
+        </b-form-group>
 
-      <b-form-group
-        label="Mot de passe"
-        label-for="password"
-      >
-        <b-form-input
-          id="password"
-          v-model="form.password"
-          type="password"
-          required
-          placeholder="Veuillez entrer votre mot de passe"
-        />
-      </b-form-group>
+        <b-form-group
+          label="Mot de passe"
+          label-for="password"
+        >
+          <b-form-input
+            id="password"
+            v-model="form.password"
+            type="password"
+            required
+            placeholder="Veuillez entrer votre mot de passe"
+          />
+        </b-form-group>
 
-      <b-button type="submit" variant="primary">Connexion</b-button>
-      <p class="forgot-password">
-        <router-link to="/">Mot de passe oublié  ?</router-link>
-      </p>
-    </b-form>
+        <p class="forgot-password">
+          <router-link to="/">
+            Mot de passe oublié ?
+          </router-link>
+        </p>
+
+        <b-button type="submit" variant="primary">
+          Connexion
+        </b-button>
+      </b-form>
+    </b-card>
   </div>
 </template>
 
@@ -43,14 +51,18 @@
           username: '',
           password: ''
         }
-      }
+      };
     }
-  }
+  };
 </script>
 
 <style scoped>
-  .form-control{
+  .form-control {
     margin: auto;
     width: 50%;
+  }
+
+  .logo {
+    width: 120px;
   }
 </style>
