@@ -3,8 +3,7 @@ import App from './App.vue';
 import router from './router';
 import {BootstrapVue} from 'bootstrap-vue';
 
-import 'bootstrap/dist/css/bootstrap.css';
-import 'bootstrap-vue/dist/bootstrap-vue.css';
+import './assets/fonts/icons/kmap-icons.css';
 
 Vue.use(BootstrapVue);
 
