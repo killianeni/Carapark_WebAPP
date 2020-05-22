@@ -18,17 +18,15 @@
         </div>
       </div>
       <div class="profil">
-        <div class="dropdown">
-          <div class="dropdown-avatar" id="dropdownMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <b-dropdown class="dropdown-avatar" variant="none" no-caret>
+          <template v-slot:button-content>
             <div class="container-avatar">
               <i class="kmap-icons icon-avatar avatar"></i>
             </div>
-          </div>
-          <div class="dropdown-menu" aria-labelledby="dropdownMenu">
-            <button class="dropdown-item" type="button">Profil</button>
-            <button class="dropdown-item" type="button">Déconnexion</button>
-          </div>
-        </div>
+          </template>
+          <b-dropdown-item href="#">Profil</b-dropdown-item>
+          <b-dropdown-item href="#">Déconnexion</b-dropdown-item>
+        </b-dropdown>
       </div>
     </div>
     <div class="menu-navigation-container" :class="{ 'open' : isBurgerActive }">
@@ -65,7 +63,6 @@
       </div>
       <div class="menu-navigation-shadow" @click.prevent="toggle"></div>
     </div>
-
   </header>
 </template>
 

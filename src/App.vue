@@ -16,3 +16,8 @@
   }
 </script>
 
+<style lang="scss" rel="stylesheet">
+  @import "assets/sass/style.scss";
+  @import '~bootstrap/scss/bootstrap.scss';
+  @import '~bootstrap-vue/src/index.scss';
+</style>
