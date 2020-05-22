@@ -1,15 +1,16 @@
 <template>
   <div class="dashboard">
-    <p>TOTO</p>
+    <Navbar/>
   </div>
 </template>
 
 <script>
-// @ is an alias to /src
+  import Navbar from '@/components/app-navbar/Navbar.vue';
 
-export default {
-  name: 'Dashboard',
-  components: {
-  }
-}
+  export default {
+    name: 'Dashboard',
+    components: {
+      Navbar
+    }
+  };
 </script>
