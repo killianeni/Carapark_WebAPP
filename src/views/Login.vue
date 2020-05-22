@@ -6,6 +6,7 @@
         <b-form-group
           label="Identifiant"
           label-for="username"
+          label-align="left"
         >
           <b-form-input
             id="username"
@@ -18,6 +19,7 @@
         <b-form-group
           label="Mot de passe"
           label-for="password"
+          label-align="left"
         >
           <b-form-input
             id="password"
@@ -71,12 +73,16 @@
 </script>
 
 <style scoped>
-  .form-control {
-    margin: auto;
-    width: 50%;
-  }
-
   .logo {
     width: 120px;
+  }
+
+  .container{
+    margin-top: 10px;
+    width: 400px;
+  }
+
+  .forgot-password{
+    text-align: left;
   }
 </style>
