@@ -2,10 +2,25 @@
   font-family: Roboto;
 }
 
+#app {
+  position: relative;
+  min-height: 100vh;
+}
+
 .btn {
   &:focus,
   &.focus {
     outline: 0;
     box-shadow: none !important;
+  }
+}
+
+.container-custom {
+  transition: 1s padding-left;
+}
+
+@media screen and (min-width: 1280px) {
+  .container-custom {
+    padding-left: 150px;
   }
 }

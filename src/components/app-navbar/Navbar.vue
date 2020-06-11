@@ -1,5 +1,5 @@
 <template>
-  <header>
+  <header v-if="hide">
     <div class="menu-header">
       <div class="container-navbar-toggle">
         <button class="navbar-toggler"
@@ -15,6 +15,9 @@
         </button>
         <div class="current-title-page">
           <span>Tableau de bord</span>
+          {{ $route.name }}
+          {{ $route.path }}
+          {{ hide }}
         </div>
       </div>
       <div class="profil">

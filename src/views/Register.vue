@@ -1,7 +1,9 @@
 <template>
-  <div>
-    <b-card class="container">
-      <img class="logo" src="../assets/img/kmap_logo.svg" alt="kmap_logo.svg" />
+  <div class="register-page">
+    <b-card>
+      <div class="container-logo">
+        <img class="logo" src="../assets/img/kmap_logo.svg" alt="kmap_logo.svg"/>
+      </div>
       <b-form>
         <b-form-group
           label="Nom"
@@ -64,41 +66,67 @@
           />
         </b-form-group>
 
-        <b-button
-          type="submit"
-          variant="primary"
-          @click="hashMdp()"
-        >
-          Créer le compte
-        </b-button>
+        <div class="container-submit">
+          <b-button
+            class="submit"
+            type="submit"
+            variant="primary"
+            @click="hashMdp()"
+          >
+            Créer le compte
+          </b-button>
+        </div>
       </b-form>
     </b-card>
   </div>
 </template>
 
 <script>
-    export default {
-        name: 'RegisterVue',
-      data() {
-        return {
-          form: {
-            name: '',
-            firstname: '',
-            license: '',
-            username: '',
-            password: ''
-          }
-        };
-      },
-    };
+  export default {
+    name: 'RegisterVue',
+    data() {
+      return {
+        form: {
+          name: '',
+          firstname: '',
+          license: '',
+          username: '',
+          password: ''
+        }
+      };
+    },
+  };
 </script>
 
-<style scoped>
-  .logo {
-    width: 120px;
-  }
+<style scoped lang="scss">
+  .register-page {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
 
-  .container{
-    width: 400px;
+    .card {
+      width: 400px;
+      background-color: $colorGrey;
+      font-weight: bold;
+      .card-body {
+        padding: 30px;
+        .container-logo {
+          width: 150px;
+          margin: 0 auto;
+        }
+        input {
+          height: 50px;
+        }
+        .container-submit {
+          text-align: center;
+          margin: 15px 0;
+          .submit {
+            width: 200px;
+            border-radius: 20px;
+          }
+        }
+      }
+    }
   }
 </style>

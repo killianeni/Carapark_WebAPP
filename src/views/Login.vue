@@ -1,7 +1,9 @@
 <template>
-  <div>
-    <b-card class="container">
-      <img class="logo" src="../assets/img/kmap_logo.svg" alt="kmap_logo.svg" />
+  <div class="login-page">
+    <b-card>
+      <div class="container-logo">
+        <img class="logo img-fluid" src="../assets/img/kmap_logo.svg" alt="kmap_logo.svg" />
+      </div>
       <b-form>
         <b-form-group
           label="Identifiant"
@@ -12,7 +14,7 @@
             id="username"
             v-model="form.username"
             required
-            placeholder="Veuillez entrer votre identifiant"
+            placeholder="Identifiant"
           />
         </b-form-group>
 
@@ -26,23 +28,26 @@
             v-model="form.password"
             type="password"
             required
-            placeholder="Veuillez entrer votre mot de passe"
+            placeholder="Mot de passe"
           />
         </b-form-group>
 
-        <p class="forgot-password">
+        <div class="forgot-password">
           <router-link to="/">
             Mot de passe oublié ?
           </router-link>
-        </p>
+        </div>
 
-        <b-button
-          type="submit"
-          variant="primary"
-          @click="hashMdp()"
-        >
+        <div class="container-submit">
+          <b-button
+            class="submit"
+            type="submit"
+            variant="primary"
+            @click="hashMdp()"
+          >
           Connexion
         </b-button>
+        </div>
       </b-form>
     </b-card>
   </div>
@@ -72,17 +77,37 @@
   };
 </script>
 
-<style scoped>
-  .logo {
-    width: 120px;
+<style scoped lang="scss">
+
+  .login-page {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+
+    .card {
+      width: 400px;
+      background-color: $colorGrey;
+      font-weight: bold;
+      .card-body {
+        padding: 30px;
+        .container-logo {
+          width: 150px;
+          margin: 0 auto;
+        }
+        input {
+          height: 50px;
+        }
+        .container-submit {
+          text-align: center;
+          margin: 15px 0;
+          .submit {
+            width: 200px;
+            border-radius: 20px;
+          }
+        }
+      }
+    }
   }
 
-  .container{
-    margin-top: 10px;
-    width: 400px;
-  }
-
-  .forgot-password{
-    text-align: left;
-  }
 </style>
