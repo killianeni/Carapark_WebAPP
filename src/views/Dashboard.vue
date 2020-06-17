@@ -1,5 +1,5 @@
 <template>
-  <div class="dashboard container-custom">
+  <div class="dashboard-page container-custom">
     <div class="container-fluid">
       <div class="row">
         <div class="col">

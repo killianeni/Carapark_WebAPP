@@ -2,9 +2,9 @@
   font-family: 'kmap-icons';
   font-style: normal;
   font-weight: 400;
-  src: url("kmap-icons.eot?76a93cdf6876b1aab4b9c79c91be868a?#iefix") format("embedded-opentype"),
-url("kmap-icons.woff2?76a93cdf6876b1aab4b9c79c91be868a") format("woff2"),
-url("kmap-icons.woff?76a93cdf6876b1aab4b9c79c91be868a") format("woff");
+  src: url("kmap-icons.eot?36d38188b5f113358199fe5d701c6845?#iefix") format("embedded-opentype"),
+url("kmap-icons.woff2?36d38188b5f113358199fe5d701c6845") format("woff2"),
+url("kmap-icons.woff?36d38188b5f113358199fe5d701c6845") format("woff");
 }
 
 .kmap-icons, .icon-icons {
@@ -50,5 +50,8 @@ url("kmap-icons.woff?76a93cdf6876b1aab4b9c79c91be868a") format("woff");
 }
 
 .icon-avatar:before { content: "\f101"; }
-.icon-dashboard:before { content: "\f102"; }
-.icon-module:before { content: "\f103"; }
+.icon-car-park:before { content: "\f102"; }
+.icon-dashboard:before { content: "\f103"; }
+.icon-module:before { content: "\f104"; }
+.icon-reservation:before { content: "\f105"; }
+.icon-users:before { content: "\f106"; }

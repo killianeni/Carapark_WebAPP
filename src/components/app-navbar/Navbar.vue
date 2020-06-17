@@ -38,28 +38,32 @@
         <nav class="nav-module">
           <ul>
             <li>
-              <a href="#" class="nav-module-item active">
+              <router-link to="/" class="nav-module-item"
+                           v-bind:class="[$route.name === 'Dashboard' ? 'active' : '']">
                 <i class="kmap-icons icon-dashboard nav-module-item-icon"></i>
                 <span class="nav-module-item-name">Dashboard</span>
-              </a>
+              </router-link>
             </li>
             <li>
-              <a href="#" class="nav-module-item">
-                <i class="kmap-icons icon-module nav-module-item-icon"></i>
-                <span class="nav-module-item-name">Dashboard</span>
-              </a>
+              <router-link to="/park" class="nav-module-item"
+                           v-bind:class="[$route.name === 'PortalPark' || $route.name === 'SitePark' || $route.name === 'CarPark' ? 'active' : '']">
+                <i class="kmap-icons icon-car-park nav-module-item-icon"></i>
+                <span class="nav-module-item-name">Park</span>
+              </router-link>
             </li>
             <li>
-              <a href="#" class="nav-module-item">
-                <i class="kmap-icons icon-module nav-module-item-icon"></i>
-                <span class="nav-module-item-name">Dashboard</span>
-              </a>
+              <router-link to="/reserve" class="nav-module-item" v
+                           v-bind:class="[$route.name === 'PortalReserve' || $route.name === 'SiteReserve' ? 'active' : '']">
+                <i class="kmap-icons icon-reservation nav-module-item-icon"></i>
+                <span class="nav-module-item-name">Réservation</span>
+              </router-link>
             </li>
             <li>
-              <a href="#" class="nav-module-item">
-                <i class="kmap-icons icon-module nav-module-item-icon"></i>
-                <span class="nav-module-item-name">Dashboard</span>
-              </a>
+              <router-link to="/user" class="nav-module-item"
+                           v-bind:class="[$route.name === 'User' ? 'active' : '']">
+                <i class="kmap-icons icon-users nav-module-item-icon"></i>
+                <span class="nav-module-item-name">Utilisateurs</span>
+              </router-link>
             </li>
           </ul>
         </nav>
