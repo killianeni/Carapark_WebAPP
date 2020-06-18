@@ -18,7 +18,7 @@
           <span v-else>{{ $route.meta.title }}</span>
         </div>
       </div>
-      <div class="profil">
+      <div v-if="isAuthenticated" class="profil">
         <b-dropdown class="dropdown-avatar" variant="none" no-caret>
           <template v-slot:button-content>
             <div class="container-avatar">
@@ -34,7 +34,7 @@
       <div class="menu-navigation">
         <img src="~@/assets/img/kmap_logo.svg" alt="" class="logo">
         <nav class="nav-module">
-          <ul>
+          <ul v-if="isAuthenticated">
             <li>
               <router-link to="/" class="nav-module-item"
                            v-bind:class="[$route.name === 'Dashboard' ? 'active' : '']">

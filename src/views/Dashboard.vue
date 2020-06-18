@@ -1,7 +1,6 @@
 <template>
   <div>
     <div v-if="isAuthenticated">
-      <Navbar/>
       <div class="dashboard-page container-custom">
         <div class="container-fluid">
           <div class="row">
@@ -34,14 +33,12 @@
 </template>
 
 <script>
-  import Navbar from '@/components/app-navbar/Navbar.vue';
   import {mapGetters} from 'vuex';
   import Login from './Login';
 
   export default {
     name: 'Dashboard',
     components: {
-      Navbar,
       Login
     },
     computed: {

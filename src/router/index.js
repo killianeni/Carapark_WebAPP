@@ -41,6 +41,9 @@ const routes = [
     path: '/login',
     name: 'Login',
     component: Login,
+    meta: {
+      title: 'Connexion',
+    },
     beforeEnter: ifNotAuthenticated
   },
   {

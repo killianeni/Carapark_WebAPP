@@ -1,11 +1,13 @@
 <template>
   <main id="app">
+    <Navbar/>
     <router-view/>
   </main>
 </template>
 
 <script>
   import { USER_REQUEST} from './store/actions/user';
+  import Navbar from '@/components/app-navbar/Navbar.vue';
 
   export default {
     name: 'app',
@@ -14,6 +16,9 @@
         this.$store.dispatch(USER_REQUEST);
       }
     },
+    components: {
+      Navbar
+    }
   }
 </script>
 
