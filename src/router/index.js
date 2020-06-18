@@ -8,8 +8,25 @@ import CarPark from '../views/module-park/Car.vue';
 import PortalReserve from '../views/module-reserve/Portal.vue';
 import SiteReserve from '../views/module-reserve/Site.vue';
 import User from '../views/module-user/User.vue';
+import store from '../store';
 
 Vue.use(VueRouter);
+
+const ifNotAuthenticated = (to, from, next) => {
+  if (!store.getters.isAuthenticated) {
+    next();
+    return;
+  }
+  next('/');
+};
+
+const ifAuthenticated = (to, from, next) => {
+  if (store.getters.isAuthenticated) {
+    next();
+    return;
+  }
+  next('/login');
+};
 
 const routes = [
   {
@@ -23,12 +40,14 @@ const routes = [
   {
     path: '/login',
     name: 'Login',
-    component: Login
+    component: Login,
+    beforeEnter: ifNotAuthenticated
   },
   {
     path: '/register',
     name: 'Register',
-    component: Register
+    component: Register,
+    beforeEnter: ifAuthenticated
   },
   {
     path: '/park',

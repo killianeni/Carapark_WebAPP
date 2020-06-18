@@ -1,5 +1,5 @@
 <template>
-  <header v-if="hide">
+  <header>
     <div class="menu-header">
       <div class="container-navbar-toggle">
         <button class="navbar-toggler"
@@ -26,7 +26,7 @@
             </div>
           </template>
           <b-dropdown-item href="#">Profil</b-dropdown-item>
-          <b-dropdown-item href="#">Déconnexion</b-dropdown-item>
+          <b-dropdown-item @click="logout">Déconnexion</b-dropdown-item>
         </b-dropdown>
       </div>
     </div>
