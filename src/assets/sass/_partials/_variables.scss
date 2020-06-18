@@ -31,6 +31,9 @@ $colorBlack: #000000;
 
 $primary: $colorBlue;
 $secondary: $colorOrange;
+$light: $colorGrey;
+$dark: $colorDark;
+
 
 // ----------------
 // Menu
@@ -41,9 +44,9 @@ $colorMenuFond: #f0f5f6;
 $colorMenuFondNav: #364652;
 $colorMenuBurgerIcon: #364652;
 $colorMenuBorder: #ffffff;
-$colorMenuBgDefault: #575454;
+$colorMenuBgDefault: #2e2e2e;
 $colorMenuTextDefault: #ffffff;
-$colorMenuTextActive: #575454;
+$colorMenuTextActive: #2e2e2e;
 $colorMenuBgActive: #ffffff;
 
 // ----------------
