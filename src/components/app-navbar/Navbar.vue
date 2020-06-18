@@ -14,10 +14,8 @@
           </div>
         </button>
         <div class="current-title-page">
-          <span>Tableau de bord</span>
-          {{ $route.name }}
-          {{ $route.path }}
-          {{ hide }}
+          <span v-if="$route.name === 'CarPark'">{{ $route.meta.title }} LIBELLE</span>
+          <span v-else>{{ $route.meta.title }}</span>
         </div>
       </div>
       <div class="profil">
@@ -41,18 +39,18 @@
               <router-link to="/" class="nav-module-item"
                            v-bind:class="[$route.name === 'Dashboard' ? 'active' : '']">
                 <i class="kmap-icons icon-dashboard nav-module-item-icon"></i>
-                <span class="nav-module-item-name">Dashboard</span>
+                <span class="nav-module-item-name">Tableau de bord</span>
               </router-link>
             </li>
             <li>
               <router-link to="/park" class="nav-module-item"
                            v-bind:class="[$route.name === 'PortalPark' || $route.name === 'SitePark' || $route.name === 'CarPark' ? 'active' : '']">
                 <i class="kmap-icons icon-car-park nav-module-item-icon"></i>
-                <span class="nav-module-item-name">Park</span>
+                <span class="nav-module-item-name">Parc</span>
               </router-link>
             </li>
             <li>
-              <router-link to="/reserve" class="nav-module-item" v
+              <router-link to="/reserve" class="nav-module-item"
                            v-bind:class="[$route.name === 'PortalReserve' || $route.name === 'SiteReserve' ? 'active' : '']">
                 <i class="kmap-icons icon-reservation nav-module-item-icon"></i>
                 <span class="nav-module-item-name">Réservation</span>
