@@ -6,6 +6,7 @@ import {
 } from '../actions/auth';
 import {USER_REQUEST} from '../actions/user';
 import apiCall from '../../utils/api';
+import {api} from '../../config';
 
 const state = {
   token: localStorage.getItem('user-token') || '',
@@ -17,6 +18,11 @@ const getters = {
   isAuthenticated: state => !!state.token,
   authStatus: state => state.status
 };
+
+api.url('/api/token').post({
+  "Mail":"jean.bon@eni.fr",
+  "Password":"123456"
+});
 
 const actions = {
   [AUTH_REQUEST]: ({commit, dispatch}, user) => {

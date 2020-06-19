@@ -49,8 +49,7 @@ const routes = [
   {
     path: '/register',
     name: 'Register',
-    component: Register,
-    beforeEnter: ifAuthenticated
+    component: Register
   },
   {
     path: '/park',
@@ -58,7 +57,8 @@ const routes = [
     component: SitePark,
     meta: {
       title: 'Park',
-    }
+    },
+    beforeEnter: ifAuthenticated
   },
   {
     path: '/park/:id/car',
@@ -66,22 +66,26 @@ const routes = [
     component: CarPark,
     meta: {
       title: 'Voitures du site :',
-    }
+    },
+    beforeEnter: ifAuthenticated
   },
   {
     path: '/reserve',
     name: 'PortalReserve',
-    component: PortalReserve
+    component: PortalReserve,
+    beforeEnter: ifAuthenticated
   },
   {
     path: '/reserve/site',
     name: 'SiteReserve',
-    component: SiteReserve
+    component: SiteReserve,
+    beforeEnter: ifAuthenticated
   },
   {
     path: '/user',
     name: 'User',
-    component: User
+    component: User,
+    beforeEnter: ifAuthenticated
   }
 ];
 
