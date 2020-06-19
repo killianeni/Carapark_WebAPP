@@ -19,15 +19,14 @@ const getters = {
   authStatus: state => state.status
 };
 
-api.url('/api/token').post({
-  "Mail":"jean.bon@eni.fr",
-  "Password":"123456"
-});
-
 const actions = {
   [AUTH_REQUEST]: ({commit, dispatch}, user) => {
     return new Promise((resolve, reject) => {
       commit(AUTH_REQUEST);
+      api.url('/api/token').post({
+        "Mail":user.username,
+        "Password":user.password
+      });
       apiCall({url: 'auth', data: user, method: 'POST'})
         .then(resp => {
           localStorage.setItem('user-token', resp.token);
