@@ -8,8 +8,25 @@ import CarPark from '../views/module-park/Car.vue';
 import PortalReserve from '../views/module-reserve/Portal.vue';
 import SiteReserve from '../views/module-reserve/Site.vue';
 import User from '../views/module-user/User.vue';
+import store from '../store';
 
 Vue.use(VueRouter);
+
+const ifNotAuthenticated = (to, from, next) => {
+  if (!store.getters.isAuthenticated) {
+    next();
+    return;
+  }
+  next('/');
+};
+
+const ifAuthenticated = (to, from, next) => {
+  if (store.getters.isAuthenticated) {
+    next();
+    return;
+  }
+  next('/login');
+};
 
 const routes = [
   {
@@ -23,7 +40,11 @@ const routes = [
   {
     path: '/login',
     name: 'Login',
-    component: Login
+    component: Login,
+    meta: {
+      title: 'Connexion',
+    },
+    beforeEnter: ifNotAuthenticated
   },
   {
     path: '/register',
@@ -36,7 +57,8 @@ const routes = [
     component: SitePark,
     meta: {
       title: 'Park',
-    }
+    },
+    beforeEnter: ifAuthenticated
   },
   {
     path: '/park/:id/car',
@@ -44,22 +66,26 @@ const routes = [
     component: CarPark,
     meta: {
       title: 'Voitures du site :',
-    }
+    },
+    beforeEnter: ifAuthenticated
   },
   {
     path: '/reserve',
     name: 'PortalReserve',
-    component: PortalReserve
+    component: PortalReserve,
+    beforeEnter: ifAuthenticated
   },
   {
     path: '/reserve/site',
     name: 'SiteReserve',
-    component: SiteReserve
+    component: SiteReserve,
+    beforeEnter: ifAuthenticated
   },
   {
     path: '/user',
     name: 'User',
-    component: User
+    component: User,
+    beforeEnter: ifAuthenticated
   }
 ];
 

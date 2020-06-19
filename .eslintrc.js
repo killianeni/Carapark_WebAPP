@@ -27,9 +27,9 @@ module.exports = {
       "math": "always"
     }],
     "no-console": ["off"],
-    "quotes": ["error", "single", { "allowTemplateLiterals": true }],
+    "quotes": ["warn", "single", { "allowTemplateLiterals": true }],
     "guard-for-in": "error",
-    "quote-props": ["error", "as-needed"],
+    "quote-props": ["warn", "as-needed"],
     "arrow-parens": ["warn", "as-needed"],
     "no-unneeded-ternary": ["error", { "defaultAssignment": true }],
     "prefer-const": "warn",

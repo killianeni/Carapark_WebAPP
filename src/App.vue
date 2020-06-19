@@ -6,10 +6,16 @@
 </template>
 
 <script>
+  import { USER_REQUEST} from './store/actions/user';
   import Navbar from '@/components/app-navbar/Navbar.vue';
 
   export default {
     name: 'app',
+    created: function() {
+      if (this.$store.getters.isAuthenticated) {
+        this.$store.dispatch(USER_REQUEST);
+      }
+    },
     components: {
       Navbar
     }

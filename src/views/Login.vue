@@ -2,7 +2,7 @@
   <div class="login-page">
     <b-card>
       <div class="container-logo">
-        <img class="logo img-fluid" src="../assets/img/kmap_logo.svg" alt="kmap_logo.svg" />
+        <img class="logo img-fluid" src="../assets/img/kmap_logo.svg" alt="kmap_logo.svg"/>
       </div>
       <b-form>
         <b-form-group
@@ -12,7 +12,7 @@
         >
           <b-form-input
             id="username"
-            v-model="form.username"
+            v-model="username"
             required
             placeholder="Identifiant"
           />
@@ -25,7 +25,7 @@
         >
           <b-form-input
             id="password"
-            v-model="form.password"
+            v-model="password"
             type="password"
             required
             placeholder="Mot de passe"
@@ -45,8 +45,8 @@
             variant="primary"
             @click="hashMdp()"
           >
-          Connexion
-        </b-button>
+            Connexion
+          </b-button>
         </div>
       </b-form>
     </b-card>
@@ -54,24 +54,27 @@
 </template>
 
 <script>
-  import bcrypt from 'bcryptjs';
+  // import bcrypt from 'bcryptjs';
+  import {AUTH_REQUEST} from '../store/actions/auth';
 
   export default {
     name: 'LoginVue',
     data() {
       return {
-        form: {
-          username: '',
-          password: ''
-        }
+        username: '',
+        password: ''
       };
     },
     methods: {
       async hashMdp() {
-        await bcrypt.hash(this.form.password, 8, function(err, hash) {
-          // store password in db
-          console.log(hash);
-        });
+        // await bcrypt.hash(this.password, 8, function(err, hash) {
+        //   // store password in db
+        //   console.log(hash);
+        // });
+        const {username, password} = this;
+        this.$store.dispatch(AUTH_REQUEST, {username, password}).then(() => {
+          this.$router.push('/')
+        })
       }
     }
   };
@@ -83,24 +86,29 @@
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%,-50%);
+    transform: translate(-50%, -50%);
 
     .card {
       width: 400px;
       background-color: $colorGrey;
       font-weight: bold;
+
       .card-body {
         padding: 30px;
+
         .container-logo {
           width: 150px;
           margin: 0 auto;
         }
+
         input {
           height: 50px;
         }
+
         .container-submit {
           text-align: center;
           margin: 15px 0;
+
           .submit {
             width: 200px;
             border-radius: 20px;

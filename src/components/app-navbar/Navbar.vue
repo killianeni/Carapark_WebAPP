@@ -1,5 +1,5 @@
 <template>
-  <header v-if="hide">
+  <header>
     <div class="menu-header">
       <div class="container-navbar-toggle">
         <button class="navbar-toggler"
@@ -18,7 +18,7 @@
           <span v-else>{{ $route.meta.title }}</span>
         </div>
       </div>
-      <div class="profil">
+      <div v-if="isAuthenticated" class="profil">
         <b-dropdown class="dropdown-avatar" variant="none" no-caret>
           <template v-slot:button-content>
             <div class="container-avatar">
@@ -26,7 +26,7 @@
             </div>
           </template>
           <b-dropdown-item href="#">Profil</b-dropdown-item>
-          <b-dropdown-item href="#">Déconnexion</b-dropdown-item>
+          <b-dropdown-item @click="logout">Déconnexion</b-dropdown-item>
         </b-dropdown>
       </div>
     </div>
@@ -34,7 +34,7 @@
       <div class="menu-navigation">
         <img src="~@/assets/img/kmap_logo.svg" alt="" class="logo">
         <nav class="nav-module">
-          <ul>
+          <ul v-if="isAuthenticated">
             <li>
               <router-link to="/" class="nav-module-item"
                            v-bind:class="[$route.name === 'Dashboard' ? 'active' : '']">
