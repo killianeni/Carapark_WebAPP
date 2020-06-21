@@ -2,13 +2,13 @@
   <div class="site-park-page container-custom">
     <div class="container-fluid">
       <div class="row justify-content-between">
-        <div class="col-2 mt-3 mb-3">
+        <div class="col-6 mt-3 mb-3">
           <router-link :to="{ name: 'SitePark' }" class="btn btn-primary">
             <i class="kmap-icons icon-back mr-2"></i>
             Retour
           </router-link>
         </div>
-        <div class="col-2 text-right mt-3 mb-3">
+        <div class="col-6 text-right mt-3 mb-3">
           <b-button variant="primary" v-b-modal.modal-car>
             <i class="kmap-icons icon-edit mr-2"></i>
             Ajouter une voiture
@@ -16,7 +16,21 @@
         </div>
       </div>
       <div class="table-car">
-        <b-table striped hover :items="cars" :fields="fields"></b-table>
+        <b-table striped hover :items="items" :fields="fields" stacked="md">
+          <template v-slot:cell(actions)="{item}">
+            <b-button-group>
+              <b-button variant="primary" @click="editeCar(item)">
+                <i class="kmap-icons icon-edit"></i>
+              </b-button>
+              <b-button variant="danger" @click="deleteCar(item)">
+                <i class="kmap-icons icon-delete"></i>
+              </b-button>
+            </b-button-group>
+          </template>
+          <template v-slot:cell(actif)="{item}">
+            {{ item.actif ? 'Oui' : 'Non' }}
+          </template>
+        </b-table>
       </div>
     </div>
 
@@ -31,8 +45,10 @@
       header-bg-variant="light"
       body-bg-variant="light"
       footer-bg-variant="light"
+      @hidden="resetModal"
+      @ok="okCar"
     >
-      <form ref="form" @submit.stop.prevent="handleSubmit">
+      <form ref="form" @submit.stop.prevent="submitCar">
         <b-form-group
           label="Numéro de matricule"
           label-for="car-matricule"
@@ -40,6 +56,7 @@
         >
           <b-form-input
             id="car-matricule"
+            v-model="form.numero_matricule"
             required
           ></b-form-input>
         </b-form-group>
@@ -50,6 +67,7 @@
         >
           <b-form-input
             id="car-modele"
+            v-model="form.modele_voiture"
             required
           ></b-form-input>
         </b-form-group>
@@ -58,6 +76,7 @@
           label-for="car-places">
           <b-form-select
             id="car-places"
+            v-model="form.nb_places"
             :options="nbPlaces"
             required
           ></b-form-select>
@@ -67,6 +86,7 @@
           label-for="car-portes">
           <b-form-select
             id="car-portes"
+            v-model="form.nb_portes"
             :options="nbPortes"
             required
           ></b-form-select>
@@ -76,12 +96,18 @@
           label-for="car-carburant">
           <b-form-select
             id="car-carburant"
+            v-model="form.type_carburant"
             :options="typeCarburant"
             required
           ></b-form-select>
         </b-form-group>
         <b-form-group>
-          <b-form-checkbox value="true">Actif</b-form-checkbox>
+          <b-form-checkbox
+            value="true"
+            v-model="form.actif"
+          >
+            Actif
+          </b-form-checkbox>
         </b-form-group>
       </form>
     </b-modal>
@@ -94,12 +120,22 @@
     name: 'CarPark',
     data() {
       return {
+        form: {
+          numero_matricule: '',
+          modele_voiture: '',
+          nb_places: '',
+          nb_portes: '',
+          type_carburant: '',
+          actif: null
+        },
         nbPlaces: [
           { text: '-', value: null },
           { text: '1', value: 1 },
           { text: '2', value: 2 },
           { text: '3', value: 3 },
           { text: '4', value: 4 },
+          { text: '5', value: 5 },
+          { text: '6', value: 6 },
         ],
         nbPortes: [
           { text: '-', value: null },
@@ -107,6 +143,8 @@
           { text: '2', value: 2 },
           { text: '3', value: 3 },
           { text: '4', value: 4 },
+          { text: '5', value: 5 },
+          { text: '6', value: 6 },
         ],
         typeCarburant: [
           { text: '-', value: null },
@@ -151,14 +189,64 @@
             label: 'Actions'
           },
         ],
-        cars: [
-          { numero_matricule: 'AA-999-AA', modele_voiture: 'peugeot', nb_places: '4', nb_portes: '5', type_carburant: 'essence', actif: true },
-          { numero_matricule: 'AA-999-AA', modele_voiture: 'peugeot', nb_places: '3', nb_portes: '4', type_carburant: 'diesel', actif: true },
-          { numero_matricule: 'AA-999-AA', modele_voiture: 'peugeot', nb_places: '5', nb_portes: '6', type_carburant: 'hybride', actif: true },
-          { numero_matricule: 'AA-999-AA', modele_voiture: 'peugeot', nb_places: '2', nb_portes: '3', type_carburant: 'diesel', actif: true },
-          { numero_matricule: 'AA-999-AA', modele_voiture: 'peugeot', nb_places: '4', nb_portes: '5', type_carburant: 'electrique', actif: true },
+        items: [
+          { id: 1, numero_matricule: 'AA-999-AA', modele_voiture: 'peugeot', nb_places: 4, nb_portes: 5, type_carburant: 'essence', actif: true },
+          { id: 2, numero_matricule: 'AA-999-AA', modele_voiture: 'peugeot', nb_places: 4, nb_portes: 4, type_carburant: 'diesel', actif: false },
+          { id: 3, numero_matricule: 'AA-999-AA', modele_voiture: 'peugeot', nb_places: 5, nb_portes: 6, type_carburant: 'hybride', actif: true },
+          { id: 4, numero_matricule: 'AA-999-AA', modele_voiture: 'peugeot', nb_places: 2, nb_portes: 3, type_carburant: 'diesel', actif: true },
+          { id: 5, numero_matricule: 'AA-999-AA', modele_voiture: 'peugeot', nb_places: 4, nb_portes: 5, type_carburant: 'electrique', actif: false },
         ]
        }
+    },
+    methods: {
+      okCar(bvModalEvt) {
+        bvModalEvt.preventDefault();
+        this.submitCar()
+      },
+      submitCar() {
+        console.log(JSON.stringify(this.form));
+        this.$nextTick(() => {
+          this.$bvModal.hide('modal-car')
+        })
+      },
+      resetModal() {
+          this.form.numero_matricule = '';
+          this.form.modele_voiture = '';
+          this.form.nb_places = '';
+          this.form.nb_portes = '';
+          this.form.type_carburant = '';
+          this.form.actif = null
+      },
+      editeCar(item) {
+        this.$bvModal.show("modal-car");
+        this.form.numero_matricule = item.numero_matricule;
+        this.form.modele_voiture = item.modele_voiture;
+        this.form.nb_places = item.nb_places;
+        this.form.nb_portes = item.nb_portes;
+        this.form.type_carburant = item.type_carburant;
+        this.form.actif = item.actif;
+        console.log(item);
+      },
+      deleteCar(item) {
+        this.$bvModal.msgBoxConfirm('Veuillez confirmer que vous souhaitez supprimer cette voiture.', {
+          title: 'Veuillez confirmer',
+          size: 'md',
+          buttonSize: 'md',
+          okVariant: 'primary',
+          cancelVariant: 'danger',
+          okTitle: 'Valider',
+          cancelTitle: 'Annuler',
+          footerClass: 'p-2',
+          hideHeaderClose: false,
+        })
+        .then(value => {
+          console.log(value);
+          console.log(item);
+        })
+        .catch(err => {
+          console.log(err);
+        })
+      }
     }
   };
 </script>

@@ -56,7 +56,7 @@ const routes = [
     name: 'SitePark',
     component: SitePark,
     meta: {
-      title: 'Park',
+      title: 'Parc',
     },
     beforeEnter: ifAuthenticated
   },

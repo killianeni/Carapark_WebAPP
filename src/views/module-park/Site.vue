@@ -11,20 +11,20 @@
         <div class="col-12 col-md-4" v-for="(item) in items" :key="item.site">
             <b-card bg-variant="light" class="mb-3">
               <b-card-title>
-                Site {{ item.siteId }}
+                Site - {{ item.libelle }}
               </b-card-title>
               <b-card-text>
                 Nombre de voitures : {{ item.nbVoiture }}
               </b-card-text>
               <div class="text-right">
                 <b-button-group>
-                  <router-link :to="{ name: 'CarPark', params: { id: item.siteId }}" class="btn btn-dark">
+                  <router-link :to="{ name: 'CarPark', params: { id: item.id }}" class="btn btn-dark">
                     <i class="kmap-icons icon-see"></i>
                   </router-link>
-                  <b-button variant="primary">
+                  <b-button variant="primary" @click="editSite(item)">
                     <i class="kmap-icons icon-edit"></i>
                   </b-button>
-                  <b-button variant="danger">
+                  <b-button variant="danger" @click="deleteSite(item)">
                     <i class="kmap-icons icon-delete"></i>
                   </b-button>
                 </b-button-group>
@@ -44,12 +44,10 @@
       header-bg-variant="light"
       body-bg-variant="light"
       footer-bg-variant="light"
-    >
-      <!--@show="resetModal"
       @hidden="resetModal"
-      @ok="handleOk"-->
-      <form ref="form" @submit.stop.prevent="handleSubmit">
-        <!--:state="nameState"-->
+      @ok="okSite"
+    >
+      <form ref="form" @submit.stop.prevent="submitSite">
         <b-form-group
           label="Libelle"
           label-for="name-input"
@@ -57,10 +55,9 @@
         >
           <b-form-input
             id="name-input"
+            v-model="form.libelle"
             required
           ></b-form-input>
-          <!--v-model="name"
-          :state="nameState"-->
         </b-form-group>
       </form>
     </b-modal>
@@ -72,28 +69,76 @@
     name: 'SitePark',
     data() {
       return {
+        form: {
+          libelle: ''
+        },
         items: [
           {
-            siteId: '1',
-            nbVoiture: '10'
+            id: 1,
+            libelle: 'Nantes',
+            nbVoiture: 10
           },
           {
-            siteId: '2',
-            nbVoiture: '4'
+            id: 2,
+            libelle: 'Paris',
+            nbVoiture: 4
           },
           {
-            siteId: '3',
-            nbVoiture: '3'
+            id: 3,
+            libelle: 'Rennes',
+            nbVoiture: 3
           },
           {
-            siteId: '4',
-            nbVoiture: '5'
+            id: 4,
+            libelle: 'Tours',
+            nbVoiture: 5
           },
           {
-            siteId: '5',
-            nbVoiture: '6'
+            id: 5,
+            libelle: 'Lille',
+            nbVoiture: 6
           },
         ]
+      }
+    },
+    methods: {
+      okSite(bvModalEvt) {
+        bvModalEvt.preventDefault();
+        this.submitSite()
+      },
+      submitSite() {
+        console.log(JSON.stringify(this.form));
+        this.$nextTick(() => {
+          this.$bvModal.hide('modal-site')
+        })
+      },
+      resetModal() {
+        this.form.libelle = ''
+      },
+      editSite(item) {
+        this.$bvModal.show("modal-site");
+        this.form.libelle = item.libelle;
+        console.log(item);
+      },
+      deleteSite(item) {
+        this.$bvModal.msgBoxConfirm('Veuillez confirmer que vous souhaitez supprimer ce site et toutes les voitures associées.', {
+          title: 'Veuillez confirmer',
+          size: 'md',
+          buttonSize: 'md',
+          okVariant: 'primary',
+          cancelVariant: 'danger',
+          okTitle: 'Valider',
+          cancelTitle: 'Annuler',
+          footerClass: 'p-2',
+          hideHeaderClose: false,
+        })
+          .then(value => {
+            console.log(value);
+            console.log(item);
+          })
+          .catch(err => {
+            console.log(err);
+          })
       }
     }
   };
