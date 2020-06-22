@@ -15,6 +15,14 @@
   }
 }
 
+.color-true {
+  color: $colorTrue;
+}
+
+.color-false {
+  color: $colorFalse;
+}
+
 .container-custom {
   transition: 1s padding-left;
 }

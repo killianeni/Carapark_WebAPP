@@ -14,7 +14,8 @@
           </div>
         </button>
         <div class="current-title-page">
-          <span v-if="$route.name === 'CarPark'">{{ $route.meta.title }} LIBELLE</span>
+          <span v-if="$route.name === 'ParkCar'">{{ $route.meta.title }} LIBELLE</span>
+          <span v-else-if="$route.name === 'UserList'">{{ $route.meta.title }} LIBELLE SITE</span>
           <span v-else>{{ $route.meta.title }}</span>
         </div>
       </div>
@@ -43,22 +44,22 @@
               </router-link>
             </li>
             <li>
-              <router-link to="/park" class="nav-module-item"
-                           v-bind:class="[$route.name === 'PortalPark' || $route.name === 'SitePark' || $route.name === 'CarPark' ? 'active' : '']">
+              <router-link :to="{ name: 'ParkPortal' }" class="nav-module-item"
+                           v-bind:class="[$route.name === 'ParkPortal' || $route.name === 'ParkCar' ? 'active' : '']">
                 <i class="kmap-icons icon-car-park nav-module-item-icon"></i>
                 <span class="nav-module-item-name">Parc</span>
               </router-link>
             </li>
             <li>
-              <router-link to="/reserve" class="nav-module-item"
-                           v-bind:class="[$route.name === 'PortalReserve' || $route.name === 'SiteReserve' ? 'active' : '']">
+              <router-link :to="{ name: 'ReservePortal' }" class="nav-module-item"
+                           v-bind:class="[$route.name === 'ReservePortal' || $route.name === 'ReserveSite' ? 'active' : '']">
                 <i class="kmap-icons icon-reservation nav-module-item-icon"></i>
                 <span class="nav-module-item-name">Réservation</span>
               </router-link>
             </li>
             <li>
-              <router-link to="/user" class="nav-module-item"
-                           v-bind:class="[$route.name === 'User' ? 'active' : '']">
+              <router-link :to="{ name: 'UserPortal' }" class="nav-module-item"
+                           v-bind:class="[$route.name === 'UserPortal' || $route.name === 'UserList' ? 'active' : '']">
                 <i class="kmap-icons icon-users nav-module-item-icon"></i>
                 <span class="nav-module-item-name">Utilisateurs</span>
               </router-link>

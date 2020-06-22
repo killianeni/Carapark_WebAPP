@@ -3,11 +3,12 @@ import VueRouter from 'vue-router';
 import Login from '../views/Login';
 import Register from '../views/Register';
 import Dashboard from '../views/Dashboard.vue';
-import SitePark from '../views/module-park/Site.vue';
-import CarPark from '../views/module-park/Car.vue';
-import PortalReserve from '../views/module-reserve/Portal.vue';
-import SiteReserve from '../views/module-reserve/Site.vue';
-import User from '../views/module-user/User.vue';
+import ParkPortal from '../views/module-park/ParkPortal.vue';
+import ParkCar from '../views/module-park/ParkCar.vue';
+import ReservePortal from '../views/module-reserve/ReservePortal.vue';
+import ReserveSite from '../views/module-reserve/ReserveSite.vue';
+import UserPortal from '../views/module-user/UserPortal.vue';
+import UserList from '../views/module-user/UserList.vue';
 import store from '../store';
 
 Vue.use(VueRouter);
@@ -52,39 +53,51 @@ const routes = [
     component: Register
   },
   {
-    path: '/park',
-    name: 'SitePark',
-    component: SitePark,
+    path: '/park-portal',
+    name: 'ParkPortal',
+    component: ParkPortal,
     meta: {
       title: 'Parc',
     },
     beforeEnter: ifAuthenticated
   },
   {
-    path: '/park/:id/car',
-    name: 'CarPark',
-    component: CarPark,
+    path: '/park-portal/:id/cars',
+    name: 'ParkCar',
+    component: ParkCar,
     meta: {
       title: 'Voitures du site :',
     },
     beforeEnter: ifAuthenticated
   },
   {
-    path: '/reserve',
-    name: 'PortalReserve',
-    component: PortalReserve,
+    path: '/reserve-portal',
+    name: 'ReservePortal',
+    component: ReservePortal,
     beforeEnter: ifAuthenticated
   },
   {
     path: '/reserve/site',
-    name: 'SiteReserve',
-    component: SiteReserve,
+    name: 'ReserveSite',
+    component: ReserveSite,
     beforeEnter: ifAuthenticated
   },
   {
-    path: '/user',
-    name: 'User',
-    component: User,
+    path: '/user-portal',
+    name: 'UserPortal',
+    component: UserPortal,
+    meta: {
+      title: 'Utilisateurs',
+    },
+    beforeEnter: ifAuthenticated
+  },
+  {
+    path: '/user-portal/:id/users',
+    name: 'UserList',
+    component: UserList,
+    meta: {
+      title: 'Utilisateurs du site :',
+    },
     beforeEnter: ifAuthenticated
   }
 ];

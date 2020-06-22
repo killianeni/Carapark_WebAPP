@@ -1,9 +1,9 @@
 <template>
-  <div class="site-park-page container-custom">
+  <div class="park-car-page container-custom">
     <div class="container-fluid">
       <div class="row justify-content-between">
         <div class="col-6 mt-3 mb-3">
-          <router-link :to="{ name: 'SitePark' }" class="btn btn-primary">
+          <router-link :to="{ name: 'ParkPortal' }" class="btn btn-primary">
             <i class="kmap-icons icon-back mr-2"></i>
             Retour
           </router-link>
@@ -16,7 +16,41 @@
         </div>
       </div>
       <div class="table-car">
-        <b-table striped hover :items="items" :fields="fields" stacked="md">
+        <div class="container-fluid">
+          <div class="row justify-content-between">
+            <div class="col-12 col-md-4 mt-3 mb-3">
+              <b-input-group>
+                <b-form-input
+                  v-model="filterCar"
+                  type="search"
+                  id="filterInput"
+                  placeholder="Rechercher"
+                ></b-form-input>
+                <b-input-group-append>
+                  <b-button  variant="primary" :disabled="!filterCar" @click="filterCar = ''">Clear</b-button>
+                </b-input-group-append>
+              </b-input-group>
+            </div>
+            <div class="col-12 col-md-4 mt-3 mb-3">
+              <b-pagination
+                v-model="currentPage"
+                :total-rows="totalRows"
+                :per-page="perPage"
+                size="md"
+                class="my-0 justify-content-end"
+              ></b-pagination>
+            </div>
+          </div>
+        </div>
+        <b-table
+          striped
+          hover
+          :items="items"
+          :fields="fields"
+          stacked="md"
+          :current-page="currentPage"
+          :per-page="perPage"
+          :filter="filterCar">
           <template v-slot:cell(actions)="{item}">
             <b-button-group>
               <b-button variant="primary" @click="editeCar(item)">
@@ -31,6 +65,19 @@
             {{ item.actif ? 'Oui' : 'Non' }}
           </template>
         </b-table>
+        <div class="container-fluid d-md-none">
+          <div class="row justify-content-end">
+            <div class="col-12 col-md-4 mt-3 mb-3">
+              <b-pagination
+                v-model="currentPage"
+                :total-rows="totalRows"
+                :per-page="perPage"
+                size="md"
+                class="my-0 justify-content-end"
+              ></b-pagination>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -45,8 +92,9 @@
       header-bg-variant="light"
       body-bg-variant="light"
       footer-bg-variant="light"
-      @hidden="resetModal"
+      @hidden="resetModalCar"
       @ok="okCar"
+      centered
     >
       <form ref="form" @submit.stop.prevent="submitCar">
         <b-form-group
@@ -117,7 +165,7 @@
 
 <script>
   export default {
-    name: 'CarPark',
+    name: 'ParkCar',
     data() {
       return {
         form: {
@@ -195,8 +243,26 @@
           { id: 3, numero_matricule: 'AA-999-AA', modele_voiture: 'peugeot', nb_places: 5, nb_portes: 6, type_carburant: 'hybride', actif: true },
           { id: 4, numero_matricule: 'AA-999-AA', modele_voiture: 'peugeot', nb_places: 2, nb_portes: 3, type_carburant: 'diesel', actif: true },
           { id: 5, numero_matricule: 'AA-999-AA', modele_voiture: 'peugeot', nb_places: 4, nb_portes: 5, type_carburant: 'electrique', actif: false },
-        ]
+          { id: 6, numero_matricule: 'AA-999-AA', modele_voiture: 'peugeot', nb_places: 4, nb_portes: 5, type_carburant: 'electrique', actif: false },
+          { id: 7, numero_matricule: 'AA-999-AA', modele_voiture: 'peugeot', nb_places: 4, nb_portes: 5, type_carburant: 'electrique', actif: false },
+          { id: 8, numero_matricule: 'AA-999-AA', modele_voiture: 'peugeot', nb_places: 4, nb_portes: 5, type_carburant: 'electrique', actif: false },
+          { id: 9, numero_matricule: 'AA-999-AA', modele_voiture: 'peugeot', nb_places: 4, nb_portes: 5, type_carburant: 'electrique', actif: false },
+          { id: 10, numero_matricule: 'AA-999-AA', modele_voiture: 'peugeot', nb_places: 4, nb_portes: 5, type_carburant: 'electrique', actif: false },
+          { id: 11, numero_matricule: 'AA-999-AA', modele_voiture: 'peugeot', nb_places: 4, nb_portes: 5, type_carburant: 'electrique', actif: false },
+          { id: 12, numero_matricule: 'AA-999-AA', modele_voiture: 'peugeot', nb_places: 4, nb_portes: 5, type_carburant: 'electrique', actif: false },
+          { id: 13, numero_matricule: 'AA-999-AA', modele_voiture: 'peugeot', nb_places: 4, nb_portes: 5, type_carburant: 'electrique', actif: false },
+          { id: 14, numero_matricule: 'AA-999-AA', modele_voiture: 'peugeot', nb_places: 4, nb_portes: 5, type_carburant: 'toto', actif: false },
+          { id: 15, numero_matricule: 'AA-999-AA', modele_voiture: 'peugeot', nb_places: 4, nb_portes: 5, type_carburant: 'electrique', actif: false },
+          { id: 16, numero_matricule: 'AA-999-AA', modele_voiture: 'peugeot', nb_places: 4, nb_portes: 5, type_carburant: 'electrique', actif: false },
+        ],
+        totalRows: 1,
+        currentPage: 1,
+        perPage: 10,
+        filterCar: null,
        }
+    },
+    mounted() {
+      this.totalRows = this.items.length
     },
     methods: {
       okCar(bvModalEvt) {
@@ -209,7 +275,7 @@
           this.$bvModal.hide('modal-car')
         })
       },
-      resetModal() {
+      resetModalCar() {
           this.form.numero_matricule = '';
           this.form.modele_voiture = '';
           this.form.nb_places = '';
@@ -238,6 +304,7 @@
           cancelTitle: 'Annuler',
           footerClass: 'p-2',
           hideHeaderClose: false,
+          centered: true
         })
         .then(value => {
           console.log(value);
