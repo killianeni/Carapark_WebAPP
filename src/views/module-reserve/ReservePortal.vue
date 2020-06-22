@@ -1,12 +1,12 @@
 <template>
-  <div class="user-page container-custom">
+  <div class="reserve-portal-page container-custom">
 
   </div>
 </template>
 
 <script>
   export default {
-    name: 'User'
+    name: 'ReservePortal'
   };
 </script>
 
