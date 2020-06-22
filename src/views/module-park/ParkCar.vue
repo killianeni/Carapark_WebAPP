@@ -27,7 +27,7 @@
                   placeholder="Rechercher"
                 ></b-form-input>
                 <b-input-group-append>
-                  <b-button  variant="primary" :disabled="!filterCar" @click="filterCar = ''">Clear</b-button>
+                  <b-button  variant="primary" :disabled="!filterCar" @click="filterCar = ''">Effacer</b-button>
                 </b-input-group-append>
               </b-input-group>
             </div>
