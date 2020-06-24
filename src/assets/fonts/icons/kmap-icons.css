@@ -2,9 +2,9 @@
   font-family: 'kmap-icons';
   font-style: normal;
   font-weight: 400;
-  src: url("kmap-icons.eot?d6b5746ee25c5f343f7f000493cf5a41?#iefix") format("embedded-opentype"),
-url("kmap-icons.woff2?d6b5746ee25c5f343f7f000493cf5a41") format("woff2"),
-url("kmap-icons.woff?d6b5746ee25c5f343f7f000493cf5a41") format("woff");
+  src: url("kmap-icons.eot?99c833fc483c882adeb8660336f2d661?#iefix") format("embedded-opentype"),
+url("kmap-icons.woff2?99c833fc483c882adeb8660336f2d661") format("woff2"),
+url("kmap-icons.woff?99c833fc483c882adeb8660336f2d661") format("woff");
 }
 
 .kmap-icons, .icon-icons {
@@ -57,8 +57,9 @@ url("kmap-icons.woff?d6b5746ee25c5f343f7f000493cf5a41") format("woff");
 .icon-edit:before { content: "\f106"; }
 .icon-false:before { content: "\f107"; }
 .icon-module:before { content: "\f108"; }
-.icon-refresh:before { content: "\f109"; }
-.icon-reservation:before { content: "\f10a"; }
-.icon-see:before { content: "\f10b"; }
-.icon-true:before { content: "\f10c"; }
-.icon-users:before { content: "\f10d"; }
+.icon-next:before { content: "\f109"; }
+.icon-refresh:before { content: "\f10a"; }
+.icon-reservation:before { content: "\f10b"; }
+.icon-see:before { content: "\f10c"; }
+.icon-true:before { content: "\f10d"; }
+.icon-users:before { content: "\f10e"; }

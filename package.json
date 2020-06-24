@@ -17,6 +17,7 @@
     "core-js": "^3.6.5",
     "follow-redirects": "^1.12.1",
     "fontagon": "^1.0.10",
+    "moment": "^2.27.0",
     "vue": "^2.6.11",
     "vue-router": "^3.3.4",
     "vuex": "^3.4.0",
