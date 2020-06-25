@@ -5,7 +5,6 @@ import {
   AUTH_LOGOUT
 } from '../actions/auth';
 import {USER_REQUEST} from '../actions/user';
-import apiCall from '../../utils/api';
 import {api} from '../../config';
 
 const state = {
@@ -20,29 +19,23 @@ const getters = {
 };
 
 const actions = {
-  [AUTH_REQUEST]: ({commit, dispatch}, user) => {
-    return new Promise((resolve, reject) => {
-      commit(AUTH_REQUEST);
-      api.url('/api/token').post({
-        "Mail":user.username,
-        "Password":user.password
-      });
-      apiCall({url: 'auth', data: user, method: 'POST'})
-        .then(resp => {
-          localStorage.setItem('user-token', resp.token);
-          // Here set the header of your ajax library to the token value.
-          // example with axios
-          // axios.defaults.headers.common['Authorization'] = resp.token
-          commit(AUTH_SUCCESS, resp);
-          dispatch(USER_REQUEST);
-          resolve(resp);
-        })
-        .catch(err => {
-          commit(AUTH_ERROR, err);
-          localStorage.removeItem('user-token');
-          reject(err);
-        });
-    });
+  [AUTH_REQUEST]: async ({commit, dispatch}, user) => {
+    commit(AUTH_REQUEST);
+    const body = {
+      "Mail": user.username,
+      "Password": user.password
+    };
+    try {
+      const token = await api.url('/api/token')
+        .headers({"Content-Type": "application/json", Accept: "application/json"})
+        .post(body).json();
+      localStorage.setItem('user-token', token);
+      commit(AUTH_SUCCESS, token);
+      dispatch(USER_REQUEST, {user});
+    } catch (err) {
+      commit(AUTH_ERROR, err);
+      localStorage.removeItem('user-token');
+    }
   },
   [AUTH_LOGOUT]: ({commit}) => {
     return new Promise(resolve => {
@@ -59,7 +52,7 @@ const mutations = {
   },
   [AUTH_SUCCESS]: (state, resp) => {
     state.status = 'success';
-    state.token = resp.token;
+    state.token = resp;
     state.hasLoadedOnce = true;
   },
   [AUTH_ERROR]: state => {
