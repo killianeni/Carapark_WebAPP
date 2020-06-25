@@ -1,4 +1,4 @@
-header {
+header.header {
   height: 60px;
 
   .menu-header {
@@ -202,9 +202,10 @@ header {
   }
 
 }
+
 @media screen and (min-width: 1280px) {
 
-  header {
+  header.header {
     .menu-header {
       padding-left: 170px;
       .container-navbar-toggle {

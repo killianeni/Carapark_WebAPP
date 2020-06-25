@@ -8,40 +8,41 @@
               <b-button variant="primary" class="rounded-circle" @click="subtractMonth">
                 <i class="kmap-icons icon-back"></i>
               </b-button>
-              <h3 class="month-title">{{month + ' - ' + year}}</h3>
+              <h3 class="month-title">{{ month + ' - ' + year }}</h3>
               <b-button variant="primary" class="rounded-circle" @click="addMonth">
                 <i class="kmap-icons icon-next"></i>
               </b-button>
             </div>
             <div class="weekdays">
               <div class="day" v-for="(day, indexDay) in days" v-bind:key="indexDay">
-                <p>{{day}}</p>
+                <p>{{ day }}</p>
               </div>
             </div>
             <div class="dates">
               <div class="date"
                    v-for="(blank,indexBlank) in firstDayOfMonth" v-bind:key="indexBlank + '_key'"
-                   :class="{ 'date-disable' : blank}"
+                   :class="{ 'date-disable' : blank }"
               >
               </div>
-              <div class="date" v-for="(date) in daysInMonth" v-bind:key="date">
-                <span class="date-number"
+              <div class="date" v-for="(date) in daysInMonthNoWeekend()" v-bind:key="date">
+                <span class="container-date-number"
                       :class="{ 'current-day' : date === initialDate && month === initialMonth && year === initialYear }">
-                  {{date}}
+                  <span class="date-number">
+                    {{ date }}  <span class="day"> - {{ dateContext.date(date).format('dd') }}</span>
+                  </span>
                 </span>
                 <div class="container-reservation">
                   <span class="date-reserve date-am"
                         @click="listReservation(dateContext.date(date).format('YYYYMMDD'),'AM')"
                         v-if="reservationAm(date).length"
                         :class="checkSize(reservationAm(date).length)">
-                    Réservations AM - {{ reservationAm(date).length }}/{{ maxVoitureSite }}
+                    AM - {{ reservationAm(date).length }}/{{ maxVoitureSite }}
                   </span>
                   <span class="date-reserve date-pm"
-                        :data-element-date="dateContext.date(date).format('DD/MM/YYYY')"
-                        data-reserve-time="PM"
+                        @click="listReservation(dateContext.date(date).format('YYYYMMDD'),'PM')"
                         v-if="reservationPm(date).length"
                         :class="checkSize(reservationPm(date).length)">
-                    Réservations PM - {{ reservationPm(date).length }}/{{ maxVoitureSite }}
+                    PM - {{ reservationPm(date).length }}/{{ maxVoitureSite }}
                   </span>
                 </div>
               </div>
@@ -50,8 +51,8 @@
         </div>
         <b-modal
           id="modal-list-reservation"
-          ref="modal"
-          title="Liste des réservations"
+          ref="modal-list-reservation"
+          :title="currentListTitle"
           cancel-title="Annuler"
           ok-title="Valider"
           cancel-variant="danger"
@@ -67,9 +68,16 @@
         >
           <div class="list-reservation">
             <b-list-group>
-              <b-list-group-item v-for="reserve in currentListReserve" v-bind:key="reserve.id" v-b-modal.modal-reservation>
-                {{reserve.nom}}
-                {{reserve.prenom}}
+              <b-list-group-item
+                v-for="reserve in currentListReserve" v-bind:key="reserve.id"
+                v-b-modal.modal-reservation>
+                <div class="full-name">
+                  {{ reserve.nom }}
+                  {{ reserve.prenom }}
+                </div>
+                <span class="look">
+                  <i class="kmap-icons icon-see"></i>
+                </span>
               </b-list-group-item>
             </b-list-group>
           </div>
@@ -78,7 +86,13 @@
         <b-modal
           id="modal-reservation"
           title="Réservation"
-          ok-only
+          header-bg-variant="light"
+          body-bg-variant="light"
+          footer-bg-variant="light"
+          cancel-title="Annuler"
+          ok-title="Valider"
+          cancel-variant="danger"
+          ok-variant="primary"
         >
           <p class="my-2">First Modal</p>
           <b-button v-b-modal.modal-multi-2>Open Second Modal</b-button>
@@ -108,17 +122,18 @@
       return {
         today: moment(),
         dateContext: moment(),
-        days: ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'],
+        days: ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi'],
         maxVoitureSite: 8,
+        currentListTitle: '',
         currentListReserve: [],
         reservations: [
           {
             id: 1,
-            date: moment("20200603", "YYYYMMDD"),
-            dateEnd: moment("20200603", "YYYYMMDD"),
+            date: moment('20200603', 'YYYYMMDD'),
+            dateEnd: moment('20200603', 'YYYYMMDD'),
             reserveTime: 'AM',
-            nom: "Michel",
-            prenom: "Toto",
+            nom: 'Michel',
+            prenom: 'Toto',
             idUtilisateur: 1,
             vehicule: Object,
             list_personne: Object,
@@ -127,11 +142,11 @@
           },
           {
             id: 2,
-            date: moment("20200603", "YYYYMMDD"),
-            dateEnd: moment("20200603", "YYYYMMDD"),
+            date: moment('20200603', 'YYYYMMDD'),
+            dateEnd: moment('20200603', 'YYYYMMDD'),
             reserveTime: 'AM',
-            nom: "Thomas",
-            prenom: "Tata",
+            nom: 'Thomas',
+            prenom: 'Tata',
             idUtilisateur: 1,
             vehicule: Object,
             list_personne: Object,
@@ -140,11 +155,11 @@
           },
           {
             id: 3,
-            date: moment("20200603", "YYYYMMDD"),
-            dateEnd: moment("20200603", "YYYYMMDD"),
+            date: moment('20200603', 'YYYYMMDD'),
+            dateEnd: moment('20200603', 'YYYYMMDD'),
             reserveTime: 'PM',
-            nom: "Dany",
-            prenom: "Bane",
+            nom: 'Dany',
+            prenom: 'Bane',
             idUtilisateur: 1,
             vehicule: Object,
             list_personne: Object,
@@ -153,24 +168,11 @@
           },
           {
             id: 4,
-            date: moment("20200603", "YYYYMMDD"),
-            dateEnd: moment("20200603", "YYYYMMDD"),
+            date: moment('20200603', 'YYYYMMDD'),
+            dateEnd: moment('20200603', 'YYYYMMDD'),
             reserveTime: 'AM',
-            nom: "Micky",
-            prenom: "Tino",
-            idUtilisateur: 1,
-            vehicule: Object,
-            list_personne: Object,
-            site_destination: Object,
-            description: String
-          },
-          {
-            id: 4,
-            date: moment("20200603", "YYYYMMDD"),
-            dateEnd: moment("20200603", "YYYYMMDD"),
-            reserveTime: 'AM',
-            nom: "Micky",
-            prenom: "Tino",
+            nom: 'Micky',
+            prenom: 'Tino',
             idUtilisateur: 1,
             vehicule: Object,
             list_personne: Object,
@@ -179,11 +181,11 @@
           },
           {
             id: 5,
-            date: moment("20200610", "YYYYMMDD"),
-            dateEnd: moment("20200610", "YYYYMMDD"),
+            date: moment('20200610', 'YYYYMMDD'),
+            dateEnd: moment('20200610', 'YYYYMMDD'),
             reserveTime: 'AM',
-            nom: "Argentina",
-            prenom: "Mirel",
+            nom: 'Argentina',
+            prenom: 'Mirel',
             idUtilisateur: 1,
             vehicule: Object,
             list_personne: Object,
@@ -192,11 +194,11 @@
           },
           {
             id: 6,
-            date: moment("20200610", "YYYYMMDD"),
-            dateEnd: moment("20200610", "YYYYMMDD"),
+            date: moment('20200610', 'YYYYMMDD'),
+            dateEnd: moment('20200610', 'YYYYMMDD'),
             reserveTime: 'AM',
-            nom: "Argentina",
-            prenom: "Mirel",
+            nom: 'Argentina',
+            prenom: 'Mirel',
             idUtilisateur: 1,
             vehicule: Object,
             list_personne: Object,
@@ -205,11 +207,11 @@
           },
           {
             id: 7,
-            date: moment("20200610", "YYYYMMDD"),
-            dateEnd: moment("20200610", "YYYYMMDD"),
+            date: moment('20200610', 'YYYYMMDD'),
+            dateEnd: moment('20200610', 'YYYYMMDD'),
             reserveTime: 'AM',
-            nom: "Argentina",
-            prenom: "Mirel",
+            nom: 'Argentina',
+            prenom: 'Mirel',
             idUtilisateur: 1,
             vehicule: Object,
             list_personne: Object,
@@ -218,11 +220,11 @@
           },
           {
             id: 8,
-            date: moment("20200610", "YYYYMMDD"),
-            dateEnd: moment("20200610", "YYYYMMDD"),
+            date: moment('20200610', 'YYYYMMDD'),
+            dateEnd: moment('20200610', 'YYYYMMDD'),
             reserveTime: 'AM',
-            nom: "Argentina",
-            prenom: "Mirel",
+            nom: 'Argentina',
+            prenom: 'Mirel',
             idUtilisateur: 1,
             vehicule: Object,
             list_personne: Object,
@@ -231,11 +233,11 @@
           },
           {
             id: 9,
-            date: moment("20200610", "YYYYMMDD"),
-            dateEnd: moment("20200610", "YYYYMMDD"),
+            date: moment('20200610', 'YYYYMMDD'),
+            dateEnd: moment('20200610', 'YYYYMMDD'),
             reserveTime: 'AM',
-            nom: "Argentina",
-            prenom: "Mirel",
+            nom: 'Argentina',
+            prenom: 'Mirel',
             idUtilisateur: 1,
             vehicule: Object,
             list_personne: Object,
@@ -244,11 +246,11 @@
           },
           {
             id: 10,
-            date: moment("20200610", "YYYYMMDD"),
-            dateEnd: moment("20200610", "YYYYMMDD"),
+            date: moment('20200610', 'YYYYMMDD'),
+            dateEnd: moment('20200610', 'YYYYMMDD'),
             reserveTime: 'AM',
-            nom: "Argentina",
-            prenom: "Mirel",
+            nom: 'Argentina',
+            prenom: 'Mirel',
             idUtilisateur: 1,
             vehicule: Object,
             list_personne: Object,
@@ -257,11 +259,11 @@
           },
           {
             id: 11,
-            date: moment("20200610", "YYYYMMDD"),
-            dateEnd: moment("20200610", "YYYYMMDD"),
+            date: moment('20200610', 'YYYYMMDD'),
+            dateEnd: moment('20200610', 'YYYYMMDD'),
             reserveTime: 'AM',
-            nom: "Argentina",
-            prenom: "Mirel",
+            nom: 'Argentina',
+            prenom: 'Mirel',
             idUtilisateur: 1,
             vehicule: Object,
             list_personne: Object,
@@ -270,11 +272,11 @@
           },
           {
             id: 12,
-            date: moment("20200603", "YYYYMMDD"),
-            dateEnd: moment("20200603", "YYYYMMDD"),
+            date: moment('20200603', 'YYYYMMDD'),
+            dateEnd: moment('20200603', 'YYYYMMDD'),
             reserveTime: 'AM',
-            nom: "Micky",
-            prenom: "Tino",
+            nom: 'Micky',
+            prenom: 'Tino',
             idUtilisateur: 1,
             vehicule: Object,
             list_personne: Object,
@@ -283,11 +285,24 @@
           },
           {
             id: 13,
-            date: moment("20200603", "YYYYMMDD"),
-            dateEnd: moment("20200603", "YYYYMMDD"),
+            date: moment('20200603', 'YYYYMMDD'),
+            dateEnd: moment('20200603', 'YYYYMMDD'),
             reserveTime: 'AM',
-            nom: "Micky",
-            prenom: "Tino",
+            nom: 'Micky',
+            prenom: 'Tino',
+            idUtilisateur: 1,
+            vehicule: Object,
+            list_personne: Object,
+            site_destination: Object,
+            description: String
+          },
+          {
+            id: 14,
+            date: moment('20200603', 'YYYYMMDD'),
+            dateEnd: moment('20200603', 'YYYYMMDD'),
+            reserveTime: 'AM',
+            nom: 'Micky',
+            prenom: 'Tino',
             idUtilisateur: 1,
             vehicule: Object,
             list_personne: Object,
@@ -312,8 +327,11 @@
         return this.dateContext.get('date');
       },
       firstDayOfMonth() {
-        let startOfMonth = this.dateContext.startOf('month');
-        return startOfMonth.weekday();
+        let startDay = this.dateContext.startOf('month').weekday();
+        if(startDay > 0) {
+          startDay -= 1;
+        }
+        return startDay;
       },
       initialDate() {
         return this.today.get('date');
@@ -331,6 +349,19 @@
       },
       subtractMonth() {
         this.dateContext = moment(this.dateContext).subtract(1, 'month');
+      },
+      daysInMonthNoWeekend() {
+        let dayArray = new Array(this.dateContext.daysInMonth());
+        let currentDays = [];
+        for (let i = 0; i < dayArray.length; i++) {
+          let d = i + 1;
+          if (this.dateContext.date(d).format('dd') !== 'S'
+            && this.dateContext.date(d).format('dd') !== 'D') {
+            currentDays.push(d);
+          }
+        }
+        console.log(currentDays);
+        return currentDays;
       },
       checkSize(size) {
         let reserveSize = (size / this.maxVoitureSite) * 100;
@@ -367,16 +398,18 @@
         })
       },
       listReservation(thisDate, thisReserveTime) {
-
         this.reservations.filter((reserve) => {
           if (reserve.date.format('YYYYMMDD') === thisDate
             && reserve.reserveTime === thisReserveTime) {
             this.currentListReserve.push(reserve);
           }
         });
+        let time = moment(thisDate).format('DD/MM/YYYY');
+        this.currentListTitle = 'Liste des réservations du ' + time + ' - ' + thisReserveTime;
         this.$bvModal.show('modal-list-reservation')
       },
       resetListReservation() {
+        this.currentListTitle = '';
         this.currentListReserve = [];
       }
     }
@@ -391,6 +424,8 @@
       .month {
         display: flex;
         align-items: center;
+        justify-content: center;
+        margin: 20px 0;
 
         .month-title {
           text-transform: uppercase;
@@ -400,29 +435,14 @@
       }
 
       .weekdays {
-        display: flex;
-        flex-wrap: wrap;
-
-        .day {
-          width: calc((100% / 7) - 10px);
-          margin: 10px 10px 10px 0;
-
-          p {
-            text-transform: uppercase;
-            font-weight: bold;
-            margin: 0;
-          }
-        }
+        display: none;
       }
 
       .dates {
-        display: flex;
-        flex-wrap: wrap;
-
         .date {
           position: relative;
-          width: calc((100% / 7) - 10px);
-          height: 150px;
+          width: 100%;
+          min-height: 50px;
           border: 1px solid $colorDark;
           background-color: $colorGrey;
           margin-bottom: 10px;
@@ -430,14 +450,28 @@
           box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.75);
           overflow-y: hidden;
 
-          .date-number {
+          .container-date-number {
             position: absolute;
             top: 5px;
             left: 5px;
             font-weight: bold;
+            width: 60px;
+            height: 25px;
+            border-radius: 10px;
+            background-color: $colorBlue;
+            color: $colorWhite;
 
             &.current-day {
-              color: $colorOrange;
+              background-color: $colorGreen;
+            }
+
+            .date-number {
+              position: absolute;
+              width: 100%;
+              text-align: center;
+              top: 50%;
+              left: 50%;
+              transform: translate(-50%, -50%);
             }
           }
 
@@ -455,6 +489,7 @@
               text-align: center;
               transition: background-color 1s;
               outline: none;
+              cursor: pointer;
 
               &.date-color-50 {
                 background-color: $colorGreen;
@@ -482,10 +517,78 @@
     .list-reservation {
       .list-group {
         .list-group-item {
-          color: $colorWhite;
-          background-color: rgba(54, 70, 82, 0.8);
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+
+          .look {
+            position: relative;
+            background-color: $colorBlue;
+            color: $colorWhite;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+
+            .icon-see {
+              position: absolute;
+              top: 50%;
+              left: 50%;
+              transform: translate(-50%, -50%);
+            }
+          }
         }
       }
     }
+  }
+
+  @media screen and (min-width: 720px) {
+
+    .dashboard-page {
+      .calendar {
+
+        .month {
+          justify-content: left;
+        }
+
+        .weekdays {
+          display: flex;
+          flex-wrap: wrap;
+
+          .day {
+            width: calc((100% / 5) - 10px);
+            margin: 10px 10px 10px 0;
+
+            p {
+              text-transform: uppercase;
+              font-weight: bold;
+              margin: 0;
+            }
+          }
+        }
+
+        .dates {
+          display: flex;
+          flex-wrap: wrap;
+
+          .date {
+            width: calc((100% / 5) - 10px);
+            min-height: 150px;
+
+            .container-date-number {
+              width: 25px;
+              height: 25px;
+              border-radius: 50%;
+
+              .date-number {
+                .day {
+                  display: none;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
   }
 </style>
