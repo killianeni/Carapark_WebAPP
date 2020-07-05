@@ -9,9 +9,13 @@
     ok-title="Valider"
     cancel-variant="danger"
     ok-variant="primary"
-    @hidden="resetReserve"
+    @hidden="resetModalReserve"
+    @ok="okModalReserve"
   >
-    <form ref="formReservation" class="user-reservation">
+    <form
+      ref="formReservation"
+      class="user-reservation"
+      @submit.stop.prevent="submitModalReserve">
       <b-form-group
         label="Date"
         label-for="reserve-dateStart"
@@ -21,17 +25,26 @@
           <b-form-input
             id="reserve-dateStart"
             v-model="formReservation.dateStart"
+            readonly
             required
           ></b-form-input>
           <b-input-group-append>
             <b-form-datepicker
               :date-format-options="{ year: 'numeric', month: 'numeric', day: 'numeric' }"
               aria-controls="reserve-dateStart"
+              :initial-date="initialDateStart"
               button-only
               right
               locale="fr"
               @context="onContextDateStart"
-            ></b-form-datepicker>
+              :date-disabled-fn="dateDisabled"
+              @shown="shown"
+              selected-variant="success"
+              today-variant="danger"
+              button-variant="primary"
+              hide-header
+            >
+            </b-form-datepicker>
           </b-input-group-append>
         </b-input-group>
         <b-form-select
@@ -59,16 +72,23 @@
           <b-form-input
             id="reserve-dateEnd"
             v-model="formReservation.dateEnd"
+            readonly
             required
           ></b-form-input>
           <b-input-group-append>
             <b-form-datepicker
               :date-format-options="{ year: 'numeric', month: 'numeric', day: 'numeric' }"
               aria-controls="reserve-dateEnd"
+              :initial-date="initialDateEnd"
               button-only
               right
               locale="fr"
               @context="onContextDateEnd"
+              :date-disabled-fn="dateDisabled"
+              selected-variant="success"
+              today-variant="danger"
+              button-variant="primary"
+              hide-header
             ></b-form-datepicker>
           </b-input-group-append>
         </b-input-group>
@@ -161,5 +181,5 @@
   </b-modal>
 </template>
 
-<script lang="js" src="./AppReservation.js"></script>
+<script type="application/javascript" src="./AppReservation.js"></script>
 <style src="vue-multiselect/dist/vue-multiselect.min.css"></style>

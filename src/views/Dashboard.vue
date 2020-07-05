@@ -356,7 +356,7 @@
         });
       },
       editReserveModal(reserve) {
-        this.$refs.formReservation.editReserve(reserve);
+        this.$refs.formReservation.editModalReserve(reserve);
       }
     },
     mounted() {
