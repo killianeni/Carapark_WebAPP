@@ -2,9 +2,9 @@
   font-family: 'kmap-icons';
   font-style: normal;
   font-weight: 400;
-  src: url("kmap-icons.eot?d6b5746ee25c5f343f7f000493cf5a41?#iefix") format("embedded-opentype"),
-url("kmap-icons.woff2?d6b5746ee25c5f343f7f000493cf5a41") format("woff2"),
-url("kmap-icons.woff?d6b5746ee25c5f343f7f000493cf5a41") format("woff");
+  src: url("kmap-icons.eot?6eec7740b8d0d0bd54c010e2229dff9a?#iefix") format("embedded-opentype"),
+url("kmap-icons.woff2?6eec7740b8d0d0bd54c010e2229dff9a") format("woff2"),
+url("kmap-icons.woff?6eec7740b8d0d0bd54c010e2229dff9a") format("woff");
 }
 
 .kmap-icons, .icon-icons {
@@ -55,10 +55,13 @@ url("kmap-icons.woff?d6b5746ee25c5f343f7f000493cf5a41") format("woff");
 .icon-dashboard:before { content: "\f104"; }
 .icon-delete:before { content: "\f105"; }
 .icon-edit:before { content: "\f106"; }
-.icon-false:before { content: "\f107"; }
-.icon-module:before { content: "\f108"; }
-.icon-refresh:before { content: "\f109"; }
-.icon-reservation:before { content: "\f10a"; }
-.icon-see:before { content: "\f10b"; }
-.icon-true:before { content: "\f10c"; }
-.icon-users:before { content: "\f10d"; }
+.icon-endFlag:before { content: "\f107"; }
+.icon-false:before { content: "\f108"; }
+.icon-module:before { content: "\f109"; }
+.icon-next:before { content: "\f10a"; }
+.icon-refresh:before { content: "\f10b"; }
+.icon-reservation:before { content: "\f10c"; }
+.icon-see:before { content: "\f10d"; }
+.icon-startFlag:before { content: "\f10e"; }
+.icon-true:before { content: "\f10f"; }
+.icon-users:before { content: "\f110"; }

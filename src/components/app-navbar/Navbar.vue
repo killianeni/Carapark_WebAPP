@@ -1,5 +1,5 @@
 <template>
-  <header>
+  <header class="header">
     <div class="menu-header">
       <div class="container-navbar-toggle">
         <button class="navbar-toggler"
