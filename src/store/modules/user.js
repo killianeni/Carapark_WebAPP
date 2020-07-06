@@ -1,27 +1,30 @@
-import { USER_REQUEST, USER_ERROR, USER_SUCCESS } from '../actions/user';
-import apiCall from '../../utils/api';
+import {USER_REQUEST, USER_ERROR, USER_SUCCESS} from '../actions/user';
 import Vue from 'vue';
-import { AUTH_LOGOUT } from '../actions/auth';
+import {AUTH_LOGOUT} from '../actions/auth';
+import {api} from "../../config";
 
-const state = { status: '', profile: {} };
+const state = {status: '', profile: {}};
 
 const getters = {
   getProfile: state => state.profile,
-  isProfileLoaded: state => !!state.profile.name
+  isProfileLoaded: state => !!state.profile.id
 };
 
 const actions = {
-  [USER_REQUEST]: ({ commit, dispatch }) => {
+  [USER_REQUEST]: async ({commit, dispatch}, data) => {
     commit(USER_REQUEST);
-    apiCall({ url: 'user/me' })
-      .then(resp => {
-        commit(USER_SUCCESS, resp);
-      })
-      .catch(() => {
-        commit(USER_ERROR);
-        // if resp is unauthorized, logout, to
-        dispatch(AUTH_LOGOUT);
-      });
+    try {
+      const token = localStorage.getItem('user-token');
+      const users = await api.url('/api/utilisateurs')
+        .headers({"Authorization": "Bearer " +  token})
+        .get()
+        .json();
+      const userLogged = users.find(user => user.mail === data.user.username);
+      commit(USER_SUCCESS, userLogged);
+    } catch (err) {
+      commit(USER_ERROR);
+      dispatch(AUTH_LOGOUT);
+    }
   }
 };
 

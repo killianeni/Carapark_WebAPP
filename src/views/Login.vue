@@ -72,9 +72,8 @@
         //   console.log(hash);
         // });
         const {username, password} = this;
-        this.$store.dispatch(AUTH_REQUEST, {username, password}).then(() => {
-          this.$router.push('/')
-        })
+        await this.$store.dispatch(AUTH_REQUEST, {username, password});
+        this.$router.push('/')
       }
     }
   };
