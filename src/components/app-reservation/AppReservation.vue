@@ -135,8 +135,8 @@
           placeholder="Rechercher un utilisateur"
           label="name"
           track-by="nom"
-          deselectLabel="Cliquez pour supprimer"
-          selectLabel="Cliquez pour sélectionner"
+          deselectLabel="Supprimer"
+          selectLabel="Sélectionner"
           selectedLabel="Sélectionné"
           :options="passagersOptions"
           :multiple="true"
@@ -182,4 +182,5 @@
 </template>
 
 <script type="application/javascript" src="./AppReservation.js"></script>
+<style lang="scss" src="./AppReservation.scss" rel="stylesheet"></style>
 <style src="vue-multiselect/dist/vue-multiselect.min.css"></style>

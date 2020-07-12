@@ -7,6 +7,7 @@ import ParkPortal from '../views/module-park/ParkPortal.vue';
 import ParkCar from '../views/module-park/ParkCar.vue';
 import ReservePortal from '../views/module-reserve/ReservePortal.vue';
 import ReserveSite from '../views/module-reserve/ReserveSite.vue';
+import ReserveListUser from '../views/module-reserve/ReserveListUser.vue';
 import UserPortal from '../views/module-user/UserPortal.vue';
 import UserList from '../views/module-user/UserList.vue';
 import store from '../store';
@@ -67,6 +68,15 @@ const routes = [
     component: ParkCar,
     meta: {
       title: 'Voitures du site :',
+    },
+    beforeEnter: ifAuthenticated
+  },
+  {
+    path: '/reserve-list-user',
+    name: 'ReserveListUser',
+    component: ReserveListUser,
+    meta: {
+      title: 'Mes Réservations',
     },
     beforeEnter: ifAuthenticated
   },

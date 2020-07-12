@@ -44,6 +44,13 @@
               </router-link>
             </li>
             <li>
+              <router-link :to="{ name: 'ReserveListUser' }" class="nav-module-item"
+                           v-bind:class="[$route.name === 'ReserveListUser' ? 'active' : '']">
+                <i class="kmap-icons icon-my-reservation nav-module-item-icon"></i>
+                <span class="nav-module-item-name">Mes Réservations</span>
+              </router-link>
+            </li>
+            <li>
               <router-link :to="{ name: 'ParkPortal' }" class="nav-module-item"
                            v-bind:class="[$route.name === 'ParkPortal' || $route.name === 'ParkCar' ? 'active' : '']">
                 <i class="kmap-icons icon-car-park nav-module-item-icon"></i>

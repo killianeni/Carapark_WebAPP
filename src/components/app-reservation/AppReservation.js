@@ -1,4 +1,4 @@
-//import moment from 'moment';
+import moment from 'moment';
 import Multiselect from 'vue-multiselect';
 
 export default {
@@ -81,17 +81,38 @@ export default {
     editModalReserve(reserve) {
       this.cTitleReserveModal = 'Réservation de ' + reserve.utilisateur.nom + reserve.utilisateur.prenom;
       this.$bvModal.show("modal-reservation");
-      this.initialDateStart = reserve.dateStart.format('YYYY-MM-DD');
-      this.initialDateEnd = reserve.dateEnd.format('YYYY-MM-DD');
-      this.formReservation.dateStart = reserve.dateStart.format('DD/MM/YYYY');
+      this.initialDateStart = moment(reserve.dateStart).format('YYYY-MM-DD');
+      this.initialDateEnd = moment(reserve.dateEnd).format('YYYY-MM-DD');
+      this.formReservation.dateStart = moment(reserve.dateStart).format('DD/MM/YYYY');
       this.formReservation.reserveTimeStart = reserve.reserveTimeStart;
-      this.formReservation.dateEnd = reserve.dateEnd.format('DD/MM/YYYY');
+      this.formReservation.dateEnd = moment(reserve.dateEnd).format('DD/MM/YYYY');
       this.formReservation.reserveTimeEnd = reserve.reserveTimeEnd;
       this.formReservation.idVehicule = reserve.idVehicule;
       this.formReservation.passagers = reserve.passagers;
       this.formReservation.destination = reserve.destination;
       this.formReservation.description = reserve.description;
       console.log(JSON.stringify(reserve));
+    },
+    deleteModalReserve(reserve){
+      this.$bvModal.msgBoxConfirm('Veuillez confirmer que vous souhaitez supprimer cette réservation.', {
+        title: 'Veuillez confirmer',
+        size: 'md',
+        buttonSize: 'md',
+        okVariant: 'primary',
+        cancelVariant: 'danger',
+        okTitle: 'Valider',
+        cancelTitle: 'Annuler',
+        footerClass: 'p-2',
+        hideHeaderClose: false,
+        centered: true
+      })
+        .then(value => {
+          console.log(value);
+          console.log(reserve);
+        })
+        .catch(err => {
+          console.log(err);
+        })
     },
     onContextDateStart(ctxS) {
       if(ctxS.selectedDate != null) {
@@ -104,10 +125,10 @@ export default {
       }
     },
     dateDisabled(ymd, date) {
-      const weekday = date.getDay();
+      //const weekday = date.getDay();
       const day = date.getDate();
       // Exemple
-      return weekday === 0 || weekday === 6 || day === 13;
+      return day === 13;
     },
     shown(){
       console.log("Open");

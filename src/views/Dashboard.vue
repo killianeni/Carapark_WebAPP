@@ -4,16 +4,24 @@
       <div class="dashboard-page container-custom">
         <div class="container-fluid">
           <div class="calendar">
-            <div class="month">
-              <b-button variant="primary" class="rounded-circle" @click="subtractMonth">
-                <i class="kmap-icons icon-back"/>
-              </b-button>
-              <h3 class="month-title">
-                {{ month + ' - ' + year }}
-              </h3>
-              <b-button variant="primary" class="rounded-circle" @click="addMonth">
-                <i class="kmap-icons icon-next"/>
-              </b-button>
+            <div class="calendar-action">
+              <div class="month">
+                <b-button variant="primary" class="rounded-circle" @click="subtractMonth">
+                  <i class="kmap-icons icon-back"/>
+                </b-button>
+                <h3 class="month-title">
+                  {{ month + ' - ' + year }}
+                </h3>
+                <b-button variant="primary" class="rounded-circle" @click="addMonth">
+                  <i class="kmap-icons icon-next"/>
+                </b-button>
+              </div>
+              <div class="action">
+                <b-button variant="primary" v-b-modal.modal-reservation>
+                  <i class="kmap-icons icon-add mr-2"></i>
+                  Ajouter une réservation
+                </b-button>
+              </div>
             </div>
             <div class="weekdays">
               <div class="day" v-for="(day, indexDay) in days" v-bind:key="indexDay">
@@ -79,7 +87,7 @@
                     {{ reserve.id }} {{ reserve.utilisateur.nom }} {{ reserve.utilisateur.prenom }}
                   </h5>
                   <span class="look">
-                    <i class="kmap-icons icon-see" />
+                    <i class="kmap-icons icon-see"/>
                   </span>
                 </div>
                 <div class="targetReserve">
@@ -133,9 +141,9 @@
         reservations: [
           {
             id: 1,
-            dateStart: moment('20200701', 'YYYYMMDD'),
+            dateStart: '20200701',
             reserveTimeStart: 'AM',
-            dateEnd: moment('20200705', 'YYYYMMDD'),
+            dateEnd: '20200705',
             reserveTimeEnd: 'PM',
             utilisateur: {
               id: 1,
@@ -157,9 +165,9 @@
           },
           {
             id: 2,
-            dateStart: moment('20200702', 'YYYYMMDD'),
+            dateStart: '20200702',
             reserveTimeStart: 'AM',
-            dateEnd: moment('20200703', 'YYYYMMDD'),
+            dateEnd: '20200703',
             reserveTimeEnd: 'PM',
             utilisateur: {
               id: 1,
@@ -182,9 +190,9 @@
           },
           {
             id: 3,
-            dateStart: moment('20200703', 'YYYYMMDD'),
+            dateStart: '20200703',
             reserveTimeStart: 'AM',
-            dateEnd: moment('20200705', 'YYYYMMDD'),
+            dateEnd: '20200705',
             reserveTimeEnd: 'AM',
             utilisateur: {
               id: 1,
@@ -293,9 +301,9 @@
       },
       initPushDataReserve() {
         this.reservations.forEach((r) => {
-          if (r.dateStart.format('YYYYMMDD') !== r.dateEnd.format('YYYYMMDD')) {
+          if (moment(r.dateStart).format('YYYYMMDD') !== moment(r.dateEnd).format('YYYYMMDD') && r.status !== 3) {
             this.cListReservations.find(function (e) {
-              if (e.date === r.dateStart.format('YYYYMMDD')) {
+              if (e.date === moment(r.dateStart).format('YYYYMMDD')) {
                 if (r.reserveTimeStart === 'AM') {
                   e.AM += 1;
                   e.PM += 1;
@@ -305,7 +313,7 @@
                   e.PM += 1;
                   e.idReservePM.push(r.id);
                 }
-              } else if (e.date === r.dateEnd.format('YYYYMMDD')) {
+              } else if (e.date === moment(r.dateEnd).format('YYYYMMDD')) {
                 if (r.reserveTimeEnd === 'AM') {
                   e.AM += 1;
                   e.idReserveAM.push(r.id);
@@ -317,9 +325,8 @@
                 }
               }
             });
-
             // Nombre de jours de différent entre la date de début et de fin
-            let nbDaysDiff = r.dateEnd.diff(r.dateStart, 'days');
+            let nbDaysDiff = moment(r.dateEnd).diff(moment(r.dateStart), 'days');
 
             for (let d = 1; d < nbDaysDiff; d++) {
               let m = moment(r.dateStart).add(d, 'day');
@@ -332,10 +339,10 @@
                 }
               });
             }
-
-          } else if (r.dateStart.format('YYYYMMDD') === r.dateEnd.format('YYYYMMDD')) {
+          }
+          else if (moment(r.dateStart).format('YYYYMMDD') === moment(r.dateEnd).format('YYYYMMDD') && r.status !== 3) {
             this.cListReservations.find(function (e) {
-              if (e.date === r.dateStart.format('YYYYMMDD')) {
+              if (e.date === moment(r.dateStart).format('YYYYMMDD')) {
                 if (r.reserveTimeStart === r.reserveTimeEnd) {
                   if (r.reserveTimeStart === 'AM') {
                     e.AM += 1;
@@ -370,19 +377,25 @@
 <style scoped lang="scss">
   .dashboard-page {
     .calendar {
-      margin: 20px 0;
+      .calendar-action {
+        .month {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin: 20px 0;
 
-      .month {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 20px 0;
-
-        .month-title {
-          text-transform: uppercase;
-          font-weight: bold;
-          margin: 0 10px;
+          .month-title {
+            text-transform: uppercase;
+            font-weight: bold;
+            margin: 0 10px;
+          }
         }
+
+        .action {
+          text-align: center;
+          margin: 20px 0;
+        }
+
       }
 
       .weekdays {
@@ -464,73 +477,18 @@
     }
   }
 
-  .modal {
-    .list-reservation {
-      .list-group {
-        .list-group-item {
-          display: flex;
-          flex-direction: column;
-          align-items: start;
-          cursor: pointer;
-
-          .titreReserve {
-            display: flex;
-            width: 100%;
-            justify-content: space-between;
-
-            .look {
-              position: relative;
-              background-color: $colorBlue;
-              color: $colorWhite;
-              width: 30px;
-              height: 30px;
-              border-radius: 50%;
-
-              .icon-see {
-                position: absolute;
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
-              }
-            }
-          }
-
-          .targetReserve {
-            display: flex;
-            justify-content: space-between;
-            width: 100%;
-            .distance {
-              span {
-                margin-right: 20px;
-                i {
-                  font-size: 1.5rem;
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-
-    .user-reservation {
-      .option-list-user {
-        display: flex;
-        align-items: center;
-
-        .nom-prenom {
-          padding-left: 10px;
-        }
-      }
-    }
-  }
-
   @media screen and (min-width: 720px) {
 
     .dashboard-page {
       .calendar {
+        .calendar-action {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
 
-        .month {
-          justify-content: left;
+          .month {
+            justify-content: left;
+          }
         }
 
         .weekdays {
