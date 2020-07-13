@@ -31,7 +31,7 @@ const actions = {
         .post(body).json();
       localStorage.setItem('user-token', token.token);
       commit(AUTH_SUCCESS, token.token);
-      dispatch(USER_REQUEST, token.user);
+      dispatch(USER_REQUEST, token);
     } catch (err) {
       commit(AUTH_ERROR, err);
       localStorage.removeItem('user-token');

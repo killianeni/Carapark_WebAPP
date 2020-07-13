@@ -3,18 +3,23 @@ import Vue from 'vue';
 import {AUTH_LOGOUT} from '../actions/auth';
 // import {api} from "../../config";
 
-const state = {status: '', profile: {}};
+const state = {status: '', user: {}};
 
 const getters = {
-  getProfile: state => state.profile,
-  isProfileLoaded: state => !!state.profile.id
+  userLogged: state => state.user,
+  isUserLoaded: state => !!state.user.id
 };
 
 const actions = {
-  [USER_REQUEST]: async ({commit, dispatch}, dataUser) => {
+  [USER_REQUEST]: async ({commit, dispatch}, data) => {
     commit(USER_REQUEST);
     try {
-      commit(USER_SUCCESS, dataUser);
+      // const token = localStorage.getItem('user-token');
+      // const users = await api.url('/api/utilisateurs')
+      //   .headers({"Authorization": "Bearer " +  token})
+      //   .get()
+      //   .json();
+      commit(USER_SUCCESS, {user: data.user});
     } catch (err) {
       commit(USER_ERROR);
       dispatch(AUTH_LOGOUT);
@@ -28,7 +33,8 @@ const mutations = {
   },
   [USER_SUCCESS]: (state, resp) => {
     state.status = 'success';
-    Vue.set(state, 'profile', resp);
+    console.log(resp);
+    Vue.set(state, 'user', resp.user);
   },
   [USER_ERROR]: state => {
     state.status = 'error';
