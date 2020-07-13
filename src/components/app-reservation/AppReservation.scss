@@ -1,53 +1,4 @@
 #modal-reservation {
-  .list-reservation {
-    .list-group {
-      .list-group-item {
-        display: flex;
-        flex-direction: column;
-        align-items: start;
-        cursor: pointer;
-
-        .titreReserve {
-          display: flex;
-          width: 100%;
-          justify-content: space-between;
-
-          .look {
-            position: relative;
-            background-color: $colorBlue;
-            color: $colorWhite;
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-
-            .icon-see {
-              position: absolute;
-              top: 50%;
-              left: 50%;
-              transform: translate(-50%, -50%);
-            }
-          }
-        }
-
-        .targetReserve {
-          display: flex;
-          justify-content: space-between;
-          width: 100%;
-
-          .distance {
-            span {
-              margin-right: 20px;
-
-              i {
-                font-size: 1.5rem;
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-
   .user-reservation {
     .option-list-user {
       display: flex;
@@ -56,6 +7,22 @@
       .nom-prenom {
         padding-left: 10px;
       }
+    }
+  }
+
+  .contact {
+    display: block;
+    position: relative;
+    background-color: #364652;
+    color: #ffffff;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    .icon-contact {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
     }
   }
 }

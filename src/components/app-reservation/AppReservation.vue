@@ -43,6 +43,7 @@
               today-variant="danger"
               button-variant="primary"
               hide-header
+              :disabled="formReservation.disabled"
             >
             </b-form-datepicker>
           </b-input-group-append>
@@ -50,6 +51,7 @@
         <b-form-select
           id="reserve-reserveTimeStart"
           v-model="formReservation.reserveTimeStart"
+          :disabled="formReservation.disabled"
           required
         >
           <b-form-select-option :value="null" disabled>
@@ -89,12 +91,14 @@
               today-variant="danger"
               button-variant="primary"
               hide-header
+              :disabled="formReservation.disabled"
             ></b-form-datepicker>
           </b-input-group-append>
         </b-input-group>
         <b-form-select
           id="reserve-reserveTimeEnd"
           v-model="formReservation.reserveTimeEnd"
+          :disabled="formReservation.disabled"
           required
         >
           <b-form-select-option :value="null" disabled>
@@ -116,6 +120,7 @@
         <b-form-select
           id="reserve-voiture"
           v-model="formReservation.idVehicule"
+          :disabled="formReservation.disabled"
           value-field="id"
           text-field="modele_voiture">
           <b-form-select-option :value="null" disabled>-- Choix de la voiture --</b-form-select-option>
@@ -143,6 +148,7 @@
           :max=2
           :custom-label="customLabel"
           :optionsLimit=10
+          :disabled="formReservation.disabled"
         >
           <template slot="option" slot-scope="props">
             <div class="option-list-user">
@@ -162,6 +168,7 @@
         <b-form-input
           id="reserve-destination"
           v-model="formReservation.destination"
+          :disabled="formReservation.disabled"
           required
         ></b-form-input>
       </b-form-group>
@@ -173,10 +180,17 @@
         <b-form-textarea
           id="description"
           v-model="formReservation.description"
+          :disabled="formReservation.disabled"
           rows="3"
           max-rows="4"
         ></b-form-textarea>
       </b-form-group>
+      <div id="contact" class="d-flex align-items-center" v-if="contact">
+        <span class="contact mr-3">
+            <i class="kmap-icons icon-contact"></i>
+        </span>
+        {{ contact }}
+      </div>
     </form>
   </b-modal>
 </template>

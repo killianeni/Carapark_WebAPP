@@ -37,6 +37,7 @@ export default {
         {id: 8, modele_voiture: 'ford', nb_places: 4},
       ],
       formReservation: {
+        disabled: false,
         dateStart: '',
         reserveTimeStart: '',
         dateEnd: '',
@@ -46,9 +47,10 @@ export default {
         destination: '',
         description: ''
       },
-      cTitleReserveModal: '',
+      cTitleReserveModal: 'Ajouter une réservation',
       initialDateStart: '',
-      initialDateEnd: ''
+      initialDateEnd: '',
+      contact: ''
     }
   },
   methods: {
@@ -66,9 +68,11 @@ export default {
       })*/
     },
     resetModalReserve() {
-      this.cTitleReserveModal = '';
+      this.cTitleReserveModal = 'Ajouter une réservation';
       this.initialDateStart = '';
       this.initialDateEnd = '';
+      this.contact = '';
+      this.formReservation.disabled = false;
       this.formReservation.dateStart = '';
       this.formReservation.reserveTimeStart = '';
       this.formReservation.dateEnd = '';
@@ -80,7 +84,13 @@ export default {
     },
     editModalReserve(reserve) {
       this.cTitleReserveModal = 'Réservation de ' + reserve.utilisateur.nom + reserve.utilisateur.prenom;
+      this.contact = reserve.utilisateur.mail;
       this.$bvModal.show("modal-reservation");
+
+      if (reserve.status === 2 || reserve.status === 3) {
+        this.formReservation.disabled = true;
+      }
+
       this.initialDateStart = moment(reserve.dateStart).format('YYYY-MM-DD');
       this.initialDateEnd = moment(reserve.dateEnd).format('YYYY-MM-DD');
       this.formReservation.dateStart = moment(reserve.dateStart).format('DD/MM/YYYY');
@@ -92,8 +102,9 @@ export default {
       this.formReservation.destination = reserve.destination;
       this.formReservation.description = reserve.description;
       console.log(JSON.stringify(reserve));
+
     },
-    deleteModalReserve(reserve){
+    deleteModalReserve(reserve) {
       this.$bvModal.msgBoxConfirm('Veuillez confirmer que vous souhaitez supprimer cette réservation.', {
         title: 'Veuillez confirmer',
         size: 'md',
@@ -115,12 +126,12 @@ export default {
         })
     },
     onContextDateStart(ctxS) {
-      if(ctxS.selectedDate != null) {
+      if (ctxS.selectedDate != null) {
         this.formReservation.dateStart = ctxS.activeFormatted;
       }
     },
     onContextDateEnd(ctxE) {
-      if(ctxE.selectedDate != null) {
+      if (ctxE.selectedDate != null) {
         this.formReservation.dateEnd = ctxE.activeFormatted;
       }
     },
@@ -130,7 +141,7 @@ export default {
       // Exemple
       return day === 13;
     },
-    shown(){
+    shown() {
       console.log("Open");
     },
   },

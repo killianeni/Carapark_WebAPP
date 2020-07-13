@@ -142,13 +142,14 @@
           {
             id: 1,
             dateStart: '20200701',
-            reserveTimeStart: 'AM',
+            reserveTimeStart: 'PM',
             dateEnd: '20200705',
             reserveTimeEnd: 'PM',
             utilisateur: {
               id: 1,
               nom: 'Michels',
               prenom: 'Toto',
+              mail: 'michels.toto@eni.fr',
               site: {
                 id: 1,
                 libelle: 'Nantes'
@@ -173,12 +174,12 @@
               id: 1,
               nom: 'Thomas',
               prenom: 'Tata',
+              mail: 'thomas.tata@eni.fr',
               site: {
                 id: 1,
                 libelle: 'Nantes'
               }
             },
-            idUtilisateur: 1,
             idVehicule: 2,
             passagers: [
               {id: 3, nom: 'Flynn ', prenom: 'Barnes', site: 1},
@@ -196,14 +197,14 @@
             reserveTimeEnd: 'AM',
             utilisateur: {
               id: 1,
-              nom: 'Thomas',
-              prenom: 'Tata',
+              nom: 'Matt',
+              prenom: 'Rouge',
+              mail: 'matt.rouge@eni.fr',
               site: {
                 id: 1,
                 libelle: 'Nantes'
               }
             },
-            idUtilisateur: 1,
             idVehicule: 2,
             passagers: [
               {id: 3, nom: 'Fddm ', prenom: 'Arnes', site: 1},
@@ -339,8 +340,7 @@
                 }
               });
             }
-          }
-          else if (moment(r.dateStart).format('YYYYMMDD') === moment(r.dateEnd).format('YYYYMMDD') && r.status !== 3) {
+          } else if (moment(r.dateStart).format('YYYYMMDD') === moment(r.dateEnd).format('YYYYMMDD') && r.status !== 3) {
             this.cListReservations.find(function (e) {
               if (e.date === moment(r.dateStart).format('YYYYMMDD')) {
                 if (r.reserveTimeStart === r.reserveTimeEnd) {
@@ -472,6 +472,58 @@
 
         .date-disable {
           opacity: 0.5;
+        }
+      }
+    }
+  }
+
+  #modal-list-reservation {
+    .list-reservation {
+      .list-group {
+        .list-group-item {
+          display: flex;
+          flex-direction: column;
+          align-items: start;
+          cursor: pointer;
+
+          .titreReserve {
+            display: flex;
+            width: 100%;
+            justify-content: space-between;
+
+            .look {
+              display: block;
+              position: relative;
+              background-color: $colorBlue;
+              color: $colorWhite;
+              width: 30px;
+              height: 30px;
+              border-radius: 50%;
+
+              .icon-see {
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+              }
+            }
+          }
+
+          .targetReserve {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+
+            .distance {
+              span {
+                margin-right: 20px;
+
+                i {
+                  font-size: 1.5rem;
+                }
+              }
+            }
+          }
         }
       }
     }

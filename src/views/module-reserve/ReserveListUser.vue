@@ -71,11 +71,12 @@
             <b-badge v-if="item.status === 3" variant="danger">Rejeté</b-badge>
           </template>
           <template v-slot:cell(actions)="{item}">
-            <b-button-group v-if="item.status !== 3">
+            <b-button-group>
               <b-button variant="primary" @click="editReserveModal(item)">
-                <i class="kmap-icons icon-edit"></i>
+                <i class="kmap-icons icon-edit" v-if="item.status !== 3"></i>
+                <i class="kmap-icons icon-see" v-else></i>
               </b-button>
-              <b-button variant="danger" @click="deleteReserveModal(item)">
+              <b-button v-if="item.status !== 3" variant="danger" @click="deleteReserveModal(item)">
                 <i class="kmap-icons icon-delete"></i>
               </b-button>
             </b-button-group>
@@ -158,6 +159,7 @@
               id: 1,
               nom: 'Michels',
               prenom: 'Toto',
+              mail: 'michels.toto@eni.fr',
               site: {
                 id: 1,
                 libelle: 'Nantes'
@@ -182,12 +184,12 @@
               id: 1,
               nom: 'Thomas',
               prenom: 'Tata',
+              mail: 'thomas.tata@eni.fr',
               site: {
                 id: 1,
                 libelle: 'Nantes'
               }
             },
-            idUtilisateur: 1,
             idVehicule: 2,
             passagers: [
               {id: 3, nom: 'Flynn ', prenom: 'Barnes', site: 1},
@@ -205,14 +207,14 @@
             reserveTimeEnd: 'AM',
             utilisateur: {
               id: 1,
-              nom: 'Thomas',
-              prenom: 'Tata',
+              nom: 'Matt',
+              prenom: 'Rouge',
+              mail: 'matt.rouge@eni.fr',
               site: {
                 id: 1,
                 libelle: 'Nantes'
               }
             },
-            idUtilisateur: 1,
             idVehicule: 2,
             passagers: [
               {id: 3, nom: 'Fddm ', prenom: 'Arnes', site: 1},
