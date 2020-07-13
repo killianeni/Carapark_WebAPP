@@ -15,7 +15,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(['getProfile', 'isAuthenticated', 'isProfileLoaded']),
+    ...mapGetters(['userLogged', 'isAuthenticated', 'isUserLoaded']),
     ...mapState({
       authLoading: state => state.auth.status === 'loading',
       name: state => `${state.user.profile.title} ${state.user.profile.name}`

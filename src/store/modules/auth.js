@@ -29,9 +29,9 @@ const actions = {
       const token = await api.url('/api/token')
         .headers({"Content-Type": "application/json", Accept: "application/json"})
         .post(body).json();
-      localStorage.setItem('user-token', token);
-      commit(AUTH_SUCCESS, token);
-      dispatch(USER_REQUEST, {user});
+      localStorage.setItem('user-token', token.token);
+      commit(AUTH_SUCCESS, token.token);
+      dispatch(USER_REQUEST, token);
     } catch (err) {
       commit(AUTH_ERROR, err);
       localStorage.removeItem('user-token');
