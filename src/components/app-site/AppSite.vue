@@ -6,10 +6,10 @@
           Site - {{ dataSite.libelle }}
         </b-card-title>
         <b-card-text v-if="typePage === 'park'">
-          Nombre de voitures : {{ dataSite.nbVoiture }}
+          Nombre de voitures : {{ dataSite.nbVehicules }}
         </b-card-text>
         <b-card-text v-if="typePage === 'user'">
-          Nombre d'utilisateur : {{ dataSite.nbUtilisateur }}
+          Nombre d'utilisateur : {{ dataSite.nbUtilisateurs }}
         </b-card-text>
         <div class="text-right">
           <b-button-group v-if="typePage === 'park'">
