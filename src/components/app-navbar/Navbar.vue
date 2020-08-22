@@ -59,7 +59,7 @@
             </li>
             <li>
               <router-link :to="{ name: 'ReservePortal' }" class="nav-module-item"
-                           v-bind:class="[$route.name === 'ReservePortal' || $route.name === 'ReserveSite' ? 'active' : '']">
+                           v-bind:class="[$route.name === 'ReservePortal' || $route.name === 'ReserveListSite' ? 'active' : '']">
                 <i class="kmap-icons icon-reservation nav-module-item-icon"></i>
                 <span class="nav-module-item-name">Réservation</span>
               </router-link>

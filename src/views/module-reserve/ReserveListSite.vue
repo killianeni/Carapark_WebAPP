@@ -1,5 +1,5 @@
 <template>
-  <div class="reserve-my-page container-custom">
+  <div class="reserve-site-list-page container-custom">
     <div class="container-fluid">
       <div class="row justify-content-between">
         <div class="col-4 col-md-6 mt-3 mb-3">
@@ -68,7 +68,7 @@
           <template v-slot:cell(status)="{item}">
             <b-badge v-if="item.status === 1" variant="warning">En attente</b-badge>
             <b-badge v-if="item.status === 2" variant="success">Validé</b-badge>
-            <b-badge v-if="item.status === 3" variant="danger">Rejeté</b-badge>
+            <b-badge v-if="item.status === 3" variant="danger">Annulé</b-badge>
           </template>
           <template v-slot:cell(actions)="{item}">
             <b-button-group>
@@ -76,11 +76,11 @@
                 <i class="kmap-icons icon-edit" v-if="item.status === 1"></i>
                 <i class="kmap-icons icon-see" v-else></i>
               </b-button>
-              <b-button v-if="item.status !== 3" variant="danger" @click="deleteReserveModal(item)">
-                <i class="kmap-icons icon-delete"></i>
+              <b-button v-if="item.status === 1" variant="success" @click="validateReserveModal(item)">
+                <i class="kmap-icons icon-true"></i>
               </b-button>
-              <b-button v-if="item.status === 3" variant="danger" @click="seeReserveModal(item)">
-                <i class="kmap-icons icon-startFlag"></i>
+              <b-button v-if="item.status !== 2" variant="danger" @click="annulerReserveModal(item)">
+                <i class="kmap-icons icon-false"></i>
               </b-button>
             </b-button-group>
           </template>
@@ -109,7 +109,7 @@
   import AppReservation from '@/components/app-reservation/AppReservation.vue';
 
   export default {
-    name: 'ReserveListUser',
+    name: 'ReserveListSite',
     components: {
       AppReservation
     },
@@ -227,7 +227,7 @@
             ],
             destination: 'Paris',
             description: 'RU client',
-            commentaire: 'Réservation rejeter',
+            commentaire: '',
             status: 3
           },
         ],
@@ -253,7 +253,10 @@
       deleteReserveModal(reserve) {
         this.$refs.formReservation.deleteModalReserve(reserve);
       },
-      seeReserveModal(reserve) {
+      validateReserveModal(reserve) {
+        this.$refs.formReservation.validateModalReserve(reserve);
+      },
+      annulerReserveModal(reserve) {
         this.$refs.formReservation.editModalAnnuler(reserve);
       }
     },

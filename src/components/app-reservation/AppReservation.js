@@ -45,7 +45,8 @@ export default {
         idVehicule: '',
         passagers: [],
         destination: '',
-        description: ''
+        description: '',
+        commentaire: '',
       },
       cTitleReserveModal: 'Ajouter une réservation',
       initialDateStart: '',
@@ -125,6 +126,27 @@ export default {
           console.log(err);
         })
     },
+    validateModalReserve(reserve) {
+      this.$bvModal.msgBoxConfirm('Veuillez confirmer que vous souhaitez valider cette réservation.', {
+        title: 'Veuillez confirmer',
+        size: 'md',
+        buttonSize: 'md',
+        okVariant: 'primary',
+        cancelVariant: 'danger',
+        okTitle: 'Valider',
+        cancelTitle: 'Annuler',
+        footerClass: 'p-2',
+        hideHeaderClose: false,
+        centered: true,
+      })
+        .then(value => {
+          console.log(value);
+          console.log(reserve);
+        })
+        .catch(err => {
+          console.log(err);
+        })
+    },
     onContextDateStart(ctxS) {
       if (ctxS.selectedDate != null) {
         this.formReservation.dateStart = ctxS.activeFormatted;
@@ -144,6 +166,39 @@ export default {
     shown() {
       console.log("Open");
     },
+    editModalAnnuler(reserve) {
+      this.$bvModal.show("modal-annuler");
+
+      if (reserve.status === 2 || reserve.status === 3) {
+        this.formReservation.disabled = true;
+      }
+
+      this.initialDateStart = moment(reserve.dateStart).format('YYYY-MM-DD');
+      this.initialDateEnd = moment(reserve.dateEnd).format('YYYY-MM-DD');
+      this.formReservation.dateStart = moment(reserve.dateStart).format('DD/MM/YYYY');
+      this.formReservation.reserveTimeStart = reserve.reserveTimeStart;
+      this.formReservation.dateEnd = moment(reserve.dateEnd).format('DD/MM/YYYY');
+      this.formReservation.reserveTimeEnd = reserve.reserveTimeEnd;
+      this.formReservation.idVehicule = reserve.idVehicule;
+      this.formReservation.passagers = reserve.passagers;
+      this.formReservation.destination = reserve.destination;
+      this.formReservation.description = reserve.description;
+      this.formReservation.commentaire = reserve.commentaire;
+
+      console.log(JSON.stringify(reserve));
+    },
+    resetModalAnnuler() {
+      this.formReservation.disabled = false;
+      this.formReservation.commentaire = '';
+    },
+    okModalAnnuler(bvModalEvt) {
+      bvModalEvt.preventDefault();
+      this.submitModalAnnuler()
+    },
+    submitModalAnnuler() {
+      console.log(JSON.stringify(this.formReservation));
+    },
+
   },
   mounted() {
   }
