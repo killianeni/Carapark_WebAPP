@@ -1,5 +1,4 @@
 import {USER_REQUEST, USER_ERROR, USER_SUCCESS} from '../actions/user';
-import Vue from 'vue';
 import {AUTH_LOGOUT} from '../actions/auth';
 // import {api} from "../../config";
 
@@ -19,7 +18,7 @@ const actions = {
       //   .headers({"Authorization": "Bearer " +  token})
       //   .get()
       //   .json();
-      commit(USER_SUCCESS, {user: data.user});
+      commit(USER_SUCCESS, {user: data});
     } catch (err) {
       commit(USER_ERROR);
       dispatch(AUTH_LOGOUT);
@@ -33,7 +32,7 @@ const mutations = {
   },
   [USER_SUCCESS]: (state, resp) => {
     state.status = 'success';
-    Vue.set(state, 'user', resp.user);
+    state.user = resp.user;
   },
   [USER_ERROR]: state => {
     state.status = 'error';

@@ -37,7 +37,8 @@ const routes = [
     component: Dashboard,
     meta: {
       title: 'Tableau de bord',
-    }
+    },
+    beforeEnter: ifAuthenticated
   },
   {
     path: '/login',

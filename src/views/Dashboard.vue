@@ -1,6 +1,4 @@
 <template>
-  <div>
-    <div v-if="isAuthenticated">
       <div class="dashboard-page container-custom">
         <div class="container-fluid">
           <div class="calendar">
@@ -108,17 +106,11 @@
         </b-modal>
         <AppReservation ref="formReservation"></AppReservation>
       </div>
-    </div>
-    <div v-if="!isAuthenticated">
-      <login/>
-    </div>
-  </div>
 </template>
 
 <script>
   import {mapGetters} from 'vuex';
   import AppReservation from '@/components/app-reservation/AppReservation.vue';
-  import Login from './Login';
   import moment from 'moment';
 
   require('../store/modules/moment-locale-fr');
@@ -126,7 +118,6 @@
   export default {
     name: 'Dashboard',
     components: {
-      Login,
       AppReservation
     },
     data() {
