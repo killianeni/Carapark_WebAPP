@@ -252,9 +252,9 @@
     },
     methods: {
       async getCars(){
-        const idEntreprise = this.$route.params.id;
+        const idSite = this.$route.params.id;
         const token = localStorage.getItem('user-token');
-        this.items = await api.url(`/api/Vehicules/GetVehiculesbySite/${idEntreprise}`)
+        this.items = await api.url(`/api/Vehicules/GetVehiculesbySite/${idSite}`)
           .headers({"Authorization": "Bearer " + token})
           .get()
           .json();
