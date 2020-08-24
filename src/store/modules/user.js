@@ -1,7 +1,7 @@
 import {USER_REQUEST, USER_ERROR, USER_SUCCESS} from '../actions/user';
 import Vue from 'vue';
 import {AUTH_LOGOUT} from '../actions/auth';
-import {api} from "../../config";
+import {api} from '@/config';
 
 const state = {status: '', user: {}, site: []};
 
@@ -21,6 +21,10 @@ const actions = {
         .headers({"Authorization": "Bearer " + token})
         .get()
         .json();
+      // const usersByEntreprise = await api.url(`/api/Utilisateurs/GetUtilisateursbySite/${idEntreprise}`)
+      //   .headers({"Authorization": "Bearer " + token})
+      //   .get()
+      //   .json();
       commit(USER_SUCCESS, {user: data.user, site: sites});
     } catch (err) {
       commit(USER_ERROR);

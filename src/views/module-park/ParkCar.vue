@@ -164,6 +164,8 @@
 </template>
 
 <script>
+  // import {api} from "@/config";
+
   export default {
     name: 'ParkCar',
     data() {
@@ -262,9 +264,18 @@
        }
     },
     mounted() {
+      this.getCars();
       this.totalRows = this.items.length
     },
     methods: {
+      async getCars(){
+        // const idEntreprise = this.$route.params.id;
+        // const token = localStorage.getItem('user-token');
+        // this.items = await api.url(`/api/Vehicules/GetVehiculesbySite/${idEntreprise}`)
+        //   .headers({"Authorization": "Bearer " + token})
+        //   .get()
+        //   .json();
+      },
       okCar(bvModalEvt) {
         bvModalEvt.preventDefault();
         this.submitCar()

@@ -158,125 +158,124 @@
 </template>
 
 <script>
-  export default {
-    name: 'UserList',
-    data() {
-      return {
-        form: {
-          nom: '',
-          prenom: '',
-          mail: '',
-          permis: '',
-          actif: '',
-          site: this.$route.params.id
+import {mapGetters} from "vuex";
+import {api} from '@/config';
+
+export default {
+  name: 'UserList',
+  data() {
+    return {
+      form: {
+        nom: '',
+        prenom: '',
+        mail: '',
+        permis: '',
+        actif: '',
+        site: this.$route.params.id
+      },
+      fields: [
+        {
+          key: 'nom',
+          label: 'Nom',
+          sortable: true,
         },
-        fields: [
-          {
-            key: 'nom',
-            label: 'Nom',
-            sortable: true,
-          },
-          {
-            key: 'prenom',
-            label: 'Prénom',
-            sortable: true,
-          },
-          {
-            key: 'mail',
-            label: 'Mail',
-            sortable: true,
-          },
-          {
-            key: 'permis',
-            label: 'Permis',
-            sortable: true,
-          },
-          {
-            key: 'actif',
-            label: 'Actif',
-            sortable: true,
-          },
-          {
-            key: 'actions',
-            label: 'Actions'
-          },
-        ],
-        items: [
-          {id: 1, nom: 'Totio', prenom: 'Michel', mail: 'toto.micheh@eni.fr', permis: 'B', actif: true},
-          {id: 2, nom: 'Tata', prenom: 'Thomas', mail: 'tata.thomas@eni.fr', permis: 'B', actif: true},
-          {id: 3, nom: 'Titi', prenom: 'Antoine', mail: 'titi.antoine@eni.fr', permis: 'B', actif: false},
-          {id: 4, nom: 'Tete', prenom: 'Richard', mail: 'tete.richard@eni.fr', permis: 'B', actif: false},
-          {id: 5, nom: 'Taztaz', prenom: 'Adrien', mail: 'taztaz.adrien@eni.fr', permis: 'B', actif: true},
-          {id: 6, nom: 'Taztaz', prenom: 'Adrien', mail: 'taztaz.adrien@eni.fr', permis: 'B', actif: true},
-          {id: 7, nom: 'Taztaz', prenom: 'Adrien', mail: 'taztaz.adrien@eni.fr', permis: 'B', actif: true},
-          {id: 8, nom: 'Taztaz', prenom: 'Adrien', mail: 'taztaz.adrien@eni.fr', permis: 'B', actif: true},
-          {id: 9, nom: 'Taztaz', prenom: 'Adrien', mail: 'taztaz.adrien@eni.fr', permis: 'B', actif: true},
-          {id: 10, nom: 'Taztaz', prenom: 'Adrien', mail: 'taztaz.adrien@eni.fr', permis: 'B', actif: true},
-          {id: 11, nom: 'Taztaz', prenom: 'Adrien', mail: 'taztaz.adrien@eni.fr', permis: 'B', actif: true},
-          {id: 12, nom: 'Taztaz', prenom: 'Adrien', mail: 'taztaz.adrien@eni.fr', permis: 'B', actif: true},
-          {id: 13, nom: 'Taztaz', prenom: 'Adrien', mail: 'taztaz.adrien@eni.fr', permis: 'B', actif: true},
-          {id: 14, nom: 'Taztaz', prenom: 'Adrien', mail: 'taztaz.adrien@eni.fr', permis: 'B', actif: true},
-          {id: 15, nom: 'Taztaz', prenom: 'Adrien', mail: 'taztaz.adrien@eni.fr', permis: 'B', actif: true},
-        ],
-        totalRows: 1,
-        currentPage: 1,
-        perPage: 10,
-        filterUser: null,
-      }
-    },
-    mounted() {
-      this.totalRows = this.items.length
-    },
-    methods: {
-      okUser(bvModalEvt) {
-        bvModalEvt.preventDefault();
-        this.submitUser()
-      },
-      submitUser() {
-        console.log(JSON.stringify(this.form));
-        this.$nextTick(() => {
-          this.$bvModal.hide('modal-user')
-        })
-      },
-      resetModalUser() {
-        this.form.nom = '';
-        this.form.prenom = '';
-        this.form.mail = '';
-        this.form.permis = '';
-        this.form.actif = null
-      },
-      editeUser(item) {
-        this.$bvModal.show("modal-user");
-        this.form.nom = item.nom;
-        this.form.prenom = item.prenom;
-        this.form.mail = item.mail;
-        this.form.permis = item.permis;
-        this.form.actif = item.actif;
-        console.log(item);
-      },
-      deleteUser(item) {
-        this.$bvModal.msgBoxConfirm('Veuillez confirmer que vous souhaitez supprimer cette utilisateur.', {
-          title: 'Veuillez confirmer',
-          size: 'md',
-          buttonSize: 'md',
-          okVariant: 'primary',
-          cancelVariant: 'danger',
-          okTitle: 'Valider',
-          cancelTitle: 'Annuler',
-          footerClass: 'p-2',
-          hideHeaderClose: false,
-          centered: true
-        })
-          .then(value => {
-            console.log(value);
-            console.log(item);
-          })
-          .catch(err => {
-            console.log(err);
-          })
-      }
+        {
+          key: 'prenom',
+          label: 'Prénom',
+          sortable: true,
+        },
+        {
+          key: 'mail',
+          label: 'Mail',
+          sortable: true,
+        },
+        {
+          key: 'permis',
+          label: 'Permis',
+          sortable: true,
+        },
+        {
+          key: 'actif',
+          label: 'Actif',
+          sortable: true,
+        },
+        {
+          key: 'actions',
+          label: 'Actions'
+        },
+      ],
+      items: [],
+      totalRows: 1,
+      currentPage: 1,
+      perPage: 10,
+      filterUser: null,
     }
-  };
+  },
+  mounted() {
+    this.getUsers();
+    this.totalRows = this.items.length;
+  },
+  computed: {
+    ...mapGetters(['siteByCompany'])
+  },
+  methods: {
+    async getUsers(){
+      const idEntreprise = this.$route.params.id;
+      const token = localStorage.getItem('user-token');
+      this.items = await api.url(`/api/Utilisateurs/GetUtilisateursbySite/${idEntreprise}`)
+        .headers({"Authorization": "Bearer " + token})
+        .get()
+        .json();
+    },
+    okUser(bvModalEvt) {
+      bvModalEvt.preventDefault();
+      this.submitUser()
+    },
+    submitUser() {
+      console.log(JSON.stringify(this.form));
+      this.$nextTick(() => {
+        this.$bvModal.hide('modal-user')
+      })
+    },
+    resetModalUser() {
+      this.form.nom = '';
+      this.form.prenom = '';
+      this.form.mail = '';
+      this.form.permis = '';
+      this.form.actif = null
+    },
+    editeUser(item) {
+      this.$bvModal.show("modal-user");
+      this.form.nom = item.nom;
+      this.form.prenom = item.prenom;
+      this.form.mail = item.mail;
+      this.form.permis = item.permis;
+      this.form.actif = item.actif;
+      console.log(item);
+    },
+    deleteUser(item) {
+      this.$bvModal.msgBoxConfirm('Veuillez confirmer que vous souhaitez supprimer cette utilisateur.', {
+        title: 'Veuillez confirmer',
+        size: 'md',
+        buttonSize: 'md',
+        okVariant: 'primary',
+        cancelVariant: 'danger',
+        okTitle: 'Valider',
+        cancelTitle: 'Annuler',
+        footerClass: 'p-2',
+        hideHeaderClose: false,
+        centered: true
+      })
+        .then(value => {
+          console.log(value);
+          console.log(item);
+        })
+        .catch(err => {
+          console.log(err);
+        })
+    }
+  }
+};
 </script>
 
 <style scoped lang="scss">

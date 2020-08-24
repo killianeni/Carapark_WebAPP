@@ -43,21 +43,21 @@
                 <span class="nav-module-item-name">Tableau de bord</span>
               </router-link>
             </li>
-            <li>
+            <li v-if="isAdmin">
               <router-link :to="{ name: 'ParkPortal' }" class="nav-module-item"
                            v-bind:class="[$route.name === 'ParkPortal' || $route.name === 'ParkCar' ? 'active' : '']">
                 <i class="kmap-icons icon-car-park nav-module-item-icon"></i>
                 <span class="nav-module-item-name">Parc</span>
               </router-link>
             </li>
-            <li>
+            <li v-if="isAdmin">
               <router-link :to="{ name: 'ReservePortal' }" class="nav-module-item"
                            v-bind:class="[$route.name === 'ReservePortal' || $route.name === 'ReserveSite' ? 'active' : '']">
                 <i class="kmap-icons icon-reservation nav-module-item-icon"></i>
                 <span class="nav-module-item-name">Réservation</span>
               </router-link>
             </li>
-            <li>
+            <li v-if="isAdmin">
               <router-link :to="{ name: 'UserPortal' }" class="nav-module-item"
                            v-bind:class="[$route.name === 'UserPortal' || $route.name === 'UserList' ? 'active' : '']">
                 <i class="kmap-icons icon-users nav-module-item-icon"></i>
