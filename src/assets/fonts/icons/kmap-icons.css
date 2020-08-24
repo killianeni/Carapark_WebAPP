@@ -2,9 +2,9 @@
   font-family: 'kmap-icons';
   font-style: normal;
   font-weight: 400;
-  src: url("kmap-icons.eot?6eec7740b8d0d0bd54c010e2229dff9a?#iefix") format("embedded-opentype"),
-url("kmap-icons.woff2?6eec7740b8d0d0bd54c010e2229dff9a") format("woff2"),
-url("kmap-icons.woff?6eec7740b8d0d0bd54c010e2229dff9a") format("woff");
+  src: url("kmap-icons.eot?fedeef9f747682bad7d2539f5170b9e0?#iefix") format("embedded-opentype"),
+url("kmap-icons.woff2?fedeef9f747682bad7d2539f5170b9e0") format("woff2"),
+url("kmap-icons.woff?fedeef9f747682bad7d2539f5170b9e0") format("woff");
 }
 
 .kmap-icons, .icon-icons {
@@ -49,19 +49,22 @@ url("kmap-icons.woff?6eec7740b8d0d0bd54c010e2229dff9a") format("woff");
   font-feature-settings: 'liga';
 }
 
-.icon-avatar:before { content: "\f101"; }
-.icon-back:before { content: "\f102"; }
-.icon-car-park:before { content: "\f103"; }
-.icon-dashboard:before { content: "\f104"; }
-.icon-delete:before { content: "\f105"; }
-.icon-edit:before { content: "\f106"; }
-.icon-endFlag:before { content: "\f107"; }
-.icon-false:before { content: "\f108"; }
-.icon-module:before { content: "\f109"; }
-.icon-next:before { content: "\f10a"; }
-.icon-refresh:before { content: "\f10b"; }
-.icon-reservation:before { content: "\f10c"; }
-.icon-see:before { content: "\f10d"; }
-.icon-startFlag:before { content: "\f10e"; }
-.icon-true:before { content: "\f10f"; }
-.icon-users:before { content: "\f110"; }
+.icon-add:before { content: "\f101"; }
+.icon-avatar:before { content: "\f102"; }
+.icon-back:before { content: "\f103"; }
+.icon-car-park:before { content: "\f104"; }
+.icon-contact:before { content: "\f105"; }
+.icon-dashboard:before { content: "\f106"; }
+.icon-delete:before { content: "\f107"; }
+.icon-edit:before { content: "\f108"; }
+.icon-endFlag:before { content: "\f109"; }
+.icon-false:before { content: "\f10a"; }
+.icon-module:before { content: "\f10b"; }
+.icon-my-reservation:before { content: "\f10c"; }
+.icon-next:before { content: "\f10d"; }
+.icon-refresh:before { content: "\f10e"; }
+.icon-reservation:before { content: "\f10f"; }
+.icon-see:before { content: "\f110"; }
+.icon-startFlag:before { content: "\f111"; }
+.icon-true:before { content: "\f112"; }
+.icon-users:before { content: "\f113"; }

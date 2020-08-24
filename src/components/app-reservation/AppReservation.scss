@@ -1,0 +1,28 @@
+#modal-reservation {
+  .user-reservation {
+    .option-list-user {
+      display: flex;
+      align-items: center;
+
+      .nom-prenom {
+        padding-left: 10px;
+      }
+    }
+  }
+
+  .contact {
+    display: block;
+    position: relative;
+    background-color: #364652;
+    color: #ffffff;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    .icon-contact {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+  }
+}

@@ -61,8 +61,8 @@
     name: 'LoginVue',
     data() {
       return {
-        username: '',
-        password: ''
+        username: 'jean.bon@eni.fr',
+        password: '123456'
       };
     },
     methods: {
@@ -72,8 +72,9 @@
         //   console.log(hash);
         // });
         const {username, password} = this;
-        await this.$store.dispatch(AUTH_REQUEST, {username, password});
-        this.$router.push('/')
+        await this.$store.dispatch(AUTH_REQUEST, {username, password}).then(() => {
+          this.$router.push({ name: 'Dashboard' });
+        });
       }
     }
   };

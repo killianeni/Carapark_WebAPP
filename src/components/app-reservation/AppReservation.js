@@ -1,4 +1,4 @@
-//import moment from 'moment';
+import moment from 'moment';
 import Multiselect from 'vue-multiselect';
 
 export default {
@@ -37,6 +37,7 @@ export default {
         {id: 8, modele_voiture: 'ford', nb_places: 4},
       ],
       formReservation: {
+        disabled: false,
         dateStart: '',
         reserveTimeStart: '',
         dateEnd: '',
@@ -44,11 +45,13 @@ export default {
         idVehicule: '',
         passagers: [],
         destination: '',
-        description: ''
+        description: '',
+        commentaire: '',
       },
-      cTitleReserveModal: '',
+      cTitleReserveModal: 'Ajouter une réservation',
       initialDateStart: '',
-      initialDateEnd: ''
+      initialDateEnd: '',
+      contact: ''
     }
   },
   methods: {
@@ -66,9 +69,11 @@ export default {
       })*/
     },
     resetModalReserve() {
-      this.cTitleReserveModal = '';
+      this.cTitleReserveModal = 'Ajouter une réservation';
       this.initialDateStart = '';
       this.initialDateEnd = '';
+      this.contact = '';
+      this.formReservation.disabled = false;
       this.formReservation.dateStart = '';
       this.formReservation.reserveTimeStart = '';
       this.formReservation.dateEnd = '';
@@ -80,38 +85,120 @@ export default {
     },
     editModalReserve(reserve) {
       this.cTitleReserveModal = 'Réservation de ' + reserve.utilisateur.nom + reserve.utilisateur.prenom;
+      this.contact = reserve.utilisateur.mail;
       this.$bvModal.show("modal-reservation");
-      this.initialDateStart = reserve.dateStart.format('YYYY-MM-DD');
-      this.initialDateEnd = reserve.dateEnd.format('YYYY-MM-DD');
-      this.formReservation.dateStart = reserve.dateStart.format('DD/MM/YYYY');
+
+      if (reserve.status === 2 || reserve.status === 3) {
+        this.formReservation.disabled = true;
+      }
+
+      this.initialDateStart = moment(reserve.dateStart).format('YYYY-MM-DD');
+      this.initialDateEnd = moment(reserve.dateEnd).format('YYYY-MM-DD');
+      this.formReservation.dateStart = moment(reserve.dateStart).format('DD/MM/YYYY');
       this.formReservation.reserveTimeStart = reserve.reserveTimeStart;
-      this.formReservation.dateEnd = reserve.dateEnd.format('DD/MM/YYYY');
+      this.formReservation.dateEnd = moment(reserve.dateEnd).format('DD/MM/YYYY');
       this.formReservation.reserveTimeEnd = reserve.reserveTimeEnd;
       this.formReservation.idVehicule = reserve.idVehicule;
       this.formReservation.passagers = reserve.passagers;
       this.formReservation.destination = reserve.destination;
       this.formReservation.description = reserve.description;
       console.log(JSON.stringify(reserve));
+
+    },
+    deleteModalReserve(reserve) {
+      this.$bvModal.msgBoxConfirm('Veuillez confirmer que vous souhaitez supprimer cette réservation.', {
+        title: 'Veuillez confirmer',
+        size: 'md',
+        buttonSize: 'md',
+        okVariant: 'primary',
+        cancelVariant: 'danger',
+        okTitle: 'Valider',
+        cancelTitle: 'Annuler',
+        footerClass: 'p-2',
+        hideHeaderClose: false,
+        centered: true
+      })
+        .then(value => {
+          console.log(value);
+          console.log(reserve);
+        })
+        .catch(err => {
+          console.log(err);
+        })
+    },
+    validateModalReserve(reserve) {
+      this.$bvModal.msgBoxConfirm('Veuillez confirmer que vous souhaitez valider cette réservation.', {
+        title: 'Veuillez confirmer',
+        size: 'md',
+        buttonSize: 'md',
+        okVariant: 'primary',
+        cancelVariant: 'danger',
+        okTitle: 'Valider',
+        cancelTitle: 'Annuler',
+        footerClass: 'p-2',
+        hideHeaderClose: false,
+        centered: true,
+      })
+        .then(value => {
+          console.log(value);
+          console.log(reserve);
+        })
+        .catch(err => {
+          console.log(err);
+        })
     },
     onContextDateStart(ctxS) {
-      if(ctxS.selectedDate != null) {
+      if (ctxS.selectedDate != null) {
         this.formReservation.dateStart = ctxS.activeFormatted;
       }
     },
     onContextDateEnd(ctxE) {
-      if(ctxE.selectedDate != null) {
+      if (ctxE.selectedDate != null) {
         this.formReservation.dateEnd = ctxE.activeFormatted;
       }
     },
     dateDisabled(ymd, date) {
-      const weekday = date.getDay();
+      //const weekday = date.getDay();
       const day = date.getDate();
       // Exemple
-      return weekday === 0 || weekday === 6 || day === 13;
+      return day === 13;
     },
-    shown(){
+    shown() {
       console.log("Open");
     },
+    editModalAnnuler(reserve) {
+      this.$bvModal.show("modal-annuler");
+
+      if (reserve.status === 2 || reserve.status === 3) {
+        this.formReservation.disabled = true;
+      }
+
+      this.initialDateStart = moment(reserve.dateStart).format('YYYY-MM-DD');
+      this.initialDateEnd = moment(reserve.dateEnd).format('YYYY-MM-DD');
+      this.formReservation.dateStart = moment(reserve.dateStart).format('DD/MM/YYYY');
+      this.formReservation.reserveTimeStart = reserve.reserveTimeStart;
+      this.formReservation.dateEnd = moment(reserve.dateEnd).format('DD/MM/YYYY');
+      this.formReservation.reserveTimeEnd = reserve.reserveTimeEnd;
+      this.formReservation.idVehicule = reserve.idVehicule;
+      this.formReservation.passagers = reserve.passagers;
+      this.formReservation.destination = reserve.destination;
+      this.formReservation.description = reserve.description;
+      this.formReservation.commentaire = reserve.commentaire;
+
+      console.log(JSON.stringify(reserve));
+    },
+    resetModalAnnuler() {
+      this.formReservation.disabled = false;
+      this.formReservation.commentaire = '';
+    },
+    okModalAnnuler(bvModalEvt) {
+      bvModalEvt.preventDefault();
+      this.submitModalAnnuler()
+    },
+    submitModalAnnuler() {
+      console.log(JSON.stringify(this.formReservation));
+    },
+
   },
   mounted() {
   }

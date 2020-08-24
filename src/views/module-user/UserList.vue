@@ -10,7 +10,7 @@
         </div>
         <div class="col-8 col-md-6 text-right mt-3 mb-3">
           <b-button variant="primary" v-b-modal.modal-user>
-            <i class="kmap-icons icon-edit mr-2"></i>
+            <i class="kmap-icons icon-add mr-2"></i>
             Ajouter un utilisateur
           </b-button>
         </div>
@@ -139,7 +139,7 @@
           invalid-feedback=""
         >
           <b-form-input
-            id="user-mail"
+            id="user-permis"
             v-model="form.permis"
             required
           ></b-form-input>

@@ -6,7 +6,8 @@ import Dashboard from '../views/Dashboard.vue';
 import ParkPortal from '../views/module-park/ParkPortal.vue';
 import ParkCar from '../views/module-park/ParkCar.vue';
 import ReservePortal from '../views/module-reserve/ReservePortal.vue';
-import ReserveSite from '../views/module-reserve/ReserveSite.vue';
+import ReserveListSite from '../views/module-reserve/ReserveListSite.vue';
+import ReserveListUser from '../views/module-reserve/ReserveListUser.vue';
 import UserPortal from '../views/module-user/UserPortal.vue';
 import UserList from '../views/module-user/UserList.vue';
 import store from '../store';
@@ -36,7 +37,8 @@ const routes = [
     component: Dashboard,
     meta: {
       title: 'Tableau de bord',
-    }
+    },
+    beforeEnter: ifAuthenticated
   },
   {
     path: '/login',
@@ -71,15 +73,30 @@ const routes = [
     beforeEnter: ifAuthenticated
   },
   {
-    path: '/reserve-portal',
-    name: 'ReservePortal',
-    component: ReservePortal,
+    path: '/reserve-list-user',
+    name: 'ReserveListUser',
+    component: ReserveListUser,
+    meta: {
+      title: 'Mes Réservations',
+    },
     beforeEnter: ifAuthenticated
   },
   {
-    path: '/reserve/site',
-    name: 'ReserveSite',
-    component: ReserveSite,
+    path: '/reserve-portal',
+    name: 'ReservePortal',
+    component: ReservePortal,
+    meta: {
+      title: 'Les Réservations',
+    },
+    beforeEnter: ifAuthenticated
+  },
+  {
+    path: '/reserve-portal/:id/reserves-site',
+    name: 'ReserveListSite',
+    component: ReserveListSite,
+    meta: {
+      title: 'Liste des réservations de ',
+    },
     beforeEnter: ifAuthenticated
   },
   {

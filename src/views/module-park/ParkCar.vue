@@ -10,7 +10,7 @@
         </div>
         <div class="col-6 text-right mt-3 mb-3">
           <b-button variant="primary" v-b-modal.modal-car>
-            <i class="kmap-icons icon-edit mr-2"></i>
+            <i class="kmap-icons icon-add mr-2"></i>
             Ajouter une voiture
           </b-button>
         </div>
