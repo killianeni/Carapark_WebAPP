@@ -8,7 +8,7 @@ import {USER_REQUEST} from '../actions/user';
 import {api} from '@/config';
 
 const state = {
-  token: localStorage.getItem('user-token') || '',
+  token: '',
   status: '',
   hasLoadedOnce: false
 };
