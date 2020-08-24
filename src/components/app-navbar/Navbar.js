@@ -15,7 +15,7 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(['userLogged', 'isAuthenticated', 'isUserLoaded']),
+    ...mapGetters(['userLogged', 'isAdmin', 'isAuthenticated', 'isUserLoaded']),
     ...mapState({
       authLoading: state => state.auth.status === 'loading',
       name: state => `${state.user.user.prenom} ${state.user.user.nom}`,

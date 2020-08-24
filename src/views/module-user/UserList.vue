@@ -68,7 +68,7 @@
             </b-button-group>
           </template>
           <template v-slot:cell(role)="{item}">
-            {{ item.role.libelle }}
+            {{ item.nomRole }}
           </template>
         </b-table>
         <div class="container-fluid d-md-none">
@@ -232,183 +232,181 @@
 </template>
 
 <script>
-  import Multiselect from 'vue-multiselect';
+import Multiselect from 'vue-multiselect';
+import {mapGetters} from "vuex";
+import {api} from '@/config';
 
-  export default {
-    name: 'UserList',
-    components: {
-      Multiselect
-    },
-    data() {
-      return {
-        titleModalPersonnel: 'Ajouter un personnel',
-        isUser: false,
-        isEdit: false,
-        form: {
-          nom: '',
-          prenom: '',
-          mail: '',
-          permis: '',
-          role: '',
-          site: this.$route.params.id
+export default {
+  name: 'UserList',
+  components: {
+    Multiselect
+  },
+  data() {
+    return {
+      titleModalPersonnel: 'Ajouter un personnel',
+      isUser: false,
+      isEdit: false,
+      form: {
+        nom: '',
+        prenom: '',
+        mail: '',
+        permis: '',
+        role: '',
+        site: this.$route.params.id
+      },
+      fields: [
+        {
+          key: 'nom',
+          label: 'Nom',
+          sortable: true,
         },
-        fields: [
-          {
-            key: 'nom',
-            label: 'Nom',
-            sortable: true,
-          },
-          {
-            key: 'prenom',
-            label: 'Prénom',
-            sortable: true,
-          },
-          {
-            key: 'mail',
-            label: 'Mail',
-            sortable: true,
-          },
-          {
-            key: 'permis',
-            label: 'Permis',
-            sortable: true,
-          },
-          {
-            key: 'role',
-            label: 'Role',
-            sortable: true,
-          },
-          {
-            key: 'actions',
-            label: 'Actions'
-          },
-        ],
-        items: [
-          {id: 1, nom: 'Toto', prenom: 'Michel', mail: 'toto.micheh@eni.fr', permis: 'B', role: { id: 2, libelle: "Utilisateur"}},
-          {id: 2, nom: 'Tata', prenom: 'Thomas', mail: 'tata.thomas@eni.fr', permis: 'B', role: { id: 3, libelle: "Admin"}},
-          {id: 3, nom: 'Titi', prenom: 'Antoine', mail: 'titi.antoine@eni.fr', permis: 'B', role: { id: 2, libelle: "Utilisateur"}},
-          {id: 4, nom: 'Tete', prenom: 'Richard', mail: 'tete.richard@eni.fr', permis: 'B', role: { id: 2, libelle: "Utilisateur"}},
-          {id: 5, nom: 'Taztaz', prenom: 'Adrien', mail: 'taztaz.adrien@eni.fr', permis: 'B', role: { id: 2, libelle: "Utilisateur"}},
-          {id: 6, nom: 'Taztaz', prenom: 'Adrien', mail: 'taztaz.adrien@eni.fr', permis: 'B', role: { id: 2, libelle: "Utilisateur"}},
-          {id: 7, nom: 'Taztaz', prenom: 'Adrien', mail: 'taztaz.adrien@eni.fr', permis: 'B', role: { id: 2, libelle: "Utilisateur"}},
-          {id: 8, nom: 'Taztaz', prenom: 'Adrien', mail: 'taztaz.adrien@eni.fr', permis: 'B', role: { id: 2, libelle: "Utilisateur"}},
-          {id: 9, nom: 'Taztaz', prenom: 'Adrien', mail: 'taztaz.adrien@eni.fr', permis: 'B', role: { id: 2, libelle: "Utilisateur"}},
-          {id: 10, nom: 'Taztaz', prenom: 'Adrien', mail: 'taztaz.adrien@eni.fr', permis: 'B', role: { id: 2, libelle: "Utilisateur"}},
-          {id: 11, nom: 'Taztaz', prenom: 'Adrien', mail: 'taztaz.adrien@eni.fr', permis: 'B', role: { id: 2, libelle: "Utilisateur"}},
-          {id: 12, nom: 'Taztaz', prenom: 'Adrien', mail: 'taztaz.adrien@eni.fr', permis: 'B', role: { id: 2, libelle: "Utilisateur"}},
-          {id: 13, nom: 'Taztaz', prenom: 'Adrien', mail: 'taztaz.adrien@eni.fr', permis: 'B', role: { id: 2, libelle: "Utilisateur"}},
-          {id: 14, nom: 'Taztaz', prenom: 'Adrien', mail: 'taztaz.adrien@eni.fr', permis: 'B', role: { id: 2, libelle: "Utilisateur"}},
-          {id: 15, nom: 'Taztaz', prenom: 'Adrien', mail: 'taztaz.adrien@eni.fr', permis: 'B', role: { id: 2, libelle: "Utilisateur"}},
-        ],
-        totalRows: 1,
-        currentPage: 1,
-        perPage: 10,
-        filterUser: null,
-        formUpgrade: {
-          personnels: [],
-          role : []
+        {
+          key: 'prenom',
+          label: 'Prénom',
+          sortable: true,
         },
-        personnels: [
-          {id: 1, nom: 'Andrews ', prenom: 'Baxter'},
-          {id: 2, nom: 'Burke ', prenom: 'Mcfadden'},
-          {id: 3, nom: 'Flynn ', prenom: 'Barnes'},
-          {id: 4, nom: 'Dorsey ', prenom: 'Blackwell'},
-          {id: 5, nom: 'Thelma ', prenom: 'Gay'},
-          {id: 6, nom: 'Nell ', prenom: 'Silva'},
-          {id: 7, nom: 'Nettie ', prenom: 'Dixon'},
-          {id: 8, nom: 'Bailey ', prenom: 'Carver'},
-          {id: 9, nom: 'Maryann ', prenom: 'Erickson'},
-          {id: 10, nom: 'Imelda ', prenom: 'Kirk'},
-          {id: 11, nom: 'Nettie ', prenom: 'Carver'},
-          {id: 12, nom: 'Barnes', prenom: 'Kirk'},
-          {id: 13, nom: 'Erickson ', prenom: 'Blackwell'},
-          {id: 14, nom: 'Maryann ', prenom: 'Kirk'},
-          {id: 15, nom: 'Silva ', prenom: 'Nettie'},
-          {id: 16, nom: 'Blackwell ', prenom: 'Dorsey'},
-        ],
-        roles: [
-          { text: 'Utilisateur', value: 2 },
-          { text: 'Admin', value: 3 },
-        ]
-      }
-    },
-    mounted() {
-      this.totalRows = this.items.length
-    },
-    methods: {
-      customLabel({nom, prenom}) {
-        return `${nom} – ${prenom}`
+        {
+          key: 'mail',
+          label: 'Mail',
+          sortable: true,
+        },
+        {
+          key: 'permis',
+          label: 'Permis',
+          sortable: true,
+        },
+        {
+          key: 'role',
+          label: 'Role',
+          sortable: true,
+        },
+        {
+          key: 'actions',
+          label: 'Actions'
+        },
+      ],
+      items: [],
+      totalRows: 1,
+      currentPage: 1,
+      perPage: 10,
+      filterUser: null,
+      formUpgrade: {
+        personnels: [],
+        role : []
       },
-      okModalUser(bvModalEvt) {
-        bvModalEvt.preventDefault();
-        this.submitModalUser();
-      },
-      submitModalUser() {
-        console.log(JSON.stringify(this.form));
-        console.log(this.isUser);
-        this.$nextTick(() => {
-          this.$bvModal.hide('modal-personnel')
-        })
-      },
-      resetModalUser() {
-        this.titleModalPersonnel = 'Ajouter un personnel';
-        this.form.nom = '';
-        this.form.prenom = '';
-        this.form.mail = '';
-        this.form.permis = '';
-        this.form.role = '';
-        this.isUser = false;
-        this.isEdit = false;
-      },
-      editModalUser(item) {
-        this.titleModalPersonnel = 'Modifier un utilisateur';
-        this.isEdit = true;
-        this.$bvModal.show("modal-personnel");
-        this.form.nom = item.nom;
-        this.form.prenom = item.prenom;
-        this.form.mail = item.mail;
-        this.form.permis = item.permis;
-        this.form.role = item.role.id;
-        console.log(item);
-        console.log(this.isEdit);
-      },
-      deleteModalUser(item) {
-        this.$bvModal.msgBoxConfirm('Veuillez confirmer que vous souhaitez supprimer cette utilisateur.', {
-          title: 'Veuillez confirmer',
-          size: 'md',
-          buttonSize: 'md',
-          okVariant: 'primary',
-          cancelVariant: 'danger',
-          okTitle: 'Valider',
-          cancelTitle: 'Annuler',
-          footerClass: 'p-2',
-          hideHeaderClose: false,
-          centered: true
-        })
-          .then(value => {
-            console.log(value);
-            console.log(item);
-          })
-          .catch(err => {
-            console.log(err);
-          })
-      },
-      resetModalUpgrade() {
-        this.formUpgrade.personnels = [];
-        this.formUpgrade.role = [];
-      },
-      okModalUpgrade(bvModalEvt) {
-        bvModalEvt.preventDefault();
-        this.submitModalUpgrade();
-      },
-      submitModalUpgrade() {
-        console.log(JSON.stringify(this.formUpgrade));
-        this.$nextTick(() => {
-          this.$bvModal.hide('modal-upgrade');
-        })
-      },
+      personnels: [
+        {id: 1, nom: 'Andrews ', prenom: 'Baxter'},
+        {id: 2, nom: 'Burke ', prenom: 'Mcfadden'},
+        {id: 3, nom: 'Flynn ', prenom: 'Barnes'},
+        {id: 4, nom: 'Dorsey ', prenom: 'Blackwell'},
+        {id: 5, nom: 'Thelma ', prenom: 'Gay'},
+        {id: 6, nom: 'Nell ', prenom: 'Silva'},
+        {id: 7, nom: 'Nettie ', prenom: 'Dixon'},
+        {id: 8, nom: 'Bailey ', prenom: 'Carver'},
+        {id: 9, nom: 'Maryann ', prenom: 'Erickson'},
+        {id: 10, nom: 'Imelda ', prenom: 'Kirk'},
+        {id: 11, nom: 'Nettie ', prenom: 'Carver'},
+        {id: 12, nom: 'Barnes', prenom: 'Kirk'},
+        {id: 13, nom: 'Erickson ', prenom: 'Blackwell'},
+        {id: 14, nom: 'Maryann ', prenom: 'Kirk'},
+        {id: 15, nom: 'Silva ', prenom: 'Nettie'},
+        {id: 16, nom: 'Blackwell ', prenom: 'Dorsey'},
+      ],
+      roles: [
+        { text: 'Utilisateur', value: 2 },
+        { text: 'Admin', value: 3 },
+      ]
     }
-  };
+  },
+  mounted() {
+    this.getUsers();
+    this.totalRows = this.items.length;
+  },
+  computed: {
+    ...mapGetters(['siteByCompany'])
+  },
+  methods: {
+    async getUsers(){
+      const idEntreprise = this.$route.params.id;
+      const token = localStorage.getItem('user-token');
+      this.items = await api.url(`/api/Utilisateurs/GetUtilisateursbySite/${idEntreprise}`)
+        .headers({"Authorization": "Bearer " + token})
+        .get()
+        .json();
+      console.log(this.items);
+    },
+    customLabel({nom, prenom}) {
+      return `${nom} – ${prenom}`
+    },
+    okModalUser(bvModalEvt) {
+      bvModalEvt.preventDefault();
+      this.submitModalUser();
+    },
+    submitModalUser() {
+      console.log(JSON.stringify(this.form));
+      console.log(this.isUser);
+      this.$nextTick(() => {
+        this.$bvModal.hide('modal-personnel')
+      })
+    },
+    resetModalUser() {
+      this.titleModalPersonnel = 'Ajouter un personnel';
+      this.form.nom = '';
+      this.form.prenom = '';
+      this.form.mail = '';
+      this.form.permis = '';
+      this.form.role = '';
+      this.isUser = false;
+      this.isEdit = false;
+    },
+    editModalUser(item) {
+      this.titleModalPersonnel = 'Modifier un utilisateur';
+      this.isEdit = true;
+      this.$bvModal.show("modal-personnel");
+      this.form.nom = item.nom;
+      this.form.prenom = item.prenom;
+      this.form.mail = item.mail;
+      this.form.permis = item.permis;
+      this.form.role = '';
+      console.log(item);
+    },
+    deleteModalUser(item) {
+      this.$bvModal.msgBoxConfirm('Veuillez confirmer que vous souhaitez supprimer cette utilisateur.', {
+        title: 'Veuillez confirmer',
+        size: 'md',
+        buttonSize: 'md',
+        okVariant: 'primary',
+        cancelVariant: 'danger',
+        okTitle: 'Valider',
+        cancelTitle: 'Annuler',
+        footerClass: 'p-2',
+        hideHeaderClose: false,
+        centered: true
+      })
+        .then(value => {
+          console.log(value);
+          console.log(item);
+        })
+        .catch(err => {
+          console.log(err);
+        })
+    },
+    resetModalUpgrade() {
+      this.formUpgrade.personnels = [];
+      this.formUpgrade.role = [];
+    },
+    okModalUpgrade(bvModalEvt) {
+      bvModalEvt.preventDefault();
+      this.submitModalUpgrade();
+    },
+    submitModalUpgrade() {
+      console.log(JSON.stringify(this.formUpgrade));
+      this.$nextTick(() => {
+        this.$bvModal.hide('modal-upgrade');
+      })
+    },
+  }
+};
 </script>
 
 <style scoped lang="scss">
