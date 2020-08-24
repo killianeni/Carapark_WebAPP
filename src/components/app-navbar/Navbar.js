@@ -18,7 +18,8 @@ export default {
     ...mapGetters(['userLogged', 'isAuthenticated', 'isUserLoaded']),
     ...mapState({
       authLoading: state => state.auth.status === 'loading',
-      name: state => `${state.user.user.nom} ${state.user.user.prenom}`
+      name: state => `${state.user.user.prenom} ${state.user.user.nom}`,
+      mail: state => `${state.user.user.mail}`,
     })
   }
 };

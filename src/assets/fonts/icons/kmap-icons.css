@@ -2,9 +2,9 @@
   font-family: 'kmap-icons';
   font-style: normal;
   font-weight: 400;
-  src: url("kmap-icons.eot?fedeef9f747682bad7d2539f5170b9e0?#iefix") format("embedded-opentype"),
-url("kmap-icons.woff2?fedeef9f747682bad7d2539f5170b9e0") format("woff2"),
-url("kmap-icons.woff?fedeef9f747682bad7d2539f5170b9e0") format("woff");
+  src: url("kmap-icons.eot?2adb9c3ecfb5c372a3e85491c60c9301?#iefix") format("embedded-opentype"),
+url("kmap-icons.woff2?2adb9c3ecfb5c372a3e85491c60c9301") format("woff2"),
+url("kmap-icons.woff?2adb9c3ecfb5c372a3e85491c60c9301") format("woff");
 }
 
 .kmap-icons, .icon-icons {
@@ -53,18 +53,19 @@ url("kmap-icons.woff?fedeef9f747682bad7d2539f5170b9e0") format("woff");
 .icon-avatar:before { content: "\f102"; }
 .icon-back:before { content: "\f103"; }
 .icon-car-park:before { content: "\f104"; }
-.icon-contact:before { content: "\f105"; }
-.icon-dashboard:before { content: "\f106"; }
-.icon-delete:before { content: "\f107"; }
-.icon-edit:before { content: "\f108"; }
-.icon-endFlag:before { content: "\f109"; }
-.icon-false:before { content: "\f10a"; }
-.icon-module:before { content: "\f10b"; }
-.icon-my-reservation:before { content: "\f10c"; }
-.icon-next:before { content: "\f10d"; }
-.icon-refresh:before { content: "\f10e"; }
-.icon-reservation:before { content: "\f10f"; }
-.icon-see:before { content: "\f110"; }
-.icon-startFlag:before { content: "\f111"; }
-.icon-true:before { content: "\f112"; }
-.icon-users:before { content: "\f113"; }
+.icon-cloche:before { content: "\f105"; }
+.icon-contact:before { content: "\f106"; }
+.icon-dashboard:before { content: "\f107"; }
+.icon-delete:before { content: "\f108"; }
+.icon-edit:before { content: "\f109"; }
+.icon-endFlag:before { content: "\f10a"; }
+.icon-false:before { content: "\f10b"; }
+.icon-module:before { content: "\f10c"; }
+.icon-my-reservation:before { content: "\f10d"; }
+.icon-next:before { content: "\f10e"; }
+.icon-refresh:before { content: "\f10f"; }
+.icon-reservation:before { content: "\f110"; }
+.icon-see:before { content: "\f111"; }
+.icon-startFlag:before { content: "\f112"; }
+.icon-true:before { content: "\f113"; }
+.icon-users:before { content: "\f114"; }
