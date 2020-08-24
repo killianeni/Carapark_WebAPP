@@ -1,5 +1,5 @@
 import {USER_REQUEST, USER_ERROR, USER_SUCCESS} from '../actions/user';
-import Vue from 'vue';
+// import Vue from 'vue';
 import {AUTH_LOGOUT} from '../actions/auth';
 import {api} from '@/config';
 
@@ -21,10 +21,6 @@ const actions = {
         .headers({"Authorization": "Bearer " + token})
         .get()
         .json();
-      // const usersByEntreprise = await api.url(`/api/Utilisateurs/GetUtilisateursbySite/${idEntreprise}`)
-      //   .headers({"Authorization": "Bearer " + token})
-      //   .get()
-      //   .json();
       commit(USER_SUCCESS, {user: data.user, site: sites});
     } catch (err) {
       commit(USER_ERROR);
@@ -39,8 +35,8 @@ const mutations = {
   },
   [USER_SUCCESS]: (state, resp) => {
     state.status = 'success';
-    Vue.set(state, 'user', resp.user);
-    Vue.set(state, 'site', resp.site);
+    state.user = resp.user;
+    state.site = resp.site;
   },
   [USER_ERROR]: state => {
     state.status = 'error';

@@ -10,7 +10,7 @@
         </div>
         <div class="col-8 col-md-6 text-right mt-3 mb-3">
           <b-button variant="primary" v-b-modal.modal-user>
-            <i class="kmap-icons icon-edit mr-2"></i>
+            <i class="kmap-icons icon-add mr-2"></i>
             Ajouter un utilisateur
           </b-button>
         </div>
@@ -55,7 +55,7 @@
           :filter="filterUser">
           <template v-slot:cell(actions)="{item}">
             <b-button-group>
-              <b-button variant="primary" @click="editeUser(item)">
+              <b-button variant="primary" @click="editUser(item)">
                 <i class="kmap-icons icon-edit"></i>
               </b-button>
               <b-button variant="danger" @click="deleteUser(item)">
@@ -244,7 +244,7 @@ export default {
       this.form.permis = '';
       this.form.actif = null
     },
-    editeUser(item) {
+    editUser(item) {
       this.$bvModal.show("modal-user");
       this.form.nom = item.nom;
       this.form.prenom = item.prenom;

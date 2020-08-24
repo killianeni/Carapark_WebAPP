@@ -10,7 +10,7 @@
         </div>
         <div class="col-6 text-right mt-3 mb-3">
           <b-button variant="primary" v-b-modal.modal-car>
-            <i class="kmap-icons icon-edit mr-2"></i>
+            <i class="kmap-icons icon-add mr-2"></i>
             Ajouter une voiture
           </b-button>
         </div>
@@ -53,7 +53,7 @@
           :filter="filterCar">
           <template v-slot:cell(actions)="{item}">
             <b-button-group>
-              <b-button variant="primary" @click="editeCar(item)">
+              <b-button variant="primary" @click="editCar(item)">
                 <i class="kmap-icons icon-edit"></i>
               </b-button>
               <b-button variant="danger" @click="deleteCar(item)">
@@ -104,7 +104,7 @@
         >
           <b-form-input
             id="car-matricule"
-            v-model="form.numero_matricule"
+            v-model="form.numImmat"
             required
           ></b-form-input>
         </b-form-group>
@@ -115,7 +115,7 @@
         >
           <b-form-input
             id="car-modele"
-            v-model="form.modele_voiture"
+            v-model="form.modele"
             required
           ></b-form-input>
         </b-form-group>
@@ -124,7 +124,7 @@
           label-for="car-places">
           <b-form-select
             id="car-places"
-            v-model="form.nb_places"
+            v-model="form.nbPlaces"
             :options="nbPlaces"
             required
           ></b-form-select>
@@ -134,7 +134,7 @@
           label-for="car-portes">
           <b-form-select
             id="car-portes"
-            v-model="form.nb_portes"
+            v-model="form.nbPortes"
             :options="nbPortes"
             required
           ></b-form-select>
@@ -164,18 +164,18 @@
 </template>
 
 <script>
-  // import {api} from "@/config";
+  import {api} from "@/config";
 
   export default {
     name: 'ParkCar',
     data() {
       return {
         form: {
-          numero_matricule: '',
-          modele_voiture: '',
-          nb_places: '',
+          numImmat: '',
+          modele: '',
+          nbPlaces: '',
           nb_portes: '',
-          type_carburant: '',
+          typeCarbu: '',
           actif: null
         },
         nbPlaces: [
@@ -205,27 +205,27 @@
         ],
         fields: [
           {
-            key: 'numero_matricule',
+            key: 'numImmat',
             label: 'Numéro de matricule',
             sortable: true,
           },
           {
-            key: 'modele_voiture',
+            key: 'modele',
             label: 'Modèle de la voiture',
             sortable: true,
           },
           {
-            key: 'nb_places',
+            key: 'nbPlaces',
             label: 'Nombre de places',
             sortable: true,
           },
           {
-            key: 'nb_portes',
+            key: 'nbPortes',
             label: 'Nombre de portes',
             sortable: true,
           },
           {
-            key: 'type_carburant',
+            key: 'typeCarbu',
             label: 'Type de carburant',
             sortable: true,
           },
@@ -239,24 +239,7 @@
             label: 'Actions'
           },
         ],
-        items: [
-          { id: 1, numero_matricule: 'AA-999-AA', modele_voiture: 'peugeot', nb_places: 4, nb_portes: 5, type_carburant: 'essence', actif: true },
-          { id: 2, numero_matricule: 'AA-999-AA', modele_voiture: 'peugeot', nb_places: 4, nb_portes: 4, type_carburant: 'diesel', actif: false },
-          { id: 3, numero_matricule: 'AA-999-AA', modele_voiture: 'peugeot', nb_places: 5, nb_portes: 6, type_carburant: 'hybride', actif: true },
-          { id: 4, numero_matricule: 'AA-999-AA', modele_voiture: 'peugeot', nb_places: 2, nb_portes: 3, type_carburant: 'diesel', actif: true },
-          { id: 5, numero_matricule: 'AA-999-AA', modele_voiture: 'peugeot', nb_places: 4, nb_portes: 5, type_carburant: 'electrique', actif: false },
-          { id: 6, numero_matricule: 'AA-999-AA', modele_voiture: 'peugeot', nb_places: 4, nb_portes: 5, type_carburant: 'electrique', actif: false },
-          { id: 7, numero_matricule: 'AA-999-AA', modele_voiture: 'peugeot', nb_places: 4, nb_portes: 5, type_carburant: 'electrique', actif: false },
-          { id: 8, numero_matricule: 'AA-999-AA', modele_voiture: 'peugeot', nb_places: 4, nb_portes: 5, type_carburant: 'electrique', actif: false },
-          { id: 9, numero_matricule: 'AA-999-AA', modele_voiture: 'peugeot', nb_places: 4, nb_portes: 5, type_carburant: 'electrique', actif: false },
-          { id: 10, numero_matricule: 'AA-999-AA', modele_voiture: 'peugeot', nb_places: 4, nb_portes: 5, type_carburant: 'electrique', actif: false },
-          { id: 11, numero_matricule: 'AA-999-AA', modele_voiture: 'peugeot', nb_places: 4, nb_portes: 5, type_carburant: 'electrique', actif: false },
-          { id: 12, numero_matricule: 'AA-999-AA', modele_voiture: 'peugeot', nb_places: 4, nb_portes: 5, type_carburant: 'electrique', actif: false },
-          { id: 13, numero_matricule: 'AA-999-AA', modele_voiture: 'peugeot', nb_places: 4, nb_portes: 5, type_carburant: 'electrique', actif: false },
-          { id: 14, numero_matricule: 'AA-999-AA', modele_voiture: 'peugeot', nb_places: 4, nb_portes: 5, type_carburant: 'toto', actif: false },
-          { id: 15, numero_matricule: 'AA-999-AA', modele_voiture: 'peugeot', nb_places: 4, nb_portes: 5, type_carburant: 'electrique', actif: false },
-          { id: 16, numero_matricule: 'AA-999-AA', modele_voiture: 'peugeot', nb_places: 4, nb_portes: 5, type_carburant: 'electrique', actif: false },
-        ],
+        items: [],
         totalRows: 1,
         currentPage: 1,
         perPage: 10,
@@ -269,12 +252,12 @@
     },
     methods: {
       async getCars(){
-        // const idEntreprise = this.$route.params.id;
-        // const token = localStorage.getItem('user-token');
-        // this.items = await api.url(`/api/Vehicules/GetVehiculesbySite/${idEntreprise}`)
-        //   .headers({"Authorization": "Bearer " + token})
-        //   .get()
-        //   .json();
+        const idEntreprise = this.$route.params.id;
+        const token = localStorage.getItem('user-token');
+        this.items = await api.url(`/api/Vehicules/GetVehiculesbySite/${idEntreprise}`)
+          .headers({"Authorization": "Bearer " + token})
+          .get()
+          .json();
       },
       okCar(bvModalEvt) {
         bvModalEvt.preventDefault();
@@ -287,16 +270,16 @@
         })
       },
       resetModalCar() {
-          this.form.numero_matricule = '';
+          this.form.numImmat = '';
           this.form.modele_voiture = '';
           this.form.nb_places = '';
           this.form.nb_portes = '';
           this.form.type_carburant = '';
           this.form.actif = null
       },
-      editeCar(item) {
+      editCar(item) {
         this.$bvModal.show("modal-car");
-        this.form.numero_matricule = item.numero_matricule;
+        this.form.numImmat = item.numImmat;
         this.form.modele_voiture = item.modele_voiture;
         this.form.nb_places = item.nb_places;
         this.form.nb_portes = item.nb_portes;
