@@ -5,17 +5,18 @@ import {
   AUTH_LOGOUT
 } from '../actions/auth';
 import {USER_REQUEST} from '../actions/user';
-import {api} from '../../config';
+import {api} from '@/config';
 
 const state = {
-  token: '',
+  token: localStorage.getItem('user-token') || '',
   status: '',
   hasLoadedOnce: false
 };
 
 const getters = {
   isAuthenticated: state => !!state.token,
-  authStatus: state => state.status
+  authStatus: state => state.status,
+  isAdmin: state => !!state.admin
 };
 
 const actions = {
@@ -30,8 +31,8 @@ const actions = {
         .headers({"Content-Type": "application/json", Accept: "application/json"})
         .post(body).json();
       localStorage.setItem('user-token', token.token);
-      commit(AUTH_SUCCESS, token.token);
-      dispatch(USER_REQUEST, token.user);
+      commit(AUTH_SUCCESS, {token: token.token, role: token.user.nomRole});
+      dispatch(USER_REQUEST, token);
     } catch (err) {
       commit(AUTH_ERROR, err);
       localStorage.removeItem('user-token');
@@ -52,7 +53,8 @@ const mutations = {
   },
   [AUTH_SUCCESS]: (state, resp) => {
     state.status = 'success';
-    state.token = resp;
+    state.token = resp.token;
+    state.admin = (resp.role === 'admin');
     state.hasLoadedOnce = true;
   },
   [AUTH_ERROR]: state => {
@@ -61,6 +63,7 @@ const mutations = {
   },
   [AUTH_LOGOUT]: state => {
     state.token = '';
+    state.admin = false;
   }
 };
 
