@@ -12,13 +12,13 @@ export default {
     },
     logout: function() {
       this.$store.dispatch(AUTH_LOGOUT).then(() => this.$router.push('/login'));
-    }
+    },
   },
   computed: {
     ...mapGetters(['userLogged', 'isAdmin', 'isAuthenticated', 'isUserLoaded']),
     ...mapState({
       authLoading: state => state.auth.status === 'loading',
-      name: state => `${state.user.profile.title} ${state.user.profile.name}`
+      name: state => `${state.user.user.nom} ${state.user.user.prenom}`
     })
   }
 };

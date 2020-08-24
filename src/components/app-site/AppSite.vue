@@ -11,6 +11,9 @@
         <b-card-text v-if="typePage === 'user'">
           Nombre d'utilisateur : {{ dataSite.nbUtilisateurs }}
         </b-card-text>
+        <b-card-text v-if="typePage === 'reservation'">
+          Nombre de réservation : {{ dataSite.nbReservation }}
+        </b-card-text>
         <div class="text-right">
           <b-button-group v-if="typePage === 'park'">
             <router-link :to="{ name: 'ParkCar', params: { id: dataSite.id }}" class="btn btn-dark">
@@ -25,6 +28,11 @@
           </b-button-group>
           <b-button-group v-if="typePage === 'user'">
             <router-link :to="{ name: 'UserList', params: { id: dataSite.id }}" class="btn btn-dark">
+              <i class="kmap-icons icon-see"></i>
+            </router-link>
+          </b-button-group>
+          <b-button-group v-if="typePage === 'reservation'">
+            <router-link :to="{ name: 'ReserveListSite', params: { id: dataSite.id }}" class="btn btn-dark">
               <i class="kmap-icons icon-see"></i>
             </router-link>
           </b-button-group>
