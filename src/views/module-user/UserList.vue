@@ -327,9 +327,9 @@ export default {
   },
   methods: {
     async getUsers(){
-      const idEntreprise = this.$route.params.id;
+      const idSite = this.$route.params.id;
       const token = localStorage.getItem('user-token');
-      this.items = await api.url(`/api/Utilisateurs/GetUtilisateursbySite/${idEntreprise}`)
+      this.items = await api.url(`/api/Utilisateurs/GetUtilisateursbySite/${idSite}`)
         .headers({"Authorization": "Bearer " + token})
         .get()
         .json();

@@ -31,7 +31,7 @@ const actions = {
         .headers({"Content-Type": "application/json", Accept: "application/json"})
         .post(body).json();
       localStorage.setItem('user-token', token.token);
-      commit(AUTH_SUCCESS, {token: token.token, role: token.user.nomRole});
+      commit(AUTH_SUCCESS, {token: token.token, role: token.user.role.libelle});
       dispatch(USER_REQUEST, token);
     } catch (err) {
       commit(AUTH_ERROR, err);
