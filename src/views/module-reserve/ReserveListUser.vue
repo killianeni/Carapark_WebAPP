@@ -54,21 +54,22 @@
           :current-page="currentPage"
           :per-page="perPage"
           :filter="filterReservation">
-          <template v-slot:cell(dateStart)="{item}">
-            {{ customDate(item.dateStart,item.reserveTimeStart) }}
+          <template v-slot:cell(dateDebut)="{item}">
+            {{ customDate(item.dateDebut,item.timeStart) }}
           </template>
-          <template v-slot:cell(dateEnd)="{item}">
-            {{ customDate(item.dateEnd,item.reserveTimeEnd) }}
+          <template v-slot:cell(dateFin)="{item}">
+            {{ customDate(item.dateFin,item.timeEnd) }}
           </template>
-          <template v-slot:cell(passagers)="{item}">
+          <template v-slot:cell(personnels)="{item}">
             <b-avatar-group variant="primary">
-              <b-avatar :title="customAvatar(p)" v-for="(p, idxP) in item.passagers" v-bind:key="idxP"></b-avatar>
+              <b-avatar :title="customAvatar(p)" v-for="(p, idxP) in item.personnels" v-bind:key="idxP"></b-avatar>
             </b-avatar-group>
           </template>
           <template v-slot:cell(status)="{item}">
             <b-badge v-if="item.status === 1" variant="warning">En attente</b-badge>
             <b-badge v-if="item.status === 2" variant="success">Validé</b-badge>
             <b-badge v-if="item.status === 3" variant="danger">Rejeté</b-badge>
+            <b-badge v-if="item.status === 4" variant="dark">Clôturé</b-badge>
           </template>
           <template v-slot:cell(actions)="{item}">
             <b-button-group>
@@ -76,11 +77,11 @@
                 <i class="kmap-icons icon-edit" v-if="item.status === 1"></i>
                 <i class="kmap-icons icon-see" v-else></i>
               </b-button>
-              <b-button v-if="item.status !== 3" variant="danger" @click="deleteReserveModal(item)">
+              <b-button v-if="item.status <= 3" variant="danger" @click="deleteReserveModal(item)">
                 <i class="kmap-icons icon-delete"></i>
               </b-button>
               <b-button v-if="item.status === 3" variant="danger" @click="seeReserveModal(item)">
-                <i class="kmap-icons icon-startFlag"></i>
+                <i class="kmap-icons icon-info"></i>
               </b-button>
             </b-button-group>
           </template>
@@ -107,6 +108,8 @@
 <script>
   import moment from 'moment';
   import AppReservation from '@/components/app-reservation/AppReservation.vue';
+  import {mapGetters} from 'vuex';
+  import {api} from '@/config';
 
   export default {
     name: 'ReserveListUser',
@@ -117,22 +120,22 @@
       return {
         fields: [
           {
-            key: 'dateStart',
+            key: 'dateDebut',
             label: 'Date Début',
             sortable: true,
           },
           {
-            key: 'dateEnd',
+            key: 'dateFin',
             label: 'Date de Fin',
             sortable: true,
           },
           {
-            key: 'passagers',
-            label: 'Passagers',
+            key: 'personnels',
+            label: 'Personnels',
             sortable: true,
           },
           {
-            key: 'destination',
+            key: 'siteDestination',
             label: 'Destination',
             sortable: true,
           },
@@ -151,86 +154,7 @@
             label: 'Actions'
           },
         ],
-        items: [
-          {
-            id: 1,
-            dateStart: '20200701',
-            reserveTimeStart: 'PM',
-            dateEnd: '20200705',
-            reserveTimeEnd: 'PM',
-            utilisateur: {
-              id: 1,
-              nom: 'Michels',
-              prenom: 'Toto',
-              mail: 'michels.toto@eni.fr',
-              site: {
-                id: 1,
-                libelle: 'Nantes'
-              }
-            },
-            idVehicule: 1,
-            passagers: [
-              {id: 1, nom: 'Andrews ', prenom: 'Baxter', site: 1},
-              {id: 2, nom: 'Burke ', prenom: 'Mcfadden', site: 1},
-            ],
-            destination: 'Rennes',
-            description: 'RU client',
-            commentaire: '',
-            status: 1
-          },
-          {
-            id: 2,
-            dateStart: '20200702',
-            reserveTimeStart: 'AM',
-            dateEnd: '20200703',
-            reserveTimeEnd: 'PM',
-            utilisateur: {
-              id: 1,
-              nom: 'Thomas',
-              prenom: 'Tata',
-              mail: 'thomas.tata@eni.fr',
-              site: {
-                id: 1,
-                libelle: 'Nantes'
-              }
-            },
-            idVehicule: 2,
-            passagers: [
-              {id: 3, nom: 'Flynn ', prenom: 'Barnes', site: 1},
-              {id: 4, nom: 'Dorsey ', prenom: 'Blackwell', site: 1},
-            ],
-            destination: 'Paris',
-            description: 'RU client',
-            commentaire: '',
-            status: 2
-          },
-          {
-            id: 3,
-            dateStart: '20200703',
-            reserveTimeStart: 'AM',
-            dateEnd: '20200705',
-            reserveTimeEnd: 'AM',
-            utilisateur: {
-              id: 1,
-              nom: 'Matt',
-              prenom: 'Rouge',
-              mail: 'matt.rouge@eni.fr',
-              site: {
-                id: 1,
-                libelle: 'Nantes'
-              }
-            },
-            idVehicule: 2,
-            passagers: [
-              {id: 3, nom: 'Fddm ', prenom: 'Arnes', site: 1},
-              {id: 4, nom: 'Rorsey ', prenom: 'Lackwell', site: 1},
-            ],
-            destination: 'Paris',
-            description: 'RU client',
-            commentaire: 'Réservation rejeter',
-            status: 3
-          },
-        ],
+        items: [],
         totalRows: 1,
         currentPage: 1,
         perPage: 10,
@@ -255,9 +179,21 @@
       },
       seeReserveModal(reserve) {
         this.$refs.formReservation.editModalAnnuler(reserve);
-      }
+      },
+      async getReservationsByUser() {
+        const userId = this.userLogged.id;
+        const token = localStorage.getItem('user-token');
+        this.items = await api.url(`/api/Reservations/GetReservationsByUser/${userId}`)
+          .headers({"Authorization": "Bearer " + token})
+          .get()
+          .json();
+      },
+    },
+    computed: {
+      ...mapGetters(['userLogged']),
     },
     mounted() {
+      this.getReservationsByUser();
       this.totalRows = this.items.length
     },
   };

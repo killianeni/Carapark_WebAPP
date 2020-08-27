@@ -1,5 +1,6 @@
 import moment from 'moment';
 import Multiselect from 'vue-multiselect';
+import { mapGetters } from 'vuex';
 
 export default {
   name: 'AppReservation',
@@ -8,45 +9,31 @@ export default {
   },
   data() {
     return {
-      passagersOptions: [
-        {id: 1, nom: 'Andrews ', prenom: 'Baxter', site: 1},
-        {id: 2, nom: 'Burke ', prenom: 'Mcfadden', site: 1},
-        {id: 3, nom: 'Flynn ', prenom: 'Barnes', site: 1},
-        {id: 4, nom: 'Dorsey ', prenom: 'Blackwell', site: 1},
-        {id: 5, nom: 'Thelma ', prenom: 'Gay', site: 1},
-        {id: 6, nom: 'Nell ', prenom: 'Silva', site: 1},
-        {id: 7, nom: 'Nettie ', prenom: 'Dixon', site: 1},
-        {id: 8, nom: 'Bailey ', prenom: 'Carver', site: 1},
-        {id: 9, nom: 'Maryann ', prenom: 'Erickson', site: 1},
-        {id: 10, nom: 'Imelda ', prenom: 'Kirk', site: 1},
-        {id: 11, nom: 'Nettie ', prenom: 'Carver', site: 1},
-        {id: 12, nom: 'Barnes', prenom: 'Kirk', site: 1},
-        {id: 13, nom: 'Erickson ', prenom: 'Blackwell', site: 1},
-        {id: 14, nom: 'Maryann ', prenom: 'Kirk', site: 1},
-        {id: 15, nom: 'Silva ', prenom: 'Nettie', site: 1},
-        {id: 16, nom: 'Blackwell ', prenom: 'Dorsey', site: 1},
+      personnelsOptions: [
+        {id: '62b473a0-91f0-4e6f-bea7-1953ac199157', mail: 'martine.alaplage@eni.fr', nom: 'ALAPLAGE', prenom: 'Martine' },
+        {id: '27a51826-0f74-42f0-b3a7-3f51246545e6', mail: 'jean.bon@eni.fr', nom: 'BON', prenom: 'Jean' },
       ],
       vehiculeOptions: [
-        {id: 1, modele_voiture: 'peugeot', nb_places: 4},
-        {id: 2, modele_voiture: 'renault', nb_places: 4},
-        {id: 3, modele_voiture: 'nissan', nb_places: 4},
-        {id: 4, modele_voiture: 'opel', nb_places: 5},
-        {id: 5, modele_voiture: 'porsche', nb_places: 4},
-        {id: 6, modele_voiture: 'rolls royce', nb_places: 4},
-        {id: 7, modele_voiture: 'toyota', nb_places: 4},
-        {id: 8, modele_voiture: 'ford', nb_places: 4},
+        {id: '49a46fa6-007f-42cd-9319-23eb0c012c14', modele: 'Clio 1', nbPlaces: 5},
+        {id: '1fa6da4d-8d86-4499-86f5-efb0bf7114ab', modele: 'Clio 2', nbPlaces: 5},
+      ],
+      vehiculeCle: [
+        {id: '975938d6-8599-4384-b5c3-9d6ec159f755', libelle: 'Clé bleu'},
+        {id: '93cef5b6-9231-44bb-bf88-e54a7107c7cf', libelle: 'Clé Rouge'},
       ],
       formReservation: {
         disabled: false,
-        dateStart: '',
-        reserveTimeStart: '',
-        dateEnd: '',
-        reserveTimeEnd: '',
+        dateDebut: '',
+        timeStart: '',
+        dateFin: '',
+        timeEnd: '',
         idVehicule: '',
-        passagers: [],
-        destination: '',
+        idCle: '',
+        personnels: [],
+        siteDestination: '',
         description: '',
         commentaire: '',
+        status: ''
       },
       cTitleReserveModal: 'Ajouter une réservation',
       initialDateStart: '',
@@ -74,34 +61,40 @@ export default {
       this.initialDateEnd = '';
       this.contact = '';
       this.formReservation.disabled = false;
-      this.formReservation.dateStart = '';
-      this.formReservation.reserveTimeStart = '';
-      this.formReservation.dateEnd = '';
-      this.formReservation.reserveTimeEnd = '';
+      this.formReservation.dateDebut = '';
+      this.formReservation.timeStart = '';
+      this.formReservation.dateFin = '';
+      this.formReservation.timeEnd = '';
       this.formReservation.idVehicule = '';
-      this.formReservation.passagers = [];
-      this.formReservation.destination = '';
+      this.formReservation.idCle = '';
+      this.formReservation.personnels = [];
+      this.formReservation.siteDestination = '';
       this.formReservation.description = '';
+      this.formReservation.status = '';
     },
     editModalReserve(reserve) {
       this.cTitleReserveModal = 'Réservation de ' + reserve.utilisateur.nom + reserve.utilisateur.prenom;
       this.contact = reserve.utilisateur.mail;
       this.$bvModal.show("modal-reservation");
 
-      if (reserve.status === 2 || reserve.status === 3) {
+      if (reserve.status > 1) {
         this.formReservation.disabled = true;
       }
 
-      this.initialDateStart = moment(reserve.dateStart).format('YYYY-MM-DD');
-      this.initialDateEnd = moment(reserve.dateEnd).format('YYYY-MM-DD');
-      this.formReservation.dateStart = moment(reserve.dateStart).format('DD/MM/YYYY');
-      this.formReservation.reserveTimeStart = reserve.reserveTimeStart;
-      this.formReservation.dateEnd = moment(reserve.dateEnd).format('DD/MM/YYYY');
-      this.formReservation.reserveTimeEnd = reserve.reserveTimeEnd;
-      this.formReservation.idVehicule = reserve.idVehicule;
-      this.formReservation.passagers = reserve.passagers;
-      this.formReservation.destination = reserve.destination;
+      this.initialDateStart = moment(reserve.dateDebut).format('YYYY-MM-DD');
+      this.initialDateEnd = moment(reserve.dateFin).format('YYYY-MM-DD');
+      this.formReservation.dateDebut = moment(reserve.dateDebut).format('DD/MM/YYYY');
+      this.formReservation.timeStart = reserve.timeStart;
+      this.formReservation.dateFin = moment(reserve.dateFin).format('DD/MM/YYYY');
+      this.formReservation.timeEnd = reserve.timeEnd;
+      this.formReservation.idVehicule = reserve.vehicule.id;
+      this.formReservation.idCle = reserve.cle.id;
+      this.formReservation.personnels = reserve.personnels;
+      this.formReservation.siteDestination = reserve.siteDestination;
       this.formReservation.description = reserve.description;
+      this.formReservation.status = reserve.status;
+      this.formReservation.commentaire = reserve.commentaire;
+      console.log(reserve);
       console.log(JSON.stringify(reserve));
 
     },
@@ -147,14 +140,35 @@ export default {
           console.log(err);
         })
     },
+    cloturerModalReserve(reserve) {
+      this.$bvModal.msgBoxConfirm('Veuillez confirmer que vous souhaitez clôturer cette réservation.', {
+        title: 'Veuillez confirmer',
+        size: 'md',
+        buttonSize: 'md',
+        okVariant: 'primary',
+        cancelVariant: 'danger',
+        okTitle: 'Valider',
+        cancelTitle: 'Annuler',
+        footerClass: 'p-2',
+        hideHeaderClose: false,
+        centered: true,
+      })
+        .then(value => {
+          console.log(value);
+          console.log(reserve);
+        })
+        .catch(err => {
+          console.log(err);
+        })
+    },
     onContextDateStart(ctxS) {
       if (ctxS.selectedDate != null) {
-        this.formReservation.dateStart = ctxS.activeFormatted;
+        this.formReservation.dateDebut = ctxS.activeFormatted;
       }
     },
     onContextDateEnd(ctxE) {
       if (ctxE.selectedDate != null) {
-        this.formReservation.dateEnd = ctxE.activeFormatted;
+        this.formReservation.dateFin = ctxE.activeFormatted;
       }
     },
     dateDisabled(ymd, date) {
@@ -173,17 +187,19 @@ export default {
         this.formReservation.disabled = true;
       }
 
-      this.initialDateStart = moment(reserve.dateStart).format('YYYY-MM-DD');
-      this.initialDateEnd = moment(reserve.dateEnd).format('YYYY-MM-DD');
-      this.formReservation.dateStart = moment(reserve.dateStart).format('DD/MM/YYYY');
-      this.formReservation.reserveTimeStart = reserve.reserveTimeStart;
-      this.formReservation.dateEnd = moment(reserve.dateEnd).format('DD/MM/YYYY');
-      this.formReservation.reserveTimeEnd = reserve.reserveTimeEnd;
-      this.formReservation.idVehicule = reserve.idVehicule;
-      this.formReservation.passagers = reserve.passagers;
-      this.formReservation.destination = reserve.destination;
+      this.initialDateStart = moment(reserve.dateDebut).format('YYYY-MM-DD');
+      this.initialDateEnd = moment(reserve.dateFin).format('YYYY-MM-DD');
+      this.formReservation.dateDebut = moment(reserve.dateDebut).format('DD/MM/YYYY');
+      this.formReservation.timeStart = reserve.timeStart;
+      this.formReservation.dateFin = moment(reserve.dateFin).format('DD/MM/YYYY');
+      this.formReservation.timeEnd = reserve.timeEnd;
+      this.formReservation.idVehicule = reserve.vehicule.id;
+      this.formReservation.idCle = reserve.cle.id;
+      this.formReservation.personnels = reserve.personnels;
+      this.formReservation.siteDestination = reserve.siteDestination;
       this.formReservation.description = reserve.description;
       this.formReservation.commentaire = reserve.commentaire;
+      this.formReservation.status = reserve.status;
 
       console.log(JSON.stringify(reserve));
     },
@@ -199,6 +215,9 @@ export default {
       console.log(JSON.stringify(this.formReservation));
     },
 
+  },
+  computed: {
+    ...mapGetters(['isAdmin']),
   },
   mounted() {
   }

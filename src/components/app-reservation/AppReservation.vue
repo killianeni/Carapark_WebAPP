@@ -19,20 +19,20 @@
         @submit.stop.prevent="submitModalReserve">
         <b-form-group
           label="Date"
-          label-for="reserve-dateStart"
+          label-for="reserve-dateDebut"
           invalid-feedback=""
         >
           <b-input-group class="mb-3">
             <b-form-input
-              id="reserve-dateStart"
-              v-model="formReservation.dateStart"
+              id="reserve-dateDebut"
+              v-model="formReservation.dateDebut"
               readonly
               required
             ></b-form-input>
             <b-input-group-append>
               <b-form-datepicker
                 :date-format-options="{ year: 'numeric', month: 'numeric', day: 'numeric' }"
-                aria-controls="reserve-dateStart"
+                aria-controls="reserve-dateDebut"
                 :initial-date="initialDateStart"
                 button-only
                 right
@@ -50,8 +50,8 @@
             </b-input-group-append>
           </b-input-group>
           <b-form-select
-            id="reserve-reserveTimeStart"
-            v-model="formReservation.reserveTimeStart"
+            id="reserve-timeStart"
+            v-model="formReservation.timeStart"
             :disabled="formReservation.disabled"
             required
           >
@@ -68,20 +68,20 @@
         </b-form-group>
         <b-form-group
           label="Date Fin"
-          label-for="reserve-dateEnd"
+          label-for="reserve-dateFin"
           invalid-feedback=""
         >
           <b-input-group class="mb-3">
             <b-form-input
-              id="reserve-dateEnd"
-              v-model="formReservation.dateEnd"
+              id="reserve-dateFin"
+              v-model="formReservation.dateFin"
               readonly
               required
             ></b-form-input>
             <b-input-group-append>
               <b-form-datepicker
                 :date-format-options="{ year: 'numeric', month: 'numeric', day: 'numeric' }"
-                aria-controls="reserve-dateEnd"
+                aria-controls="reserve-dateFin"
                 :initial-date="initialDateEnd"
                 button-only
                 right
@@ -97,8 +97,8 @@
             </b-input-group-append>
           </b-input-group>
           <b-form-select
-            id="reserve-reserveTimeEnd"
-            v-model="formReservation.reserveTimeEnd"
+            id="reserve-timeEnd"
+            v-model="formReservation.timeEnd"
             :disabled="formReservation.disabled"
             required
           >
@@ -126,7 +126,24 @@
             text-field="modele_voiture">
             <b-form-select-option :value="null" disabled>-- Choix de la voiture --</b-form-select-option>
             <b-form-select-option v-for="(car) in vehiculeOptions" v-bind:key="car.id" :value="car.id">
-              {{ car.modele_voiture }} - {{ car.nb_places }} places
+              {{ car.modele }} - {{ car.nbPlaces }} places
+            </b-form-select-option>
+          </b-form-select>
+        </b-form-group>
+        <b-form-group v-if="formReservation.status === 2 || formReservation.status  === 4 || isAdmin"
+          label="Voiture Clé"
+          label-for="reserve-voiture-cle"
+          invalid-feedback=""
+        >
+          <b-form-select
+            id="reserve-voiture-cle"
+            v-model="formReservation.idCle"
+            :disabled="formReservation.disabled"
+            value-field="id"
+            text-field="modele_voiture">
+            <b-form-select-option :value="null" disabled>-- Choix de la clé --</b-form-select-option>
+            <b-form-select-option v-for="(carCle) in vehiculeCle" v-bind:key="carCle.id" :value="carCle.id">
+              {{ carCle.libelle }}
             </b-form-select-option>
           </b-form-select>
         </b-form-group>
@@ -137,14 +154,14 @@
         >
           <multiselect
             id="reserve-passager"
-            v-model="formReservation.passagers"
+            v-model="formReservation.personnels"
             placeholder="Rechercher un utilisateur"
             label="name"
             track-by="nom"
             deselectLabel="Supprimer"
             selectLabel="Sélectionner"
             selectedLabel="Sélectionné"
-            :options="passagersOptions"
+            :options="personnelsOptions"
             :multiple="true"
             :max=2
             :custom-label="customLabel"
@@ -163,12 +180,12 @@
         </b-form-group>
         <b-form-group
           label="Destination"
-          label-for="reserve-destination"
+          label-for="reserve-siteDestination"
           invalid-feedback=""
         >
           <b-form-input
-            id="reserve-destination"
-            v-model="formReservation.destination"
+            id="reserve-siteDestination"
+            v-model="formReservation.siteDestination"
             :disabled="formReservation.disabled"
             required
           ></b-form-input>
@@ -181,6 +198,19 @@
           <b-form-textarea
             id="description"
             v-model="formReservation.description"
+            :disabled="formReservation.disabled"
+            rows="3"
+            max-rows="4"
+          ></b-form-textarea>
+        </b-form-group>
+        <b-form-group v-if="isAdmin"
+          label="Commentaire"
+          label-for="reserve-commentaire"
+          invalid-feedback=""
+        >
+          <b-form-textarea
+            id="commentaire"
+            v-model="formReservation.commentaire"
             :disabled="formReservation.disabled"
             rows="3"
             max-rows="4"

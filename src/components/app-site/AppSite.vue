@@ -12,7 +12,7 @@
           Nombre d'utilisateur : {{ dataSite.nbUtilisateurs }}
         </b-card-text>
         <b-card-text v-if="typePage === 'reservation'">
-          Nombre de réservation : {{ dataSite.nbReservation }}
+          Nombre de réservation : {{ dataSite.nbReservations }}
         </b-card-text>
         <div class="text-right">
           <b-button-group v-if="typePage === 'park'">
