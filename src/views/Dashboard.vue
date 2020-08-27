@@ -82,7 +82,7 @@
               >
                 <div class="titreReserve">
                   <h5 class="mb-1">
-                    {{ reserve.id }} {{ reserve.utilisateur.nom }} {{ reserve.utilisateur.prenom }}
+                    {{ reserve.utilisateur.nom }} {{ reserve.utilisateur.prenom }}
                   </h5>
                   <span class="look">
                     <i class="kmap-icons icon-see"/>
@@ -92,7 +92,7 @@
                   <div class="distance">
                     <span><i class="kmap-icons icon-startFlag"></i>{{ reserve.utilisateur.site.libelle }}</span>
                     <span><i class="kmap-icons icon-next"></i></span>
-                    <span><i class="kmap-icons icon-endFlag"></i>{{ reserve.destination }}</span>
+                    <span><i class="kmap-icons icon-endFlag"></i>{{ reserve.siteDestination }}</span>
                   </div>
                   <div class="status">
                     <b-badge v-if="reserve.status === 1" variant="warning">En attente</b-badge>
@@ -112,6 +112,7 @@
   import {mapGetters} from 'vuex';
   import AppReservation from '@/components/app-reservation/AppReservation.vue';
   import moment from 'moment';
+  import {api} from '@/config';
 
   require('../store/modules/moment-locale-fr');
 
@@ -129,87 +130,11 @@
         cListTitleModal: '',
         cListReserveModal: [],
         cListReservations: [],
-        reservations: [
-          {
-            id: 1,
-            dateStart: '20200701',
-            reserveTimeStart: 'PM',
-            dateEnd: '20200705',
-            reserveTimeEnd: 'PM',
-            utilisateur: {
-              id: 1,
-              nom: 'Michels',
-              prenom: 'Toto',
-              mail: 'michels.toto@eni.fr',
-              site: {
-                id: 1,
-                libelle: 'Nantes'
-              }
-            },
-            idVehicule: 1,
-            passagers: [
-              {id: 1, nom: 'Andrews ', prenom: 'Baxter', site: 1},
-              {id: 2, nom: 'Burke ', prenom: 'Mcfadden', site: 1},
-            ],
-            destination: 'Rennes',
-            description: 'RU client',
-            status: 1
-          },
-          {
-            id: 2,
-            dateStart: '20200702',
-            reserveTimeStart: 'AM',
-            dateEnd: '20200703',
-            reserveTimeEnd: 'PM',
-            utilisateur: {
-              id: 1,
-              nom: 'Thomas',
-              prenom: 'Tata',
-              mail: 'thomas.tata@eni.fr',
-              site: {
-                id: 1,
-                libelle: 'Nantes'
-              }
-            },
-            idVehicule: 2,
-            passagers: [
-              {id: 3, nom: 'Flynn ', prenom: 'Barnes', site: 1},
-              {id: 4, nom: 'Dorsey ', prenom: 'Blackwell', site: 1},
-            ],
-            destination: 'Paris',
-            description: 'RU client',
-            status: 2
-          },
-          {
-            id: 3,
-            dateStart: '20200703',
-            reserveTimeStart: 'AM',
-            dateEnd: '20200705',
-            reserveTimeEnd: 'AM',
-            utilisateur: {
-              id: 1,
-              nom: 'Matt',
-              prenom: 'Rouge',
-              mail: 'matt.rouge@eni.fr',
-              site: {
-                id: 1,
-                libelle: 'Nantes'
-              }
-            },
-            idVehicule: 2,
-            passagers: [
-              {id: 3, nom: 'Fddm ', prenom: 'Arnes', site: 1},
-              {id: 4, nom: 'Rorsey ', prenom: 'Lackwell', site: 1},
-            ],
-            destination: 'Paris',
-            description: 'RU client',
-            status: 3
-          },
-        ]
+        reservations: [],
       }
     },
     computed: {
-      ...mapGetters(['isAuthenticated', 'authStatus']),
+      ...mapGetters(['isAuthenticated', 'authStatus', 'userLogged']),
       year() {
         return this.dateContext.format('Y');
       },
@@ -275,6 +200,27 @@
         this.cListTitleModal = '';
         this.cListReserveModal = [];
       },
+      async getReservationsBySite() {
+        const token = localStorage.getItem('user-token');
+        if(this.userLogged.site != null)
+        {
+          const userIdSite = this.userLogged.site.id;
+          await api.url(`/api/Reservations/GetReservationsBySite/${userIdSite}`)
+            .headers({"Authorization": "Bearer " + token})
+            .get()
+            .json()
+            .then(data => {
+              data.forEach((d) => {
+                // On retire les status "Rejeté" et "Clôturé"
+                if(d.status >= 3)
+                {
+                  this.reservations.push(d);
+                }
+              });
+              this.initPushDataReserve();
+            })
+        }
+      },
       initListReservation() {
         let dayArray = new Array(this.dateContext.daysInMonth());
         for (let i = 0; i < dayArray.length; i++) {
@@ -293,23 +239,23 @@
       },
       initPushDataReserve() {
         this.reservations.forEach((r) => {
-          if (moment(r.dateStart).format('YYYYMMDD') !== moment(r.dateEnd).format('YYYYMMDD') && r.status !== 3) {
+          if (moment(r.dateDebut).format('YYYYMMDD') !== moment(r.dateFin).format('YYYYMMDD') && r.status !== 3) {
             this.cListReservations.find(function (e) {
-              if (e.date === moment(r.dateStart).format('YYYYMMDD')) {
-                if (r.reserveTimeStart === 'AM') {
+              if (e.date === moment(r.dateDebut).format('YYYYMMDD')) {
+                if (r.timeStart === 'AM') {
                   e.AM += 1;
                   e.PM += 1;
                   e.idReserveAM.push(r.id);
                   e.idReservePM.push(r.id);
-                } else if (r.reserveTimeStart === 'PM') {
+                } else if (r.timeStart === 'PM') {
                   e.PM += 1;
                   e.idReservePM.push(r.id);
                 }
-              } else if (e.date === moment(r.dateEnd).format('YYYYMMDD')) {
-                if (r.reserveTimeEnd === 'AM') {
+              } else if (e.date === moment(r.dateFin).format('YYYYMMDD')) {
+                if (r.timeEnd === 'AM') {
                   e.AM += 1;
                   e.idReserveAM.push(r.id);
-                } else if (r.reserveTimeEnd === 'PM') {
+                } else if (r.timeEnd === 'PM') {
                   e.AM += 1;
                   e.PM += 1;
                   e.idReserveAM.push(r.id);
@@ -318,10 +264,10 @@
               }
             });
             // Nombre de jours de différent entre la date de début et de fin
-            let nbDaysDiff = moment(r.dateEnd).diff(moment(r.dateStart), 'days');
+            let nbDaysDiff = moment(r.dateFin).diff(moment(r.dateDebut), 'days');
 
             for (let d = 1; d < nbDaysDiff; d++) {
-              let m = moment(r.dateStart).add(d, 'day');
+              let m = moment(r.dateDebut).add(d, 'day');
               this.cListReservations.find(function (e) {
                 if (e.date === m.format('YYYYMMDD')) {
                   e.AM += 1;
@@ -331,14 +277,14 @@
                 }
               });
             }
-          } else if (moment(r.dateStart).format('YYYYMMDD') === moment(r.dateEnd).format('YYYYMMDD') && r.status !== 3) {
+          } else if (moment(r.dateDebut).format('YYYYMMDD') === moment(r.dateFin).format('YYYYMMDD') && r.status !== 3) {
             this.cListReservations.find(function (e) {
-              if (e.date === moment(r.dateStart).format('YYYYMMDD')) {
-                if (r.reserveTimeStart === r.reserveTimeEnd) {
-                  if (r.reserveTimeStart === 'AM') {
+              if (e.date === moment(r.dateDebut).format('YYYYMMDD')) {
+                if (r.timeStart === r.timeEnd) {
+                  if (r.timeStart === 'AM') {
                     e.AM += 1;
                     e.idReserveAM.push(r.id);
-                  } else if (r.reserveTimeStart === 'PM') {
+                  } else if (r.timeStart === 'PM') {
                     e.PM += 1;
                     e.idReservePM.push(r.id);
                   }
@@ -358,8 +304,8 @@
       }
     },
     mounted() {
+      this.getReservationsBySite();
       this.initListReservation();
-      this.initPushDataReserve();
     },
   };
 
