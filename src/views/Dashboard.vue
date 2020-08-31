@@ -15,7 +15,7 @@
                 </b-button>
               </div>
               <div class="action">
-                <b-button variant="primary" v-b-modal.modal-reservation>
+                <b-button variant="primary" @click="addReserveModal">
                   <i class="kmap-icons icon-add mr-2"></i>
                   Ajouter une réservation
                 </b-button>
@@ -212,13 +212,13 @@
             .then(data => {
               data.forEach((d) => {
                 // On retire les status "Rejeté" et "Clôturé"
-                if(d.status >= 3)
+                if(d.status < 3)
                 {
                   this.reservations.push(d);
                 }
               });
               this.initPushDataReserve();
-            })
+            });
         }
       },
       initListReservation() {
@@ -301,7 +301,10 @@
       },
       editReserveModal(reserve) {
         this.$refs.formReservation.editModalReserve(reserve);
-      }
+      },
+      addReserveModal() {
+        this.$refs.formReservation.addModalReserve();
+      },
     },
     mounted() {
       this.getReservationsBySite();

@@ -12,23 +12,19 @@
           </b-button>
         </div>
       </div>
-      <AppSite :data-sites="siteByCompany" type-page="park"></AppSite>
+      <AppSite type-page="park"></AppSite>
     </div>
   </div>
 </template>
 
 <script>
   import AppSite from '@/components/app-site/AppSite.vue';
-  import {mapGetters} from "vuex";
 
   export default {
     name: 'ParkPortal',
     components: {
       AppSite
     },
-    computed: {
-      ...mapGetters(['siteByCompany'])
-    }
   };
 </script>
 

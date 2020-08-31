@@ -123,6 +123,7 @@
             v-model="formReservation.idVehicule"
             :disabled="formReservation.disabled"
             value-field="id"
+            @change="selectVoiture"
             text-field="modele_voiture">
             <b-form-select-option :value="null" disabled>-- Choix de la voiture --</b-form-select-option>
             <b-form-select-option v-for="(car) in vehiculeOptions" v-bind:key="car.id" :value="car.id">
@@ -130,7 +131,7 @@
             </b-form-select-option>
           </b-form-select>
         </b-form-group>
-        <b-form-group v-if="formReservation.status === 2 || formReservation.status  === 4 || isAdmin"
+        <b-form-group v-if="formReservation.status === 2 || formReservation.status  === 4"
           label="Voiture Clé"
           label-for="reserve-voiture-cle"
           invalid-feedback=""
@@ -157,13 +158,13 @@
             v-model="formReservation.personnels"
             placeholder="Rechercher un utilisateur"
             label="name"
-            track-by="nom"
+            track-by="id"
             deselectLabel="Supprimer"
             selectLabel="Sélectionner"
             selectedLabel="Sélectionné"
             :options="personnelsOptions"
             :multiple="true"
-            :max=2
+            :max=maxPersonnel
             :custom-label="customLabel"
             :optionsLimit=10
             :disabled="formReservation.disabled"
@@ -203,7 +204,7 @@
             max-rows="4"
           ></b-form-textarea>
         </b-form-group>
-        <b-form-group v-if="isAdmin"
+        <b-form-group v-if="hideFormField"
           label="Commentaire"
           label-for="reserve-commentaire"
           invalid-feedback=""
@@ -211,7 +212,7 @@
           <b-form-textarea
             id="commentaire"
             v-model="formReservation.commentaire"
-            :disabled="formReservation.disabled"
+            :disabled="commentaireDisabled"
             rows="3"
             max-rows="4"
           ></b-form-textarea>

@@ -1,6 +1,7 @@
 import moment from 'moment';
 import Multiselect from 'vue-multiselect';
 import { mapGetters } from 'vuex';
+import {api} from '@/config';
 
 export default {
   name: 'AppReservation',
@@ -12,15 +13,12 @@ export default {
       personnelsOptions: [
         {id: '62b473a0-91f0-4e6f-bea7-1953ac199157', mail: 'martine.alaplage@eni.fr', nom: 'ALAPLAGE', prenom: 'Martine' },
         {id: '27a51826-0f74-42f0-b3a7-3f51246545e6', mail: 'jean.bon@eni.fr', nom: 'BON', prenom: 'Jean' },
+        {id: '27a51826-0f74-42f0-b3a7-121212112151', mail: 'jean.bon@eni.fr', nom: 'BON2', prenom: 'Jean2' },
+        {id: '27a51826-0f74-42f0-b3a7-121212051451', mail: 'jean.bon@eni.fr', nom: 'BON', prenom: 'Jean3' },
       ],
-      vehiculeOptions: [
-        {id: '49a46fa6-007f-42cd-9319-23eb0c012c14', modele: 'Clio 1', nbPlaces: 5},
-        {id: '1fa6da4d-8d86-4499-86f5-efb0bf7114ab', modele: 'Clio 2', nbPlaces: 5},
-      ],
-      vehiculeCle: [
-        {id: '975938d6-8599-4384-b5c3-9d6ec159f755', libelle: 'Clé bleu'},
-        {id: '93cef5b6-9231-44bb-bf88-e54a7107c7cf', libelle: 'Clé Rouge'},
-      ],
+      vehiculeOptions: [],
+      vehiculeCle: [],
+      maxPersonnel: 0,
       formReservation: {
         disabled: false,
         dateDebut: '',
@@ -38,7 +36,10 @@ export default {
       cTitleReserveModal: 'Ajouter une réservation',
       initialDateStart: '',
       initialDateEnd: '',
-      contact: ''
+      contact: '',
+      action: '',
+      hideFormField: '',
+      commentaireDisabled: ''
     }
   },
   methods: {
@@ -66,21 +67,37 @@ export default {
       this.formReservation.dateFin = '';
       this.formReservation.timeEnd = '';
       this.formReservation.idVehicule = '';
+      this.vehiculeOptions = [];
       this.formReservation.idCle = '';
+      this.vehiculeCle = [];
       this.formReservation.personnels = [];
       this.formReservation.siteDestination = '';
       this.formReservation.description = '';
       this.formReservation.status = '';
+      this.action = '';
+    },
+    addModalReserve() {
+      this.action = 'add';
+      this.getVehiculesBySite();
+      this.checkVisibleCommentaire();
+      this.$bvModal.show('modal-reservation');
     },
     editModalReserve(reserve) {
       this.cTitleReserveModal = 'Réservation de ' + reserve.utilisateur.nom + reserve.utilisateur.prenom;
       this.contact = reserve.utilisateur.mail;
+      this.action = 'edit';
+      this.checkVisibleCommentaire(reserve);
+
       this.$bvModal.show("modal-reservation");
 
       if (reserve.status > 1) {
         this.formReservation.disabled = true;
+        this.vehiculeOptions = [reserve.vehicule];
+        this.vehiculeCle = reserve.vehicule.cles;
+      } else {
+        this.getVehiculesBySite(reserve);
+        this.vehiculeCle = reserve.vehicule.cles;
       }
-
       this.initialDateStart = moment(reserve.dateDebut).format('YYYY-MM-DD');
       this.initialDateEnd = moment(reserve.dateFin).format('YYYY-MM-DD');
       this.formReservation.dateDebut = moment(reserve.dateDebut).format('DD/MM/YYYY');
@@ -94,8 +111,6 @@ export default {
       this.formReservation.description = reserve.description;
       this.formReservation.status = reserve.status;
       this.formReservation.commentaire = reserve.commentaire;
-      console.log(reserve);
-      console.log(JSON.stringify(reserve));
 
     },
     deleteModalReserve(reserve) {
@@ -214,11 +229,51 @@ export default {
     submitModalAnnuler() {
       console.log(JSON.stringify(this.formReservation));
     },
-
+    async getVehiculesBySite(editReserve) {
+      let userSiteId = null;
+      if(this.action === 'add') {
+        userSiteId = this.userLogged.site.id;
+      } else if (this.action === 'edit') {
+        userSiteId = editReserve.utilisateur.site.id;
+      }
+      const token = localStorage.getItem('user-token');
+      this.vehiculeOptions = await api.url(`/api/Vehicules/GetVehiculesBySite/${userSiteId}`)
+        .headers({"Authorization": "Bearer " + token})
+        .get()
+        .json();
+    },
+    selectVoiture(idVehicule) {
+      this.vehiculeOptions.forEach((v) => {
+          if(v.id === idVehicule)
+          {
+            this.vehiculeCle = v.cles;
+            this.maxPersonnel = v.nbPlaces;
+            this.formReservation.personnels = [];
+          }
+      });
+    },
+    checkVisibleCommentaire(reserve) {
+      const routeName = this.$route.name;
+      if(this.action === 'add')
+      {
+        this.hideFormField = false;
+      }
+      else if(this.action === 'edit')
+      {
+        if(reserve.utilisateur.id === this.userLogged.id
+          && routeName === 'Dashboard'
+          && reserve.commentaire !== null
+        ){
+          this.hideFormField = true;
+          this.commentaireDisabled = true;
+        }
+      }
+    }
   },
   computed: {
-    ...mapGetters(['isAdmin']),
+    ...mapGetters(['isAdmin', 'userLogged']),
   },
   mounted() {
+
   }
 };

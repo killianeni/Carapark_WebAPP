@@ -1,11 +1,13 @@
+import {api} from '@/config';
+
 export default {
   name: 'AppSite',
   props: {
-    dataSites: Array,
     typePage: String
   },
   data() {
     return {
+      dataSites: [],
       form: {
         libelle: ''
       },
@@ -50,6 +52,18 @@ export default {
         .catch(err => {
           console.log(err);
         })
-    }
+    },
+    async getSiteByEntreprise() {
+      const user = JSON.parse(localStorage.getItem('user'));
+      const token = localStorage.getItem('user-token');
+      const idEntreprise = user.idEntreprise;
+      this.dataSites = await api.url(`/api/Sites/GetSitebyEntreprise/${idEntreprise}/utilisateur`)
+        .headers({"Authorization": "Bearer " + token})
+        .get()
+        .json();
+    },
+  },
+  mounted() {
+    this.getSiteByEntreprise()
   }
 }

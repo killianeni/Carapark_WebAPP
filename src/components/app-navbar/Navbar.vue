@@ -52,10 +52,10 @@
           <div class="text-center">
             <b-avatar class="mt-3 mb-3" variant="primary" size="5rem"></b-avatar>
             <div class="nom-prenom">
-              <span>{{ name }}</span>
+              <span>{{ userLogged.prenom }} {{ userLogged.nom }}</span>
             </div>
             <div class="mail">
-              <span>{{ mail }}</span>
+              <span>{{ userLogged.mail }}</span>
             </div>
             <div class="deco m-3">
               <b-button variant="primary" @click="logout">Déconnexion</b-button>
