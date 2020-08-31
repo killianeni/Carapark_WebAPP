@@ -9,7 +9,7 @@
           </router-link>
         </div>
         <div class="col-8 col-md-6 text-right mt-3 mb-3">
-          <b-button variant="primary" v-b-modal.modal-reservation>
+          <b-button variant="primary" @click="addReserveModal">
             <i class="kmap-icons icon-add mr-2"></i>
             Ajouter une réservation
           </b-button>
@@ -179,6 +179,9 @@
       },
       seeReserveModal(reserve) {
         this.$refs.formReservation.editModalAnnuler(reserve);
+      },
+      addReserveModal() {
+        this.$refs.formReservation.addModalReserve();
       },
       async getReservationsByUser() {
         const userId = this.userLogged.id;

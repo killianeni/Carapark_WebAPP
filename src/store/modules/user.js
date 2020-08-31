@@ -1,27 +1,25 @@
 import {USER_REQUEST, USER_ERROR, USER_SUCCESS} from '../actions/user';
-// import Vue from 'vue';
 import {AUTH_LOGOUT} from '../actions/auth';
-import {api} from '@/config';
 
-const state = {status: '', user: {}, site: []};
+const state = {
+  status: '',
+  user: {},
+};
 
 const getters = {
   userLogged: state => state.user,
   isUserLoaded: state => !!state.user.id,
-  siteByCompany: state => state.site
 };
 
 const actions = {
   [USER_REQUEST]: async ({commit, dispatch}, data) => {
     commit(USER_REQUEST);
     try {
-      const token = localStorage.getItem('user-token');
-      const idEntreprise = data.user.idEntreprise;
-      const sites = await api.url(`/api/Sites/GetSitebyEntreprise/${idEntreprise}/utilisateur`)
-        .headers({"Authorization": "Bearer " + token})
-        .get()
-        .json();
-      commit(USER_SUCCESS, {user: data.user, site: sites});
+
+      if (!data) {
+        data = JSON.parse(localStorage.getItem('user'));
+      }
+      commit(USER_SUCCESS, {user: data});
     } catch (err) {
       commit(USER_ERROR);
       dispatch(AUTH_LOGOUT);
@@ -36,7 +34,6 @@ const mutations = {
   [USER_SUCCESS]: (state, resp) => {
     state.status = 'success';
     state.user = resp.user;
-    state.site = resp.site;
   },
   [USER_ERROR]: state => {
     state.status = 'error';

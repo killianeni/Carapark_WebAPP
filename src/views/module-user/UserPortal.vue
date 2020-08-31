@@ -6,23 +6,19 @@
           <h3>Choix du site :</h3>
         </div>
       </div>
-      <AppSite :data-sites="siteByCompany" type-page="user"></AppSite>
+      <AppSite type-page="user"></AppSite>
     </div>
   </div>
 </template>
 
 <script>
   import AppSite from '@/components/app-site/AppSite.vue';
-  import {mapGetters} from "vuex";
 
   export default {
     name: 'UserPortal',
     components: {
       AppSite
     },
-    computed: {
-      ...mapGetters(['siteByCompany'])
-    }
   };
 </script>
 

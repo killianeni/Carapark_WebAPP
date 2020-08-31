@@ -10,13 +10,14 @@ import {api} from '@/config';
 const state = {
   token: '',
   status: '',
-  hasLoadedOnce: false
+  hasLoadedOnce: false,
+  admin: false
 };
 
 const getters = {
   isAuthenticated: state => !!state.token,
   authStatus: state => state.status,
-  isAdmin: state => !!state.admin
+  isAdmin: state => state.admin,
 };
 
 const actions = {
@@ -31,17 +32,20 @@ const actions = {
         .headers({"Content-Type": "application/json", Accept: "application/json"})
         .post(body).json();
       localStorage.setItem('user-token', token.token);
+      localStorage.setItem('user-role', token.user.role.libelle);
+      localStorage.setItem('user', JSON.stringify(token.user));
+
       commit(AUTH_SUCCESS, {token: token.token, role: token.user.role.libelle});
-      dispatch(USER_REQUEST, token);
+      dispatch(USER_REQUEST, token.user);
     } catch (err) {
       commit(AUTH_ERROR, err);
-      localStorage.removeItem('user-token');
+      localStorage.clear();
     }
   },
   [AUTH_LOGOUT]: ({commit}) => {
     return new Promise(resolve => {
       commit(AUTH_LOGOUT);
-      localStorage.removeItem('user-token');
+      localStorage.clear();
       resolve();
     });
   }
