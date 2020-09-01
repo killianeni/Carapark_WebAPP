@@ -57,10 +57,27 @@ export default {
       const user = JSON.parse(localStorage.getItem('user'));
       const token = localStorage.getItem('user-token');
       const idEntreprise = user.idEntreprise;
-      this.dataSites = await api.url(`/api/Sites/GetSitebyEntreprise/${idEntreprise}/utilisateur`)
-        .headers({"Authorization": "Bearer " + token})
-        .get()
-        .json();
+      const pageCourante = this.$route.name;
+      switch (pageCourante) {
+        case 'ParkPortal':
+          this.dataSites = await api.url(`/api/Sites/GetSitebyEntreprise/${idEntreprise}/vehicule`)
+            .headers({"Authorization": "Bearer " + token})
+            .get()
+            .json();
+          break;
+        case 'ReservePortal':
+          this.dataSites = await api.url(`/api/Sites/GetSitebyEntreprise/${idEntreprise}/reservation`)
+            .headers({"Authorization": "Bearer " + token})
+            .get()
+            .json();
+          break;
+        case 'UserPortal':
+          this.dataSites = await api.url(`/api/Sites/GetSitebyEntreprise/${idEntreprise}/utilisateur`)
+            .headers({"Authorization": "Bearer " + token})
+            .get()
+            .json();
+          break;
+      }
     },
   },
   mounted() {

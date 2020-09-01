@@ -144,8 +144,8 @@
           label-for="car-carburant">
           <b-form-select
             id="car-carburant"
-            v-model="form.type_carburant"
-            :options="typeCarburant"
+            v-model="form.typeCarbu"
+            :options="typeCarbu"
             required
           ></b-form-select>
         </b-form-group>
@@ -174,7 +174,7 @@
           numImmat: '',
           modele: '',
           nbPlaces: '',
-          nb_portes: '',
+          nbPortes: '',
           typeCarbu: '',
           actif: null
         },
@@ -196,7 +196,7 @@
           { text: '5', value: 5 },
           { text: '6', value: 6 },
         ],
-        typeCarburant: [
+        typeCarbu: [
           { text: '-', value: null },
           { text: 'Essence', value: 'essence' },
           { text: 'Diesel', value: 'diesel' },
@@ -271,19 +271,19 @@
       },
       resetModalCar() {
           this.form.numImmat = '';
-          this.form.modele_voiture = '';
-          this.form.nb_places = '';
-          this.form.nb_portes = '';
-          this.form.type_carburant = '';
+          this.form.modele = '';
+          this.form.nbPlaces = '';
+          this.form.nbPortes = '';
+          this.form.typeCarbu = '';
           this.form.actif = null
       },
       editCar(item) {
         this.$bvModal.show("modal-car");
         this.form.numImmat = item.numImmat;
-        this.form.modele_voiture = item.modele_voiture;
-        this.form.nb_places = item.nb_places;
-        this.form.nb_portes = item.nb_portes;
-        this.form.type_carburant = item.type_carburant;
+        this.form.modele = item.modele;
+        this.form.nbPlaces = item.nbPlaces;
+        this.form.nbPortes = item.nbPortes;
+        this.form.typeCarbu = item.typeCarbu;
         this.form.actif = item.actif;
         console.log(item);
       },
