@@ -259,12 +259,20 @@
           .get()
           .json();
       },
+      async postCar(){
+        console.log(JSON.stringify(this.form));
+        // const body = JSON.stringify(this.form);
+        // await api.url('/api/Sites')
+        //   .headers({"Content-Type": "application/json", Accept: "application/json"})
+        //   .post(body).json();
+      },
       okCar(bvModalEvt) {
         bvModalEvt.preventDefault();
         this.submitCar()
       },
       submitCar() {
-        console.log(JSON.stringify(this.form));
+        this.postCar();
+        this.getCars();
         this.$nextTick(() => {
           this.$bvModal.hide('modal-car')
         })
@@ -285,7 +293,6 @@
         this.form.nbPortes = item.nbPortes;
         this.form.typeCarbu = item.typeCarbu;
         this.form.actif = item.actif;
-        console.log(item);
       },
       deleteCar(item) {
         this.$bvModal.msgBoxConfirm('Veuillez confirmer que vous souhaitez supprimer cette voiture.', {
