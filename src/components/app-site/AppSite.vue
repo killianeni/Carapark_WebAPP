@@ -19,12 +19,12 @@
             <router-link :to="{ name: 'ParkCar', params: { id: dataSite.id }}" class="btn btn-dark">
               <i class="kmap-icons icon-see"></i>
             </router-link>
-            <b-button variant="primary" @click="editSite(dataSite)">
-              <i class="kmap-icons icon-edit"></i>
-            </b-button>
-            <b-button variant="danger" @click="deleteSite(dataSite)">
-              <i class="kmap-icons icon-delete"></i>
-            </b-button>
+<!--            <b-button variant="primary" @click="editSite(dataSite)">-->
+<!--              <i class="kmap-icons icon-edit"></i>-->
+<!--            </b-button>-->
+<!--            <b-button variant="danger" @click="deleteSite(dataSite)">-->
+<!--              <i class="kmap-icons icon-delete"></i>-->
+<!--            </b-button>-->
           </b-button-group>
           <b-button-group v-if="typePage === 'user'">
             <router-link :to="{ name: 'UserList', params: { id: dataSite.id }}" class="btn btn-dark">
