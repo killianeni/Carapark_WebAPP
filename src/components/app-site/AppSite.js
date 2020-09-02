@@ -60,19 +60,19 @@ export default {
       const pageCourante = this.$route.name;
       switch (pageCourante) {
         case 'ParkPortal':
-          this.dataSites = await api.url(`/api/Sites/GetSitebyEntreprise/${idEntreprise}/vehicule`)
+          this.dataSites = await api.url(`/api/Sites/GetSitesbyEntreprise/${idEntreprise}/vehicule`)
             .headers({"Authorization": "Bearer " + token})
             .get()
             .json();
           break;
         case 'ReservePortal':
-          this.dataSites = await api.url(`/api/Sites/GetSitebyEntreprise/${idEntreprise}/reservation`)
+          this.dataSites = await api.url(`/api/Sites/GetSitesbyEntreprise/${idEntreprise}/reservation`)
             .headers({"Authorization": "Bearer " + token})
             .get()
             .json();
           break;
         case 'UserPortal':
-          this.dataSites = await api.url(`/api/Sites/GetSitebyEntreprise/${idEntreprise}/utilisateur`)
+          this.dataSites = await api.url(`/api/Sites/GetSitesbyEntreprise/${idEntreprise}/utilisateur`)
             .headers({"Authorization": "Bearer " + token})
             .get()
             .json();
