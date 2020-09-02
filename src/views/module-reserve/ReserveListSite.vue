@@ -54,6 +54,9 @@
           <template v-slot:cell(dateFin)="{item}">
             {{ customDate(item.dateFin,item.timeEnd) }}
           </template>
+          <template v-slot:cell(vehicule)="{item}">
+            {{ item.vehicule.modele }} -  {{ item.vehicule.nbPlaces }} Places
+          </template>
           <template v-slot:cell(personnels)="{item}">
             <b-avatar-group variant="primary">
               <b-avatar :title="customAvatar(p)" v-for="(p, idxP) in item.personnels" v-bind:key="idxP"></b-avatar>
@@ -74,7 +77,7 @@
               <b-button v-if="item.status === 1" variant="success" @click="validateReserveModal(item)">
                 <i class="kmap-icons icon-true"></i>
               </b-button>
-              <b-button v-if="item.status !== 2 && item.status !== 4" variant="danger" @click="annulerReserveModal(item)">
+              <b-button v-if="item.status === 1" variant="danger" @click="annulerReserveModal(item)">
                 <i class="kmap-icons icon-false"></i>
               </b-button>
               <b-button v-if="item.status === 2" variant="dark" @click="cloturerReserveModal(item)">
@@ -99,18 +102,21 @@
       </div>
     </div>
     <AppReservation ref="formReservation"></AppReservation>
+    <AppReservationAction ref="formReservationAction"></AppReservationAction>
   </div>
 </template>
 
 <script>
   import moment from 'moment';
   import AppReservation from '@/components/app-reservation/AppReservation.vue';
+  import AppReservationAction from '@/components/app-reservation-action/AppReservationAction.vue';
   import {api} from '@/config';
 
   export default {
     name: 'ReserveListSite',
     components: {
-      AppReservation
+      AppReservation,
+      AppReservationAction
     },
     data() {
       return {
@@ -123,6 +129,11 @@
           {
             key: 'dateFin',
             label: 'Date de Fin',
+            sortable: true,
+          },
+          {
+            key: 'vehicule',
+            label: 'Véhicule',
             sortable: true,
           },
           {
@@ -168,19 +179,19 @@
         return d + " - " + t;
       },
       editReserveModal(reserve) {
-        this.$refs.formReservation.editModalReserve(reserve);
+        this.$refs.formReservation.editCommentaireModalReserve(reserve);
       },
       deleteReserveModal(reserve) {
-        this.$refs.formReservation.deleteModalReserve(reserve);
+        this.$refs.formReservationAction.deleteModalReserve(reserve);
       },
       validateReserveModal(reserve) {
-        this.$refs.formReservation.validateModalReserve(reserve);
+        this.$refs.formReservationAction.validateModalReserve(reserve);
       },
       annulerReserveModal(reserve) {
-        this.$refs.formReservation.editModalAnnuler(reserve);
+        this.$refs.formReservationAction.editModalAnnuler(reserve);
       },
       cloturerReserveModal(reserve) {
-        this.$refs.formReservation.cloturerModalReserve(reserve);
+        this.$refs.formReservationAction.cloturerModalReserve(reserve);
       },
       async getReservationsBySite() {
         const idSite = this.$route.params.id;

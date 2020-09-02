@@ -60,6 +60,9 @@
           <template v-slot:cell(dateFin)="{item}">
             {{ customDate(item.dateFin,item.timeEnd) }}
           </template>
+          <template v-slot:cell(vehicule)="{item}">
+            {{ item.vehicule.modele }} -  {{ item.vehicule.nbPlaces }} Places
+          </template>
           <template v-slot:cell(personnels)="{item}">
             <b-avatar-group variant="primary">
               <b-avatar :title="customAvatar(p)" v-for="(p, idxP) in item.personnels" v-bind:key="idxP"></b-avatar>
@@ -77,7 +80,7 @@
                 <i class="kmap-icons icon-edit" v-if="item.status === 1"></i>
                 <i class="kmap-icons icon-see" v-else></i>
               </b-button>
-              <b-button v-if="item.status <= 3" variant="danger" @click="deleteReserveModal(item)">
+              <b-button v-if="item.status < 3" variant="danger" @click="deleteReserveModal(item)">
                 <i class="kmap-icons icon-delete"></i>
               </b-button>
               <b-button v-if="item.status === 3" variant="danger" @click="seeReserveModal(item)">
@@ -102,19 +105,22 @@
       </div>
     </div>
     <AppReservation ref="formReservation"></AppReservation>
+    <AppReservationAction ref="formReservationAction"></AppReservationAction>
   </div>
 </template>
 
 <script>
   import moment from 'moment';
   import AppReservation from '@/components/app-reservation/AppReservation.vue';
+  import AppReservationAction from '@/components/app-reservation-action/AppReservationAction.vue';
   import {mapGetters} from 'vuex';
   import {api} from '@/config';
 
   export default {
     name: 'ReserveListUser',
     components: {
-      AppReservation
+      AppReservation,
+      AppReservationAction
     },
     data() {
       return {
@@ -127,6 +133,11 @@
           {
             key: 'dateFin',
             label: 'Date de Fin',
+            sortable: true,
+          },
+          {
+            key: 'vehicule',
+            label: 'Véhicule',
             sortable: true,
           },
           {
@@ -175,10 +186,10 @@
         this.$refs.formReservation.editModalReserve(reserve);
       },
       deleteReserveModal(reserve) {
-        this.$refs.formReservation.deleteModalReserve(reserve);
+        this.$refs.formReservationAction.deleteModalReserve(reserve);
       },
       seeReserveModal(reserve) {
-        this.$refs.formReservation.editModalAnnuler(reserve);
+        this.$refs.formReservationAction.seeModalAnnuler(reserve);
       },
       addReserveModal() {
         this.$refs.formReservation.addModalReserve();
