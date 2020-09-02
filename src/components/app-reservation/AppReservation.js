@@ -38,8 +38,19 @@ export default {
       initialDateEnd: '',
       contact: '',
       action: '',
-      hideFormField: '',
-      commentaireDisabled: ''
+      hideReservation: {
+        hideVehicule: '',
+        hidePersonnels: '',
+        hideSiteDestination: '',
+        hideDescription: '',
+        hideCommentaire: '',
+      },
+      disabledReservation: {
+        disabledVehicule: '',
+        disabledPersonnels: '',
+        disabledSiteDestination: '',
+        disabledCommentaire: '',
+      },
     }
   },
   methods: {
@@ -75,10 +86,14 @@ export default {
       this.formReservation.description = '';
       this.formReservation.status = '';
       this.action = '';
+      this.hideReservation.hideVehicule = false;
+      this.hideReservation.hidePersonnels = false;
+      this.hideReservation.hideSiteDestination = false;
+      this.hideReservation.hideDescription = false;
+      this.hideReservation.hideCommentaire = false;
     },
     addModalReserve() {
       this.action = 'add';
-      this.getVehiculesBySite();
       this.checkVisibleCommentaire();
       this.$bvModal.show('modal-reservation');
     },
@@ -86,6 +101,10 @@ export default {
       this.cTitleReserveModal = 'Réservation de ' + reserve.utilisateur.nom + reserve.utilisateur.prenom;
       this.contact = reserve.utilisateur.mail;
       this.action = 'edit';
+      this.hideReservation.hideVehicule = true;
+      this.hideReservation.hidePersonnels = true;
+      this.hideReservation.hideSiteDestination = true;
+      this.hideReservation.hideDescription = true;
       this.checkVisibleCommentaire(reserve);
 
       this.$bvModal.show("modal-reservation");
@@ -111,70 +130,34 @@ export default {
       this.formReservation.description = reserve.description;
       this.formReservation.status = reserve.status;
       this.formReservation.commentaire = reserve.commentaire;
+    },
+    editCommentaireModalReserve(reserve) {
+      this.action = 'editCommentaire';
+      this.hideReservation.hideVehicule = true;
+      this.hideReservation.hidePersonnels = true;
+      this.hideReservation.hideSiteDestination = true;
+      this.hideReservation.hideDescription = true;
+      this.formReservation.disabled = true;
+      this.checkVisibleCommentaire(reserve);
 
-    },
-    deleteModalReserve(reserve) {
-      this.$bvModal.msgBoxConfirm('Veuillez confirmer que vous souhaitez supprimer cette réservation.', {
-        title: 'Veuillez confirmer',
-        size: 'md',
-        buttonSize: 'md',
-        okVariant: 'primary',
-        cancelVariant: 'danger',
-        okTitle: 'Valider',
-        cancelTitle: 'Annuler',
-        footerClass: 'p-2',
-        hideHeaderClose: false,
-        centered: true
-      })
-        .then(value => {
-          console.log(value);
-          console.log(reserve);
-        })
-        .catch(err => {
-          console.log(err);
-        })
-    },
-    validateModalReserve(reserve) {
-      this.$bvModal.msgBoxConfirm('Veuillez confirmer que vous souhaitez valider cette réservation.', {
-        title: 'Veuillez confirmer',
-        size: 'md',
-        buttonSize: 'md',
-        okVariant: 'primary',
-        cancelVariant: 'danger',
-        okTitle: 'Valider',
-        cancelTitle: 'Annuler',
-        footerClass: 'p-2',
-        hideHeaderClose: false,
-        centered: true,
-      })
-        .then(value => {
-          console.log(value);
-          console.log(reserve);
-        })
-        .catch(err => {
-          console.log(err);
-        })
-    },
-    cloturerModalReserve(reserve) {
-      this.$bvModal.msgBoxConfirm('Veuillez confirmer que vous souhaitez clôturer cette réservation.', {
-        title: 'Veuillez confirmer',
-        size: 'md',
-        buttonSize: 'md',
-        okVariant: 'primary',
-        cancelVariant: 'danger',
-        okTitle: 'Valider',
-        cancelTitle: 'Annuler',
-        footerClass: 'p-2',
-        hideHeaderClose: false,
-        centered: true,
-      })
-        .then(value => {
-          console.log(value);
-          console.log(reserve);
-        })
-        .catch(err => {
-          console.log(err);
-        })
+      this.$bvModal.show("modal-reservation");
+
+      this.getVehiculesBySite(reserve);
+      this.vehiculeCle = reserve.vehicule.cles;
+      this.initialDateStart = moment(reserve.dateDebut).format('YYYY-MM-DD');
+      this.initialDateEnd = moment(reserve.dateFin).format('YYYY-MM-DD');
+      this.formReservation.dateDebut = moment(reserve.dateDebut).format('DD/MM/YYYY');
+      this.formReservation.timeStart = reserve.timeStart;
+      this.formReservation.dateFin = moment(reserve.dateFin).format('DD/MM/YYYY');
+      this.formReservation.timeEnd = reserve.timeEnd;
+      this.formReservation.idVehicule = reserve.vehicule.id;
+      this.formReservation.idCle = reserve.cle.id;
+      this.formReservation.personnels = reserve.personnels;
+      this.formReservation.siteDestination = reserve.siteDestination;
+      this.formReservation.description = reserve.description;
+      this.formReservation.status = reserve.status;
+      this.formReservation.commentaire = reserve.commentaire;
+
     },
     onContextDateStart(ctxS) {
       if (ctxS.selectedDate != null) {
@@ -195,45 +178,11 @@ export default {
     shown() {
       console.log("Open");
     },
-    editModalAnnuler(reserve) {
-      this.$bvModal.show("modal-annuler");
-
-      if (reserve.status === 2 || reserve.status === 3) {
-        this.formReservation.disabled = true;
-      }
-
-      this.initialDateStart = moment(reserve.dateDebut).format('YYYY-MM-DD');
-      this.initialDateEnd = moment(reserve.dateFin).format('YYYY-MM-DD');
-      this.formReservation.dateDebut = moment(reserve.dateDebut).format('DD/MM/YYYY');
-      this.formReservation.timeStart = reserve.timeStart;
-      this.formReservation.dateFin = moment(reserve.dateFin).format('DD/MM/YYYY');
-      this.formReservation.timeEnd = reserve.timeEnd;
-      this.formReservation.idVehicule = reserve.vehicule.id;
-      this.formReservation.idCle = reserve.cle.id;
-      this.formReservation.personnels = reserve.personnels;
-      this.formReservation.siteDestination = reserve.siteDestination;
-      this.formReservation.description = reserve.description;
-      this.formReservation.commentaire = reserve.commentaire;
-      this.formReservation.status = reserve.status;
-
-      console.log(JSON.stringify(reserve));
-    },
-    resetModalAnnuler() {
-      this.formReservation.disabled = false;
-      this.formReservation.commentaire = '';
-    },
-    okModalAnnuler(bvModalEvt) {
-      bvModalEvt.preventDefault();
-      this.submitModalAnnuler()
-    },
-    submitModalAnnuler() {
-      console.log(JSON.stringify(this.formReservation));
-    },
     async getVehiculesBySite(editReserve) {
       let userSiteId = null;
       if(this.action === 'add') {
         userSiteId = this.userLogged.site.id;
-      } else if (this.action === 'edit') {
+      } else if (this.action === 'edit' || this.action === 'editCommentaire') {
         userSiteId = editReserve.utilisateur.site.id;
       }
       const token = localStorage.getItem('user-token');
@@ -242,6 +191,39 @@ export default {
         .get()
         .json();
     },
+    async getVehiculeNonResaBySiteAndDate(dateDebut,dateFin) {
+      const userSiteId = this.userLogged.site.id;
+      const token = localStorage.getItem('user-token');
+
+      this.vehiculeOptions = await api.url(`/api/Vehicules/GetVehiculeNonResaBySiteAndDate/${userSiteId}/${dateDebut}/${dateFin}`)
+        .headers({"Authorization": "Bearer " + token})
+        .get()
+        .json();
+    },
+    selectDate() {
+      if(this.action === 'add') {
+        const dD = this.formReservation.dateDebut;
+        const dF = this.formReservation.dateFin;
+        const tS = this.formReservation.timeStart;
+        const tE = this.formReservation.timeEnd;
+        const dateInfo = {
+          'dateD': null,
+          'dateF': null,
+        };
+
+        if(dD !== ''
+          && dF !== ''
+          && tS !== ''
+          && tE !== '')
+        {
+          dateInfo.dateD = tS === 'AM' ? moment(dD).format('YYYY-MM-DD 09:00:00') : moment(dD).format('YYYY-MM-DD 15:00:00');
+          dateInfo.dateF = tE === 'AM' ? moment(dF).format('YYYY-MM-DD 09:00:00') : moment(dF).format('YYYY-MM-DD 15:00:00');
+
+          this.getVehiculeNonResaBySiteAndDate(dateInfo.dateD, dateInfo.dateF);
+          this.hideReservation.hideVehicule = true;
+        }
+      }
+    },
     selectVoiture(idVehicule) {
       this.vehiculeOptions.forEach((v) => {
           if(v.id === idVehicule)
@@ -249,6 +231,9 @@ export default {
             this.vehiculeCle = v.cles;
             this.maxPersonnel = v.nbPlaces;
             this.formReservation.personnels = [];
+            this.hideReservation.hidePersonnels = true;
+            this.hideReservation.hideSiteDestination = true;
+            this.hideReservation.hideDescription = true;
           }
       });
     },
@@ -256,7 +241,7 @@ export default {
       const routeName = this.$route.name;
       if(this.action === 'add')
       {
-        this.hideFormField = false;
+        this.hideReservation.hideCommentaire = false;
       }
       else if(this.action === 'edit')
       {
@@ -264,10 +249,23 @@ export default {
           && routeName === 'Dashboard'
           && reserve.commentaire !== null
         ){
-          this.hideFormField = true;
-          this.commentaireDisabled = true;
+          this.hideReservation.hideCommentaire = true;
+          this.disabledReservation.disabledCommentaire = true;
         }
       }
+      else if (this.action === 'editCommentaire')
+      {
+        this.hideReservation.hideCommentaire = true;
+
+        if(reserve.status > 1) {
+          this.disabledReservation.disabledCommentaire = true;
+        } else {
+          this.disabledReservation.disabledCommentaire = false;
+        }
+      }
+    },
+    getFormReservation() {
+      return [this.formReservation];
     }
   },
   computed: {

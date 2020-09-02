@@ -17,6 +17,17 @@
         ref="formReservation"
         class="user-reservation"
         @submit.stop.prevent="submitModalReserve">
+        <b-container fluid v-if="formReservation.status" class="mb-3">
+          <b-row>
+            <b-col sm="12" class="p-0">
+              Statut :
+              <b-badge v-if="formReservation.status === 1" variant="warning">En attente</b-badge>
+              <b-badge v-if="formReservation.status === 2" variant="success">Validé</b-badge>
+              <b-badge v-if="formReservation.status === 3" variant="danger">Rejeté</b-badge>
+              <b-badge v-if="formReservation.status === 4" variant="dark">Clôturé</b-badge>
+            </b-col>
+          </b-row>
+        </b-container>
         <b-form-group
           label="Date"
           label-for="reserve-dateDebut"
@@ -53,6 +64,7 @@
             id="reserve-timeStart"
             v-model="formReservation.timeStart"
             :disabled="formReservation.disabled"
+            @change="selectDate"
             required
           >
             <b-form-select-option :value="null" disabled>
@@ -100,6 +112,7 @@
             id="reserve-timeEnd"
             v-model="formReservation.timeEnd"
             :disabled="formReservation.disabled"
+            @change="selectDate"
             required
           >
             <b-form-select-option :value="null" disabled>
@@ -113,7 +126,7 @@
             </b-form-select-option>
           </b-form-select>
         </b-form-group>
-        <b-form-group
+        <b-form-group v-if="hideReservation.hideVehicule"
           label="Voiture"
           label-for="reserve-voiture"
           invalid-feedback=""
@@ -148,7 +161,7 @@
             </b-form-select-option>
           </b-form-select>
         </b-form-group>
-        <b-form-group
+        <b-form-group v-if="hideReservation.hidePersonnels"
           label="Liste des passagers"
           label-for="reserve-passager"
           invalid-feedback=""
@@ -179,7 +192,7 @@
             <span slot="maxElements">Voiture complète</span>
           </multiselect>
         </b-form-group>
-        <b-form-group
+        <b-form-group v-if="hideReservation.hideSiteDestination"
           label="Destination"
           label-for="reserve-siteDestination"
           invalid-feedback=""
@@ -191,7 +204,7 @@
             required
           ></b-form-input>
         </b-form-group>
-        <b-form-group
+        <b-form-group v-if="hideReservation.hideDescription"
           label="Description"
           label-for="reserve-description"
           invalid-feedback=""
@@ -204,7 +217,7 @@
             max-rows="4"
           ></b-form-textarea>
         </b-form-group>
-        <b-form-group v-if="hideFormField"
+        <b-form-group v-if="hideReservation.hideCommentaire"
           label="Commentaire"
           label-for="reserve-commentaire"
           invalid-feedback=""
@@ -212,7 +225,7 @@
           <b-form-textarea
             id="commentaire"
             v-model="formReservation.commentaire"
-            :disabled="commentaireDisabled"
+            :disabled="disabledReservation.disabledCommentaire"
             rows="3"
             max-rows="4"
           ></b-form-textarea>
@@ -225,7 +238,7 @@
         </div>
       </form>
       <template slot="modal-footer" slot-scope="{ ok, cancel }">
-        <template v-if="formReservation.disabled">
+        <template v-if="formReservation.status > 1">
           <b-button @click="cancel" variant="danger" >Fermer</b-button>
         </template>
         <template v-else>
@@ -234,53 +247,6 @@
         </template>
       </template>
     </b-modal>
-    <template>
-      <b-modal
-        id="modal-annuler"
-        ref="modal"
-        title="Veuillez confirmer"
-        cancel-title="Annuler"
-        ok-title="Valider"
-        header-bg-variant="light"
-        body-bg-variant="light"
-        footer-bg-variant="light"
-        @hidden="resetModalAnnuler"
-        @ok="okModalAnnuler"
-        centered
-      >
-        <template slot="modal-title">
-          <template v-if="formReservation.disabled">
-            <h5>Raison du refus</h5>
-          </template>
-          <template v-else>
-            <h5>Veuillez confirmer</h5>
-          </template>
-        </template>
-        <p v-if="!formReservation.disabled">Veuillez confirmer que vous souhaitez annulé cette réservation.</p>
-        <form ref="form" @submit.stop.prevent="submitModalAnnuler">
-          <b-form-group
-            label="Commentaire"
-            label-for="reserve-commentaire"
-          >
-            <b-form-textarea
-              id="reserve-commentaire"
-              v-model="formReservation.commentaire"
-              :disabled="formReservation.disabled"
-              required
-            ></b-form-textarea>
-          </b-form-group>
-        </form>
-        <template slot="modal-footer" slot-scope="{ ok, cancel }">
-          <template v-if="formReservation.disabled">
-            <b-button @click="cancel" variant="danger" >Fermer</b-button>
-          </template>
-          <template v-else>
-            <b-button @click="cancel" variant="danger">Annuler</b-button>
-            <b-button @click="ok" variant="primary">Valider</b-button>
-          </template>
-        </template>
-      </b-modal>
-    </template>
   </div>
 </template>
 

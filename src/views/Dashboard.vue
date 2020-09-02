@@ -98,6 +98,7 @@
                     <b-badge v-if="reserve.status === 1" variant="warning">En attente</b-badge>
                     <b-badge v-if="reserve.status === 2" variant="success">Validé</b-badge>
                     <b-badge v-if="reserve.status === 3" variant="danger">Rejeté</b-badge>
+                    <b-badge v-if="reserve.status === 4" variant="dark">Clôturé</b-badge>
                   </div>
                 </div>
               </b-list-group-item>
@@ -126,7 +127,7 @@
         today: moment(),
         dateContext: moment(),
         days: ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'],
-        maxVoitureSite: 8,
+        maxVoitureSite: 0,
         cListTitleModal: '',
         cListReserveModal: [],
         cListReservations: [],
@@ -212,7 +213,7 @@
             .then(data => {
               data.forEach((d) => {
                 // On retire les status "Rejeté" et "Clôturé"
-                if(d.status < 3)
+                if(d.status !== 3)
                 {
                   this.reservations.push(d);
                 }
@@ -220,6 +221,15 @@
               this.initPushDataReserve();
             });
         }
+      },
+      async getCountVehiculeActifBySite() {
+        const userIdSite = this.userLogged.site.id;
+        const token = localStorage.getItem('user-token');
+
+        this.maxVoitureSite = await api.url(`/api/Vehicules/CountVehiculeActifBySite/${userIdSite}`)
+          .headers({"Authorization": "Bearer " + token})
+          .get()
+          .json();
       },
       initListReservation() {
         let dayArray = new Array(this.dateContext.daysInMonth());
@@ -307,6 +317,7 @@
       },
     },
     mounted() {
+      this.getCountVehiculeActifBySite();
       this.getReservationsBySite();
       this.initListReservation();
     },
