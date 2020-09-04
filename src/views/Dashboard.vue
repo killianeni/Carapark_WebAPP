@@ -222,11 +222,11 @@
             });
         }
       },
-      async getCountVehiculeActifBySite() {
+      async getCountVehiculesActifBySite() {
         const userIdSite = this.userLogged.site.id;
         const token = localStorage.getItem('user-token');
 
-        this.maxVoitureSite = await api.url(`/api/Vehicules/CountVehiculeActifBySite/${userIdSite}`)
+        this.maxVoitureSite = await api.url(`/api/Vehicules/CountVehiculesActifBySite/${userIdSite}`)
           .headers({"Authorization": "Bearer " + token})
           .get()
           .json();
@@ -317,7 +317,7 @@
       },
     },
     mounted() {
-      this.getCountVehiculeActifBySite();
+      this.getCountVehiculesActifBySite();
       this.getReservationsBySite();
       this.initListReservation();
     },
