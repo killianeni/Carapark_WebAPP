@@ -81,7 +81,7 @@
                 <i class="kmap-icons icon-see" v-else></i>
               </b-button>
               <b-button v-if="item.status < 3" variant="danger" @click="deleteReserveModal(item)">
-                <i class="kmap-icons icon-delete"></i>
+                <i class="kmap-icons icon-false"></i>
               </b-button>
               <b-button v-if="item.status === 3" variant="danger" @click="seeReserveModal(item)">
                 <i class="kmap-icons icon-info"></i>
