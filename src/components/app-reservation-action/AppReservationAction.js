@@ -10,7 +10,7 @@ export default {
   },
   methods: {
     deleteModalReserve(reserve) {
-      this.$bvModal.msgBoxConfirm('Veuillez confirmer que vous souhaitez supprimer cette réservation.', {
+      this.$bvModal.msgBoxConfirm('Veuillez confirmer que vous souhaitez annuler cette réservation.', {
         title: 'Veuillez confirmer',
         size: 'md',
         buttonSize: 'md',

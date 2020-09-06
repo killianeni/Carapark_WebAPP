@@ -10,15 +10,15 @@ export default {
   },
   data() {
     return {
-      personnelsOptions: [
-        {id: '62b473a0-91f0-4e6f-bea7-1953ac199157', mail: 'martine.alaplage@eni.fr', nom: 'ALAPLAGE', prenom: 'Martine' },
-        {id: '27a51826-0f74-42f0-b3a7-3f51246545e6', mail: 'jean.bon@eni.fr', nom: 'BON', prenom: 'Jean' },
-        {id: '27a51826-0f74-42f0-b3a7-121212112151', mail: 'jean.bon@eni.fr', nom: 'BON2', prenom: 'Jean2' },
-        {id: '27a51826-0f74-42f0-b3a7-121212051451', mail: 'jean.bon@eni.fr', nom: 'BON', prenom: 'Jean3' },
-      ],
+      token: localStorage.getItem('user-token'),
+      personnelsOptions: [],
       vehiculeOptions: [],
       vehiculeCle: [],
+      vehiculeErreur: null,
       maxPersonnel: 0,
+      disabledDateDebutCalendar: [],
+      disabledDateFinCalendar: [],
+      calendarDateFinStart: '',
       formReservation: {
         disabled: false,
         dateDebut: '',
@@ -44,13 +44,21 @@ export default {
         hideSiteDestination: '',
         hideDescription: '',
         hideCommentaire: '',
+        hideTimeStart: {
+          am: false,
+          pm: false
+        },
+        hideTimeEnd: {
+          am: false,
+          pm: false
+        }
       },
       disabledReservation: {
-        disabledVehicule: '',
-        disabledPersonnels: '',
-        disabledSiteDestination: '',
         disabledCommentaire: '',
+        disabledTimeStart: '',
+        disabledTimeEnd: '',
       },
+
     }
   },
   methods: {
@@ -59,13 +67,62 @@ export default {
     },
     okModalReserve(bvModalEvt) {
       bvModalEvt.preventDefault();
-      this.submitModalReserve()
+      this.submitModalReserve();
     },
-    submitModalReserve() {
-      console.log(JSON.stringify(this.formReservation));
-      /*this.$nextTick(() => {
-        this.$bvModal.hide('modal-reservation');
-      })*/
+    async submitModalReserve() {
+      switch (this.action) {
+        case 'add': {
+          // POST
+          const bodyFormReservation = {
+            'dateDebut': this.initialDateStart,
+            'dateFin': this.initialDateEnd,
+            'utilisateur': {
+              id: this.userLogged.id
+            },
+            'vehicule': {
+              id: this.formReservation.idVehicule
+            },
+            'personnels': [],
+            'siteDestination': this.formReservation.siteDestination,
+            'description': this.formReservation.description,
+            'confirmationCle': false,
+            'isRejeted': false,
+            'isAccepted': false,
+            'commentaire': '',
+          };
+
+          await api.url('/api/Reservations')
+            .headers({
+              'Content-Type': 'application/json',
+               Accept: 'application/json',
+              'Authorization': 'Bearer ' + this.token
+            })
+            .post(bodyFormReservation)
+            .badRequest(err => console.log(err))
+            .res(r => {
+              if(r.ok === true) {
+                this.$parent.reservations = [];
+                this.$parent.cListReservations = [];
+                this.$parent.initListReservation();
+                this.$parent.getReservationsBySite();
+                this.$bvModal.hide('modal-reservation');
+              }
+            });
+          break;
+        }
+        case 'edit': {
+          // PUT
+          console.log(this.action);
+          console.log(this.formReservation);
+          break;
+        }
+        case 'editCommentaire': {
+          // PUT
+          console.log(this.action);
+          console.log(this.formReservation);
+          break;
+        }
+      }
     },
     resetModalReserve() {
       this.cTitleReserveModal = 'Ajouter une réservation';
@@ -91,10 +148,18 @@ export default {
       this.hideReservation.hideSiteDestination = false;
       this.hideReservation.hideDescription = false;
       this.hideReservation.hideCommentaire = false;
+      this.hideReservation.hideTimeStart.am = false;
+      this.hideReservation.hideTimeStart.pm = false;
+      this.hideReservation.hideTimeEnd.am = false;
+      this.hideReservation.hideTimeEnd.pm = false;
+      this.disabledReservation.disabledTimeStart = true;
+      this.disabledReservation.disabledTimeEnd = true;
     },
     addModalReserve() {
       this.action = 'add';
       this.checkVisibleCommentaire();
+      this.disabledReservation.disabledTimeStart = true;
+      this.disabledReservation.disabledTimeEnd = true;
       this.$bvModal.show('modal-reservation');
     },
     editModalReserve(reserve) {
@@ -105,9 +170,13 @@ export default {
       this.hideReservation.hidePersonnels = true;
       this.hideReservation.hideSiteDestination = true;
       this.hideReservation.hideDescription = true;
+      this.hideReservation.hideTimeStart.am = true;
+      this.hideReservation.hideTimeStart.pm = true;
+      this.hideReservation.hideTimeEnd.am = true;
+      this.hideReservation.hideTimeEnd.pm = true;
       this.checkVisibleCommentaire(reserve);
 
-      this.$bvModal.show("modal-reservation");
+      this.$bvModal.show('modal-reservation');
 
       if (reserve.status > 1) {
         this.formReservation.disabled = true;
@@ -117,19 +186,7 @@ export default {
         this.getVehiculesBySite(reserve);
         this.vehiculeCle = reserve.vehicule.cles;
       }
-      this.initialDateStart = moment(reserve.dateDebut).format('YYYY-MM-DD');
-      this.initialDateEnd = moment(reserve.dateFin).format('YYYY-MM-DD');
-      this.formReservation.dateDebut = moment(reserve.dateDebut).format('DD/MM/YYYY');
-      this.formReservation.timeStart = reserve.timeStart;
-      this.formReservation.dateFin = moment(reserve.dateFin).format('DD/MM/YYYY');
-      this.formReservation.timeEnd = reserve.timeEnd;
-      this.formReservation.idVehicule = reserve.vehicule.id;
-      this.formReservation.idCle = reserve.cle.id;
-      this.formReservation.personnels = reserve.personnels;
-      this.formReservation.siteDestination = reserve.siteDestination;
-      this.formReservation.description = reserve.description;
-      this.formReservation.status = reserve.status;
-      this.formReservation.commentaire = reserve.commentaire;
+      this.initializeData(reserve);
     },
     editCommentaireModalReserve(reserve) {
       this.action = 'editCommentaire';
@@ -138,103 +195,128 @@ export default {
       this.hideReservation.hideSiteDestination = true;
       this.hideReservation.hideDescription = true;
       this.formReservation.disabled = true;
+      this.hideReservation.hideTimeStart.am = true;
+      this.hideReservation.hideTimeStart.pm = true;
+      this.hideReservation.hideTimeEnd.am = true;
+      this.hideReservation.hideTimeEnd.pm = true;
       this.checkVisibleCommentaire(reserve);
 
-      this.$bvModal.show("modal-reservation");
-
+      this.$bvModal.show('modal-reservation');
+      console.log(reserve);
       this.getVehiculesBySite(reserve);
       this.vehiculeCle = reserve.vehicule.cles;
-      this.initialDateStart = moment(reserve.dateDebut).format('YYYY-MM-DD');
-      this.initialDateEnd = moment(reserve.dateFin).format('YYYY-MM-DD');
-      this.formReservation.dateDebut = moment(reserve.dateDebut).format('DD/MM/YYYY');
-      this.formReservation.timeStart = reserve.timeStart;
-      this.formReservation.dateFin = moment(reserve.dateFin).format('DD/MM/YYYY');
-      this.formReservation.timeEnd = reserve.timeEnd;
-      this.formReservation.idVehicule = reserve.vehicule.id;
-      this.formReservation.idCle = reserve.cle.id;
-      this.formReservation.personnels = reserve.personnels;
-      this.formReservation.siteDestination = reserve.siteDestination;
-      this.formReservation.description = reserve.description;
-      this.formReservation.status = reserve.status;
-      this.formReservation.commentaire = reserve.commentaire;
-
+      this.initializeData(reserve);
     },
     onContextDateStart(ctxS) {
+      const dateMonthYear = moment(ctxS.activeDate).format('M-YYYY');
+      this.getFullReservedDays(dateMonthYear, this.disabledDateDebutCalendar);
+
       if (ctxS.selectedDate != null) {
+        const dateSelected = moment(ctxS.activeYMD);
         this.formReservation.dateDebut = ctxS.activeFormatted;
+        this.initialDateStart = ctxS.activeYMD;
+        this.calendarDateFinStart = new Date(dateSelected.format('YYYY-MM-DD'));
+        this.hideReservation.hideTimeStart.am = true;
+        this.hideReservation.hideTimeStart.pm = true;
+        this.disabledReservation.disabledTimeStart = false;
+        this.disabledDateDebutCalendar.forEach((d) => {
+          if(moment(d.date).format('YYYY-MM-DD') === dateSelected.format('YYYY-MM-DD')) {
+            if(d.AM === true) {
+              this.hideReservation.hideTimeStart.am = false;
+            } else if (d.PM === true) {
+              this.hideReservation.hideTimeStart.pm = false;
+            }
+          }
+        });
+
+        this.selectDate();
       }
+    },
+    disabledDateDebut(ymd, date) {
+      const thisDate = moment(date);
+      let days = 0;
+
+      this.disabledDateDebutCalendar.forEach((d) => {
+        if(d.AM === true && d.PM === true && d.date === thisDate.format('YYYY-MM-DD')) {
+          days = thisDate.format('DD');
+        }
+      });
+
+      return days;
+    },
+    shownDateDebut() {
+      console.log('open debut');
     },
     onContextDateEnd(ctxE) {
-      if (ctxE.selectedDate != null) {
-        this.formReservation.dateFin = ctxE.activeFormatted;
-      }
-    },
-    dateDisabled(ymd, date) {
-      //const weekday = date.getDay();
-      const day = date.getDate();
-      // Exemple
-      return day === 13;
-    },
-    shown() {
-      console.log("Open");
-    },
-    async getVehiculesBySite(editReserve) {
-      let userSiteId = null;
-      if(this.action === 'add') {
-        userSiteId = this.userLogged.site.id;
-      } else if (this.action === 'edit' || this.action === 'editCommentaire') {
-        userSiteId = editReserve.utilisateur.site.id;
-      }
-      const token = localStorage.getItem('user-token');
-      this.vehiculeOptions = await api.url(`/api/Vehicules/GetVehiculesBySite/${userSiteId}`)
-        .headers({"Authorization": "Bearer " + token})
-        .get()
-        .json();
-    },
-    async getVehiculeNonResaBySiteAndDate(dateDebut,dateFin) {
-      const userSiteId = this.userLogged.site.id;
-      const token = localStorage.getItem('user-token');
+      const dateMonthYear = moment(ctxE.activeDate).format('M-YYYY');
+      this.getFullReservedDays(dateMonthYear, this.disabledDateFinCalendar);
 
-      this.vehiculeOptions = await api.url(`/api/Vehicules/GetVehiculeNonResaBySiteAndDate/${userSiteId}/${dateDebut}/${dateFin}`)
-        .headers({"Authorization": "Bearer " + token})
-        .get()
-        .json();
+      if (ctxE.selectedDate != null) {
+        const dateSelected = moment(ctxE.activeYMD);
+        this.formReservation.dateFin = ctxE.activeFormatted;
+        this.initialDateEnd = ctxE.activeYMD;
+        this.hideReservation.hideTimeEnd.am = true;
+        this.hideReservation.hideTimeEnd.pm = true;
+        this.disabledReservation.disabledTimeEnd = false;
+
+        this.disabledDateFinCalendar.forEach((d) => {
+          if(d.date === dateSelected.format('YYYY-MM-DD')) {
+            if(d.AM === true) {
+              this.hideReservation.hideTimeEnd.am = false;
+            } else if (d.PM === true) {
+              this.hideReservation.hideTimeEnd.pm = false;
+            }
+          }
+        });
+
+        this.selectDate();
+      }
+    },
+    shownDateEnd() {
+      console.log('open end');
+    },
+    disabledDateFin(ymd, date) {
+      const thisDate = moment(date);
+      let days = 0;
+
+      this.disabledDateFinCalendar.forEach((d) => {
+        if(d.AM === true && d.PM === true && d.date === thisDate.format('YYYY-MM-DD')) {
+          days = thisDate.format('DD');
+        }
+      });
+
+      return days;
     },
     selectDate() {
-      if(this.action === 'add') {
-        const dD = this.formReservation.dateDebut;
-        const dF = this.formReservation.dateFin;
-        const tS = this.formReservation.timeStart;
-        const tE = this.formReservation.timeEnd;
-        const dateInfo = {
-          'dateD': null,
-          'dateF': null,
-        };
+      const dD = moment(this.initialDateStart);
+      const dF = moment(this.initialDateEnd);
+      const tS = this.formReservation.timeStart;
+      const tE = this.formReservation.timeEnd;
+      const dateInfo = {
+        dateD: null,
+        dateF: null,
+      };
 
-        if(dD !== ''
-          && dF !== ''
-          && tS !== ''
-          && tE !== '')
-        {
-          dateInfo.dateD = tS === 'AM' ? moment(dD).format('YYYY-MM-DD 09:00:00') : moment(dD).format('YYYY-MM-DD 15:00:00');
-          dateInfo.dateF = tE === 'AM' ? moment(dF).format('YYYY-MM-DD 09:00:00') : moment(dF).format('YYYY-MM-DD 15:00:00');
+      if(dD.isValid() && dF.isValid() && tS !== '' && tE !== '')
+      {
+        dateInfo.dateD = tS === 'AM' ? dD.format('YYYY-MM-DDT09:00:00') : dD.format('YYYY-MM-DDT15:00:00');
+        dateInfo.dateF = tE === 'AM' ? dF.format('YYYY-MM-DDT09:00:00') : dF.format('YYYY-MM-DDT15:00:00');
 
-          this.getVehiculeNonResaBySiteAndDate(dateInfo.dateD, dateInfo.dateF);
-          this.hideReservation.hideVehicule = true;
-        }
+        this.getVehiculeNonResaBySiteAndDate(dateInfo.dateD, dateInfo.dateF);
+        this.hideReservation.hideVehicule = true;
       }
     },
     selectVoiture(idVehicule) {
       this.vehiculeOptions.forEach((v) => {
-          if(v.id === idVehicule)
-          {
-            this.vehiculeCle = v.cles;
-            this.maxPersonnel = v.nbPlaces;
-            this.formReservation.personnels = [];
-            this.hideReservation.hidePersonnels = true;
-            this.hideReservation.hideSiteDestination = true;
-            this.hideReservation.hideDescription = true;
-          }
+        if(v.id === idVehicule)
+        {
+          this.vehiculeCle = v.cles;
+          this.maxPersonnel = v.nbPlaces;
+          this.formReservation.personnels = [];
+          this.hideReservation.hidePersonnels = true;
+          this.hideReservation.hideSiteDestination = true;
+          this.hideReservation.hideDescription = true;
+        }
       });
     },
     checkVisibleCommentaire(reserve) {
@@ -246,9 +328,11 @@ export default {
       else if(this.action === 'edit')
       {
         if(reserve.utilisateur.id === this.userLogged.id
-          && routeName === 'Dashboard'
+          && routeName === 'ReserveListUser'
           && reserve.commentaire !== null
+          && reserve.commentaire !== ""
         ){
+          console.log(reserve.commentaire);
           this.hideReservation.hideCommentaire = true;
           this.disabledReservation.disabledCommentaire = true;
         }
@@ -264,9 +348,81 @@ export default {
         }
       }
     },
-    getFormReservation() {
-      return [this.formReservation];
-    }
+    initializeData(reserve) {
+      this.initialDateStart = moment(reserve.dateDebut).format('YYYY-MM-DD');
+      this.initialDateEnd = moment(reserve.dateFin).format('YYYY-MM-DD');
+      this.formReservation.dateDebut = moment(reserve.dateDebut).format('DD/MM/YYYY');
+      this.formReservation.timeStart = reserve.timeStart;
+      this.formReservation.dateFin = moment(reserve.dateFin).format('DD/MM/YYYY');
+      this.formReservation.timeEnd = reserve.timeEnd;
+      this.formReservation.idVehicule = reserve.vehicule.id;
+      this.formReservation.idCle = reserve.cle !== null ? reserve.cle.id : null;
+      this.formReservation.personnels = reserve.personnels;
+      this.formReservation.siteDestination = reserve.siteDestination;
+      this.formReservation.description = reserve.description;
+      this.formReservation.status = reserve.status;
+      this.formReservation.commentaire = reserve.commentaire;
+    },
+    async getVehiculesBySite(editReserve) {
+      let userSiteId = null;
+      if (this.action === 'edit' || this.action === 'editCommentaire') {
+        userSiteId = editReserve.utilisateur.site.id;
+      }
+      this.vehiculeOptions = await api.url(`/api/Vehicules/GetVehiculesBySite/${userSiteId}`)
+        .headers({'Authorization': 'Bearer ' + this.token})
+        .get()
+        .json();
+    },
+    async getVehiculeNonResaBySiteAndDate(dateDebut,dateFin) {
+      const userSiteId = this.userLogged.site.id;
+      this.initialDateStart = dateDebut;
+      this.initialDateEnd = dateFin;
+
+      await api.url(`/api/Vehicules/GetVehiculesNonResaBySiteAndDate/${userSiteId}/${dateDebut}/${dateFin}`)
+        .headers({'Authorization': 'Bearer ' + this.token})
+        .get()
+        .json()
+        .then(data => {
+          if(data.length === 0) {
+            this.vehiculeOptions = [];
+            this.vehiculeErreur = false;
+          } else {
+            this.vehiculeOptions = data;
+            this.vehiculeErreur = null;
+            this.getPersonnelsBySite();
+          }
+        });
+    },
+    async getPersonnelsBySite(editReserve) {
+      let userSiteId = null;
+      if(this.action === 'add') {
+        userSiteId = this.userLogged.site.id;
+      } else if (this.action === 'edit' || this.action === 'editCommentaire') {
+        userSiteId = editReserve.utilisateur.site.id;
+      }
+        await api.url(`/api/Personnel/GetPersonnelsBySite/${userSiteId}`)
+          .headers({'Authorization': 'Bearer ' + this.token})
+          .get()
+          .json()
+          .then(data => {
+            data.forEach((d) => {
+              if(d.id !== this.userLogged.id) {
+                this.personnelsOptions.push(d);
+              }
+            });
+          });
+    },
+    async getFullReservedDays(date, array) {
+      const userSiteId = this.userLogged.site.id;
+
+      await api.url(`/api/Reservations/GetFullReservedDays/${userSiteId}/${date}`)
+        .headers({'Authorization': 'Bearer ' + this.token})
+        .get()
+        .json()
+        .then(data => {
+          array.push(data);
+        });
+    },
   },
   computed: {
     ...mapGetters(['isAdmin', 'userLogged']),

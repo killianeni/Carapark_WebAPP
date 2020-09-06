@@ -49,8 +49,8 @@
                 right
                 locale="fr"
                 @context="onContextDateStart"
-                :date-disabled-fn="dateDisabled"
-                @shown="shown"
+                :date-disabled-fn="disabledDateDebut"
+                @shown="shownDateDebut"
                 selected-variant="success"
                 today-variant="danger"
                 button-variant="primary"
@@ -63,17 +63,17 @@
           <b-form-select
             id="reserve-timeStart"
             v-model="formReservation.timeStart"
-            :disabled="formReservation.disabled"
+            :disabled="disabledReservation.disabledTimeStart"
             @change="selectDate"
             required
           >
             <b-form-select-option :value="null" disabled>
               -- Choix de la zone horaire --
             </b-form-select-option>
-            <b-form-select-option value="AM">
+            <b-form-select-option value="AM" v-if="hideReservation.hideTimeStart.am">
               Matin
             </b-form-select-option>
-            <b-form-select-option value="PM">
+            <b-form-select-option value="PM" v-if="hideReservation.hideTimeStart.pm">
               Après-midi
             </b-form-select-option>
           </b-form-select>
@@ -98,8 +98,10 @@
                 button-only
                 right
                 locale="fr"
+                :min="calendarDateFinStart"
                 @context="onContextDateEnd"
-                :date-disabled-fn="dateDisabled"
+                :date-disabled-fn="disabledDateFin"
+                @shown="shownDateEnd"
                 selected-variant="success"
                 today-variant="danger"
                 button-variant="primary"
@@ -111,17 +113,17 @@
           <b-form-select
             id="reserve-timeEnd"
             v-model="formReservation.timeEnd"
-            :disabled="formReservation.disabled"
+            :disabled="disabledReservation.disabledTimeEnd"
             @change="selectDate"
             required
           >
             <b-form-select-option :value="null" disabled>
               -- Choix de la zone horaire --
             </b-form-select-option>
-            <b-form-select-option value="AM">
+            <b-form-select-option value="AM" v-if="hideReservation.hideTimeEnd.am">
               Matin
             </b-form-select-option>
-            <b-form-select-option value="PM">
+            <b-form-select-option value="PM" v-if="hideReservation.hideTimeEnd.pm">
               Après-midi
             </b-form-select-option>
           </b-form-select>
@@ -136,6 +138,7 @@
             v-model="formReservation.idVehicule"
             :disabled="formReservation.disabled"
             value-field="id"
+            :state="vehiculeErreur"
             @change="selectVoiture"
             text-field="modele_voiture">
             <b-form-select-option :value="null" disabled>-- Choix de la voiture --</b-form-select-option>
@@ -143,6 +146,9 @@
               {{ car.modele }} - {{ car.nbPlaces }} places
             </b-form-select-option>
           </b-form-select>
+          <b-form-invalid-feedback :state="vehiculeErreur">
+            Aucune voiture disponible
+          </b-form-invalid-feedback>
         </b-form-group>
         <b-form-group v-if="formReservation.status === 2 || formReservation.status  === 4"
           label="Voiture Clé"
