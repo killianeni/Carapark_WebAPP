@@ -186,7 +186,7 @@ export default {
         this.getVehiculesBySite(reserve);
         this.vehiculeCle = reserve.vehicule.cles;
       }
-      this.initializeDate(reserve);
+      this.initializeData(reserve);
     },
     editCommentaireModalReserve(reserve) {
       this.action = 'editCommentaire';
@@ -205,7 +205,7 @@ export default {
       console.log(reserve);
       this.getVehiculesBySite(reserve);
       this.vehiculeCle = reserve.vehicule.cles;
-      this.initializeDate(reserve);
+      this.initializeData(reserve);
     },
     onContextDateStart(ctxS) {
       const dateMonthYear = moment(ctxS.activeDate).format('M-YYYY');
@@ -348,7 +348,7 @@ export default {
         }
       }
     },
-    initializeDate(reserve) {
+    initializeData(reserve) {
       this.initialDateStart = moment(reserve.dateDebut).format('YYYY-MM-DD');
       this.initialDateEnd = moment(reserve.dateFin).format('YYYY-MM-DD');
       this.formReservation.dateDebut = moment(reserve.dateDebut).format('DD/MM/YYYY');
