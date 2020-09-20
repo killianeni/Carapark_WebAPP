@@ -223,19 +223,6 @@
             max-rows="4"
           ></b-form-textarea>
         </b-form-group>
-        <b-form-group v-if="hideReservation.hideCommentaire"
-          label="Commentaire"
-          label-for="reserve-commentaire"
-          invalid-feedback=""
-        >
-          <b-form-textarea
-            id="commentaire"
-            v-model="formReservation.commentaire"
-            :disabled="disabledReservation.disabledCommentaire"
-            rows="3"
-            max-rows="4"
-          ></b-form-textarea>
-        </b-form-group>
         <div id="contact" class="d-flex align-items-center" v-if="contact">
         <span class="contact mr-3">
             <i class="kmap-icons icon-contact"></i>

@@ -61,8 +61,8 @@
     name: 'LoginVue',
     data() {
       return {
-        username: '',
-        password: ''
+        username: 'jean.bon@eni.fr',
+        password: '123456'
       };
     },
     methods: {
@@ -72,9 +72,16 @@
         //   console.log(hash);
         // });
         const {username, password} = this;
-        await this.$store.dispatch(AUTH_REQUEST, {username, password}).then(() => {
-          this.$router.push({ name: 'Dashboard' });
-        });
+        await this.$store.dispatch(AUTH_REQUEST, {username, password})
+          .then(() => {
+            this.$parent.$children[0].getNotificationsByUser();
+            this.$router.push({ name: 'Dashboard' });
+          })
+          .catch((error) => {
+            console.log(error.status);
+            console.log(error);
+          })
+        ;
       }
     }
   };

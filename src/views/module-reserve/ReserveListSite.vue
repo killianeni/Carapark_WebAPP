@@ -77,11 +77,14 @@
               <b-button v-if="item.status === 1" variant="success" @click="validateReserveModal(item)">
                 <i class="kmap-icons icon-true"></i>
               </b-button>
-              <b-button v-if="item.status === 1" variant="danger" @click="annulerReserveModal(item)">
+              <b-button v-if="item.status === 1" variant="danger" @click="annulerReserveModal(item.id)">
                 <i class="kmap-icons icon-false"></i>
               </b-button>
               <b-button v-if="item.status === 2" variant="dark" @click="cloturerReserveModal(item)">
                 <i class="kmap-icons icon-lock"></i>
+              </b-button>
+              <b-button v-if="item.status >= 1" variant="info" @click="addNotificationReserveModal(item)">
+                <i class="kmap-icons icon-message"></i>
               </b-button>
             </b-button-group>
           </template>
@@ -179,16 +182,19 @@
         return d + " - " + t;
       },
       editReserveModal(reserve) {
-        this.$refs.formReservation.editCommentaireModalReserve(reserve);
+        this.$refs.formReservation.seeModalReserve(reserve);
       },
       deleteReserveModal(reserve) {
         this.$refs.formReservationAction.deleteModalReserve(reserve);
       },
       validateReserveModal(reserve) {
-        this.$refs.formReservationAction.validateModalReserve(reserve);
+        this.$refs.formReservationAction.editModalValider(reserve);
       },
-      annulerReserveModal(reserve) {
-        this.$refs.formReservationAction.editModalAnnuler(reserve);
+      annulerReserveModal(idReserve) {
+        this.$refs.formReservationAction.annulerModalNotification(idReserve);
+      },
+      addNotificationReserveModal(idReserve) {
+        this.$refs.formReservationAction.addModalNotification(idReserve);
       },
       cloturerReserveModal(reserve) {
         this.$refs.formReservationAction.cloturerModalReserve(reserve);
@@ -196,15 +202,18 @@
       async getReservationsBySite() {
         const idSite = this.$route.params.id;
         const token = localStorage.getItem('user-token');
-        this.items = await api.url(`/api/Reservations/GetReservationsBySite/${idSite}`)
+        await api.url(`/api/Reservations/GetReservationsBySite/${idSite}`)
           .headers({"Authorization": "Bearer " + token})
           .get()
-          .json();
+          .json()
+          .then(data => {
+            this.items = data;
+            this.totalRows = this.items.length;
+          });
       },
     },
     mounted() {
       this.getReservationsBySite();
-      this.totalRows = this.items.length
     },
   };
 </script>
