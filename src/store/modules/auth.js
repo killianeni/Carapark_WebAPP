@@ -21,26 +21,31 @@ const getters = {
 };
 
 const actions = {
-  [AUTH_REQUEST]: async ({commit, dispatch}, user) => {
-    commit(AUTH_REQUEST);
-    const body = {
-      "Mail": user.username,
-      "Password": user.password
-    };
-    try {
-      const token = await api.url('/api/token')
+  [AUTH_REQUEST]: ({commit, dispatch}, user) => {
+    return new Promise((resolve, reject) => {
+      commit(AUTH_REQUEST);
+      const body = {
+        "Mail": user.username,
+        "Password": user.password
+      };
+      const token = api.url('/api/token')
         .headers({"Content-Type": "application/json", Accept: "application/json"})
-        .post(body).json();
-      localStorage.setItem('user-token', token.token);
-      localStorage.setItem('user-role', token.user.role.libelle);
-      localStorage.setItem('user', JSON.stringify(token.user));
-
-      commit(AUTH_SUCCESS, {token: token.token, role: token.user.role.libelle});
-      dispatch(USER_REQUEST, token.user);
-    } catch (err) {
-      commit(AUTH_ERROR, err);
-      localStorage.clear();
-    }
+        .post(body)
+        .json()
+        .then(data => {
+          localStorage.setItem('user-token', data.token);
+          localStorage.setItem('user-role', data.user.role.libelle);
+          localStorage.setItem('user', JSON.stringify(data.user));
+          commit(AUTH_SUCCESS, {token: data.token, role: data.user.role.libelle});
+          dispatch(USER_REQUEST, data.user);
+          resolve(token);
+        })
+        .catch(err => {
+          commit(AUTH_ERROR, err);
+          localStorage.clear();
+          reject(err);
+        })
+    })
   },
   [AUTH_LOGOUT]: ({commit}) => {
     return new Promise(resolve => {

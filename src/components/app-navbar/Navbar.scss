@@ -94,6 +94,9 @@ header.header {
           background-color: $colorGrey;
           border-radius: 0;
         }
+        .clocheAnimation {
+          animation: clocheAnimation 1s both 3s infinite;
+        }
       }
       .dropdown-alert {
         .dropdown-menu {

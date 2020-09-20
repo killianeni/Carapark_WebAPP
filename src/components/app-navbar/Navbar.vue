@@ -27,17 +27,28 @@
           no-caret
         >
           <template slot="button-content">
-            <b-avatar variant="dark" badge-variant="danger" badge="7">
+            <b-avatar
+              variant="dark"
+              badge-variant="danger"
+              :badge="countNotificationValue">
               <template slot="default">
-                <span class="kmap-icons icon-cloche"></span>
+                <span class="kmap-icons icon-cloche"
+                      v-bind:class="{ clocheAnimation: countNotification > 0}"></span>
               </template>
             </b-avatar>
           </template>
-          <b-list-group>
-            <b-list-group-item href="#" variant="success">Réservation du 24/08/2020 est acceptée</b-list-group-item>
-            <b-list-group-item href="#" variant="success">Réservation du 25/08/2020 est acceptée</b-list-group-item>
-            <b-list-group-item href="#" variant="danger">Réservation du 26/08/2020 est refusée</b-list-group-item>
-            <b-list-group-item href="#" variant="warning">Un commentaire a été ajouté à votre réservation du 27/08/2020</b-list-group-item>
+          <b-list-group class="notif-scroll">
+            <template v-for="(notification) in notifications">
+                <b-list-group-item
+                  href="#"
+                  :variant="messageVariant(notification.typeNotif)"
+                  v-bind:key="notification.id"
+                  v-if="!notification.checked"
+                  @click="getThisReservation(notification)"
+                >
+                  {{ messageNotif(notification) }}
+                </b-list-group-item>
+            </template>
           </b-list-group>
         </b-dropdown>
         <b-dropdown
@@ -56,6 +67,9 @@
             </div>
             <div class="mail">
               <span>{{ userLogged.mail }}</span>
+            </div>
+            <div class="role">
+              <span>{{ userLogged.role.libelle === 'user' ? 'Utilisateur' : 'Administrateur' }}</span>
             </div>
             <div class="deco m-3">
               <b-button variant="primary" @click="logout">Déconnexion</b-button>

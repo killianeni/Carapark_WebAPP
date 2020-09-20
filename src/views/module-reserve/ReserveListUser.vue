@@ -83,8 +83,8 @@
               <b-button v-if="item.status < 3" variant="danger" @click="deleteReserveModal(item)">
                 <i class="kmap-icons icon-false"></i>
               </b-button>
-              <b-button v-if="item.status === 3" variant="danger" @click="seeReserveModal(item)">
-                <i class="kmap-icons icon-info"></i>
+              <b-button v-if="item.status >= 1" variant="info" @click="notificationReserveModal(item)">
+                <i class="kmap-icons icon-message"></i>
               </b-button>
             </b-button-group>
           </template>
@@ -188,8 +188,8 @@
       deleteReserveModal(reserve) {
         this.$refs.formReservationAction.deleteModalReserve(reserve);
       },
-      seeReserveModal(reserve) {
-        this.$refs.formReservationAction.seeModalAnnuler(reserve);
+      notificationReserveModal(reserve) {
+        this.$refs.formReservationAction.infoModalNotification(reserve);
       },
       addReserveModal() {
         this.$refs.formReservation.addModalReserve();
@@ -208,7 +208,7 @@
     },
     mounted() {
       this.getReservationsByUser();
-      this.totalRows = this.items.length
+      this.totalRows = this.items.length;
     },
   };
 </script>
