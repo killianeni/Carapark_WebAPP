@@ -61,8 +61,8 @@
     name: 'LoginVue',
     data() {
       return {
-        username: 'jean.bon@eni.fr',
-        password: '123456'
+        username: '',
+        password: ''
       };
     },
     methods: {
