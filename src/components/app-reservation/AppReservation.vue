@@ -50,7 +50,6 @@
                 locale="fr"
                 @context="onContextDateStart"
                 :date-disabled-fn="disabledDateDebut"
-                @shown="shownDateDebut"
                 selected-variant="success"
                 today-variant="danger"
                 button-variant="primary"
@@ -99,9 +98,9 @@
                 right
                 locale="fr"
                 :min="calendarDateFinStart"
+                v-model="valueEnd"
                 @context="onContextDateEnd"
                 :date-disabled-fn="disabledDateFin"
-                @shown="shownDateEnd"
                 selected-variant="success"
                 today-variant="danger"
                 button-variant="primary"

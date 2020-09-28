@@ -128,7 +128,7 @@ export default {
       {
         this.getNotificationsByUser();
       }
-    }.bind(this),30000);
+    }.bind(this),10000);
   }
 };
 
