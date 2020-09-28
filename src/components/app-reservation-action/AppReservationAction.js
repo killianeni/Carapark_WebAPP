@@ -91,6 +91,10 @@ export default {
     addModalNotification(reserve) {
       this.formReservationNotification.currentReserve = reserve;
       this.getNotificationsByReservation(reserve.id);
+      if(reserve.status === 3) {
+        this.formReservationNotification.isVisible = false;
+        this.formReservationNotification.disabled = true;
+      }
       this.$bvModal.show("modal-notification");
     },
     infoModalNotification(reserve) {
@@ -115,20 +119,12 @@ export default {
       if(this.formReservationNotification.commentaire)
       {
         const reserve = this.formReservationNotification.currentReserve;
-        const bodyNotif = {
-          idUser: reserve.utilisateur.id,
-          idResa: reserve.id,
-          typeNotif: 3,
-          commentaire: this.formReservationNotification.commentaire,
-          checked: false
-        };
-        this.addCommmentNotif(bodyNotif);
-
         const idReservation = reserve.id;
         const bodyReservation = {
           'confirmationCle': false,
           'isRejeted': true,
           'isAccepted': false,
+          'commentaire': this.formReservationNotification.commentaire,
         };
         const modalName = 'modal-notification';
 
