@@ -53,7 +53,7 @@ export default {
         })
     },
     cloturerModalReserve(reserve) {
-      this.$bvModal.msgBoxConfirm('Veuillez confirmer que vous souhaitez clôturer cette réservation.', {
+      this.$bvModal.msgBoxConfirm('Veuillez confirmer la réception de la clé pour clôturer cette réservation.', {
         title: 'Veuillez confirmer',
         size: 'md',
         buttonSize: 'md',
@@ -91,7 +91,7 @@ export default {
     addModalNotification(reserve) {
       this.formReservationNotification.currentReserve = reserve;
       this.getNotificationsByReservation(reserve.id);
-      if(reserve.status === 3) {
+      if(reserve.status >= 3) {
         this.formReservationNotification.isVisible = false;
         this.formReservationNotification.disabled = true;
       }
@@ -116,19 +116,30 @@ export default {
       this.submitModalNotification()
     },
     submitModalNotification() {
-      if(this.formReservationNotification.commentaire)
-      {
+      if(this.formReservationNotification.commentaire) {
         const reserve = this.formReservationNotification.currentReserve;
-        const idReservation = reserve.id;
-        const bodyReservation = {
-          'confirmationCle': false,
-          'isRejeted': true,
-          'isAccepted': false,
-          'commentaire': this.formReservationNotification.commentaire,
-        };
-        const modalName = 'modal-notification';
 
-        this.updateReservationStatut(idReservation, bodyReservation, modalName)
+        if(this.formReservationNotification.isRejeted) {
+          const idReservation = reserve.id;
+          const bodyReservation = {
+            'confirmationCle': false,
+            'isRejeted': true,
+            'isAccepted': false,
+            'commentaire': this.formReservationNotification.commentaire,
+          };
+          const modalName = 'modal-notification';
+
+          this.updateReservationStatut(idReservation, bodyReservation, modalName)
+        }else {
+          const bodyNotif = {
+            idUser: reserve.utilisateur.id,
+            idResa: reserve.id,
+            typeNotif: 1,
+            commentaire: this.formReservationNotification.commentaire,
+            checked: false
+          };
+          this.addCommmentNotif(bodyNotif);
+        }
       }
     },
     dateNotification(dateNotif) {

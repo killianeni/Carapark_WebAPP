@@ -19,6 +19,7 @@ export default {
       disabledDateDebutCalendar: [],
       disabledDateFinCalendar: [],
       calendarDateFinStart: '',
+      valueEnd: '',
       formReservation: {
         disabled: false,
         id: null,
@@ -200,7 +201,7 @@ export default {
       this.$bvModal.show('modal-reservation');
     },
     editModalReserve(reserve) {
-      this.cTitleReserveModal = 'Réservation de ' + reserve.utilisateur.nom + reserve.utilisateur.prenom;
+      this.cTitleReserveModal = 'Réservation de ' + reserve.utilisateur.nom + ' ' + reserve.utilisateur.prenom;
       this.contact = reserve.utilisateur.mail;
       this.action = 'edit';
       this.hideReservation.hideVehicule = true;
@@ -250,17 +251,19 @@ export default {
         const dateSelected = moment(ctxS.activeYMD);
         this.formReservation.dateDebut = ctxS.activeFormatted;
         this.initialDateStart = ctxS.activeYMD;
-        this.calendarDateFinStart = new Date(dateSelected.format('YYYY-MM-DD'));
         this.hideReservation.hideTimeStart.am = true;
         this.hideReservation.hideTimeStart.pm = true;
         this.disabledReservation.disabledTimeStart = false;
 
+        this.valueEnd = '';
         this.formReservation.dateFin = '';
         this.initialDateEnd = '';
         this.hideReservation.hideTimeEnd.am = true;
         this.hideReservation.hideTimeEnd.pm = true;
         this.disabledReservation.disabledTimeEnd = true;
+        this.calendarDateFinStart = new Date(dateSelected.format('YYYY-MM-DD'));
 
+        // Filtrer si on peut réserver le matin ou l'après midi
         this.disabledDateDebutCalendar.forEach((d) => {
           if(moment(d.date).format('YYYY-MM-DD') === dateSelected.format('YYYY-MM-DD')) {
             if(d.am === true) {
@@ -278,6 +281,7 @@ export default {
       const thisDate = moment(date);
       let days = 0;
 
+      // Désactiver les dates qui sont indisponibles
       this.disabledDateDebutCalendar.forEach((d) => {
         if(d.am === true
           && d.pm === true
@@ -287,9 +291,6 @@ export default {
       });
 
       return days;
-    },
-    shownDateDebut() {
-      //console.log('open debut');
     },
     onContextDateEnd(ctxE) {
       const dateMonthYear = moment(ctxE.activeDate).format('M-YYYY');
@@ -302,7 +303,9 @@ export default {
         this.hideReservation.hideTimeEnd.am = true;
         this.hideReservation.hideTimeEnd.pm = true;
         this.disabledReservation.disabledTimeEnd = false;
+        this.valueEnd = new Date(dateSelected.format('YYYY-MM-DD'));
 
+        // Filtrer si on peut réserver le matin ou l'après midi
         this.disabledDateFinCalendar.forEach((d) => {
           if(moment(d.date).format('YYYY-MM-DD') === dateSelected.format('YYYY-MM-DD')) {
             if(d.am === true) {
@@ -316,13 +319,10 @@ export default {
         this.selectDate();
       }
     },
-    shownDateEnd() {
-      //console.log('open end');
-    },
     disabledDateFin(ymd, date) {
       const thisDate = moment(date);
       let days = 0;
-
+      // Désactiver les dates qui sont indisponibles
       this.disabledDateFinCalendar.forEach((d) => {
         if(d.am === true
           && d.pm === true
@@ -338,11 +338,19 @@ export default {
       const dF = moment(this.initialDateEnd);
       const tS = this.formReservation.timeStart;
       const tE = this.formReservation.timeEnd;
+
+      // Si c'est la même date et que la timeStart est l'après-midi alors on désactive l'option matin
+      if(dD.isSame(dF) && tS === 'PM')
+      {
+        this.hideReservation.hideTimeEnd.am = false;
+      }
+
       const dateInfo = {
         dateD: null,
         dateF: null,
       };
 
+      // Si les 4 champs sont compléter alors on récupère la liste des véhicules disponible sur cette période
       if(dD.isValid() && dF.isValid() && tS !== '' && tE !== '')
       {
         dateInfo.dateD = tS === 'AM' ? dD.format('YYYY-MM-DDT09:00:00') : dD.format('YYYY-MM-DDT15:00:00');
