@@ -77,7 +77,7 @@
               <b-button v-if="item.status === 1" variant="success" @click="validateReserveModal(item)">
                 <i class="kmap-icons icon-true"></i>
               </b-button>
-              <b-button v-if="item.status === 1" variant="danger" @click="annulerReserveModal(item.id)">
+              <b-button v-if="item.status === 1" variant="danger" @click="annulerReserveModal(item)">
                 <i class="kmap-icons icon-false"></i>
               </b-button>
               <b-button v-if="item.status === 2" variant="dark" @click="cloturerReserveModal(item)">
@@ -190,11 +190,11 @@
       validateReserveModal(reserve) {
         this.$refs.formReservationAction.editModalValider(reserve);
       },
-      annulerReserveModal(idReserve) {
-        this.$refs.formReservationAction.annulerModalNotification(idReserve);
+      annulerReserveModal(reserve) {
+        this.$refs.formReservationAction.annulerModalNotification(reserve);
       },
-      addNotificationReserveModal(idReserve) {
-        this.$refs.formReservationAction.addModalNotification(idReserve);
+      addNotificationReserveModal(reserve) {
+        this.$refs.formReservationAction.addModalNotification(reserve);
       },
       cloturerReserveModal(reserve) {
         this.$refs.formReservationAction.cloturerModalReserve(reserve);
@@ -208,7 +208,7 @@
           .json()
           .then(data => {
             this.items = data;
-            this.totalRows = this.items.length;
+            this.totalRows = data.length;
           });
       },
     },

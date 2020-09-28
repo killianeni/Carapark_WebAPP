@@ -40,7 +40,7 @@
           <b-list-group class="notif-scroll">
             <template v-for="(notification) in notifications">
                 <b-list-group-item
-                  href="#"
+                  button
                   :variant="messageVariant(notification.typeNotif)"
                   v-bind:key="notification.id"
                   v-if="!notification.checked"
@@ -49,6 +49,12 @@
                   {{ messageNotif(notification) }}
                 </b-list-group-item>
             </template>
+            <p
+              v-if="countNotification === 0"
+              class="m-1 text-center"
+            >
+              Aucune notification
+            </p>
           </b-list-group>
         </b-dropdown>
         <b-dropdown
@@ -126,5 +132,5 @@
   </header>
 </template>
 
-<script lang="js" src="./Navbar.js"></script>
-<style lang="scss" src="./Navbar.scss" rel="stylesheet"></style>
+<script lang="js" src="./AppNavbar.js"></script>
+<style lang="scss" src="./AppNavbar.scss" rel="stylesheet"></style>

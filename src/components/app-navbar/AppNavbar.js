@@ -4,7 +4,7 @@ import { AUTH_LOGOUT } from '../../store/actions/auth';
 import {api} from "@/config";
 
 export default {
-  name: 'Navbar',
+  name: 'AppNavbar',
   data: () => ({
     token: '',
     isBurgerActive: false,
@@ -68,12 +68,12 @@ export default {
       }
     },
     openNotification(notification) {
-      this.$parent.$children[1].filterReservation = notification.idResa;
-      this.$parent.$children[1].$refs.formReservationAction.infoModalNotification(notification.idResa);
+      this.updateNotification(notification.id);
+      this.$parent.$children[2].filterReservation = notification.idResa;
+      this.$parent.$children[2].$refs.formReservationAction.infoModalNotification(notification);
     },
     async getNotificationsByUser() {
       this.token = localStorage.getItem('user-token');
-      console.log(this.token);
       const userId = this.userLogged.id;
 
       await api.url(`/api/Notifications/GetNotificationsByUser/${userId}`)
@@ -85,12 +85,30 @@ export default {
           this.countNotification = 0;
           data.forEach((d) => {
             this.notifications.push(d);
-            if(!d.checked) {
+            if(d.checked === false) {
               this.countNotification += 1;
             }
           });
         });
     },
+    async updateNotification(idNotif) {
+      const bodyNotification = {
+        'checked': true
+      };
+      await api.url(`/api/Notifications/CheckNotif/${idNotif}`)
+        .headers({
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+          'Authorization': 'Bearer ' + this.token
+        })
+        .put(bodyNotification)
+        .badRequest(err => console.log(err))
+        .res(r => {
+          if(r.ok) {
+            this.getNotificationsByUser();
+          }
+        });
+    }
   },
   computed: {
     ...mapGetters(['userLogged', 'isAdmin', 'isAuthenticated']),

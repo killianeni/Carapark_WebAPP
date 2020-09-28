@@ -197,10 +197,14 @@
       async getReservationsByUser() {
         const userId = this.userLogged.id;
         const token = localStorage.getItem('user-token');
-        this.items = await api.url(`/api/Reservations/GetReservationsByUser/${userId}`)
+        await api.url(`/api/Reservations/GetReservationsByUser/${userId}`)
           .headers({"Authorization": "Bearer " + token})
           .get()
-          .json();
+          .json()
+          .then(data => {
+            this.items = data;
+            this.totalRows = data.length;
+          });
       },
     },
     computed: {
@@ -208,7 +212,6 @@
     },
     mounted() {
       this.getReservationsByUser();
-      this.totalRows = this.items.length;
     },
   };
 </script>
