@@ -1,13 +1,15 @@
 <template>
   <main id="app">
-    <Navbar/>
+    <AppNavbar/>
+    <AppToast ref="appToast"/>
     <router-view/>
   </main>
 </template>
 
 <script>
   import { USER_REQUEST} from './store/actions/user';
-  import Navbar from '@/components/app-navbar/Navbar.vue';
+  import AppNavbar from '@/components/app-navbar/AppNavbar.vue';
+  import AppToast from '@/components/app-toast/AppToast.vue';
 
   export default {
     name: 'app',
@@ -17,7 +19,8 @@
       }
     },
     components: {
-      Navbar
+      AppNavbar,
+      AppToast
     }
   }
 </script>

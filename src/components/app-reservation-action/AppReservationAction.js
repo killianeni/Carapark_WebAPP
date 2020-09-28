@@ -82,11 +82,11 @@ export default {
           console.log(err);
         })
     },
-    annulerModalNotification(idReserve) {
-      console.log(idReserve);
+    annulerModalNotification(reserve) {
+      this.formReservationNotification.currentReserve = reserve;
       this.formReservationNotification.isRejeted = true;
+      this.getNotificationsByReservation(reserve.id);
       this.$bvModal.show("modal-notification");
-      console.log(this.formReservationNotification);
     },
     addModalNotification(reserve) {
       this.formReservationNotification.currentReserve = reserve;
@@ -94,7 +94,7 @@ export default {
       this.$bvModal.show("modal-notification");
     },
     infoModalNotification(reserve) {
-      this.getNotificationsByReservation(reserve.id);
+      this.getNotificationsByReservation(reserve.idResa);
       this.formReservationNotification.currentReserve = reserve;
       this.formReservationNotification.disabled = true;
       this.formReservationNotification.isVisible = false;
@@ -123,6 +123,16 @@ export default {
           checked: false
         };
         this.addCommmentNotif(bodyNotif);
+
+        const idReservation = reserve.id;
+        const bodyReservation = {
+          'confirmationCle': false,
+          'isRejeted': true,
+          'isAccepted': false,
+        };
+        const modalName = 'modal-notification';
+
+        this.updateReservationStatut(idReservation, bodyReservation, modalName)
       }
     },
     dateNotification(dateNotif) {
@@ -154,7 +164,7 @@ export default {
       };
       const modalName = 'modal-valider';
 
-      this.updateReservationStatut(idReservation, bodyReservation, modalName)
+      this.updateReservationStatut(idReservation, bodyReservation, modalName);
     },
     async updateReservationStatut(idReservation, bodyReservation, modalName) {
       await api.url(`/api/Reservations/${idReservation}`)
@@ -167,6 +177,7 @@ export default {
         .badRequest(err => console.log(err))
         .res(r => {
           if (r.ok === true && this.$route.name === 'ReserveListSite') {
+            this.$parent.$parent.$refs.appToast.updateToast();
             this.$parent.getReservationsBySite();
             if (modalName) {
               this.$bvModal.hide(modalName);
@@ -174,6 +185,7 @@ export default {
           }
 
           if (r.ok === true && this.$route.name === 'ReserveListUser') {
+            this.$parent.$parent.$refs.appToast.updateToast();
             this.$parent.getReservationsByUser();
             if (modalName) {
               this.$bvModal.hide(modalName);
@@ -191,8 +203,8 @@ export default {
         .post(bodyNotif)
         .badRequest(err => console.log(err))
         .res(r => {
-          console.log(r);
           if(r.ok === true) {
+            this.$parent.$parent.$refs.appToast.successToast();
             this.$bvModal.hide('modal-notification');
           }
         });

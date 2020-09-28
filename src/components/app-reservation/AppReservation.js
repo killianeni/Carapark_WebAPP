@@ -68,9 +68,6 @@ export default {
       this.submitModalReserve();
     },
     async submitModalReserve() {
-
-      console.log(this.formReservation.personnels);
-
       let listPersonnels = [];
       const thisPersonnels = this.formReservation.personnels;
 
@@ -110,17 +107,22 @@ export default {
               'Authorization': 'Bearer ' + this.token
             })
             .post(bodyFormReservation)
-            .badRequest(err => console.log(err))
+            .badRequest(err => {
+              console.log(err);
+              this.$parent.$parent.$refs.appToast.errorToast();
+            })
             .res(r => {
               if(r.ok === true && this.$route.name === 'Dashboard') {
                 this.$parent.reservations = [];
                 this.$parent.cListReservations = [];
                 this.$parent.initListReservation();
                 this.$parent.getReservationsBySite();
+                this.$parent.$parent.$refs.appToast.successToast();
               }
               else if (r.ok === true && this.$route.name === 'ReserveListUser')
               {
                 this.$parent.getReservationsByUser();
+                this.$parent.$parent.$refs.appToast.successToast();
               }
               this.$bvModal.hide('modal-reservation');
             });
@@ -128,9 +130,6 @@ export default {
         }
         case 'edit': {
           // PUT
-          console.log(this.action);
-          console.log(this.formReservation);
-          console.log(bodyFormReservation);
           const idReservation = this.formReservation.id;
 
           await api.url(`/api/Reservations/${idReservation}`)
@@ -140,17 +139,22 @@ export default {
               'Authorization': 'Bearer ' + this.token
             })
             .put(bodyFormReservation)
-            .badRequest(err => console.log(err))
+            .badRequest(err => {
+              console.log(err);
+              this.$parent.$parent.$refs.appToast.errorToast();
+            })
             .res(r => {
               if(r.ok === true && this.$route.name === 'Dashboard') {
                 this.$parent.reservations = [];
                 this.$parent.cListReservations = [];
                 this.$parent.initListReservation();
                 this.$parent.getReservationsBySite();
+                this.$parent.$parent.$refs.appToast.updateToast();
               }
               else if (r.ok === true && this.$route.name === 'ReserveListUser')
               {
                 this.$parent.getReservationsByUser();
+                this.$parent.$parent.$refs.appToast.updateToast();
               }
               this.$bvModal.hide('modal-reservation');
             });
@@ -222,7 +226,6 @@ export default {
       this.initializeData(reserve);
     },
     seeModalReserve(reserve) {
-      console.log(reserve);
       this.action = 'see';
       this.hideReservation.hideVehicule = true;
       this.hideReservation.hidePersonnels = true;
@@ -286,7 +289,7 @@ export default {
       return days;
     },
     shownDateDebut() {
-      console.log('open debut');
+      //console.log('open debut');
     },
     onContextDateEnd(ctxE) {
       const dateMonthYear = moment(ctxE.activeDate).format('M-YYYY');
@@ -314,7 +317,7 @@ export default {
       }
     },
     shownDateEnd() {
-      console.log('open end');
+      //console.log('open end');
     },
     disabledDateFin(ymd, date) {
       const thisDate = moment(date);
