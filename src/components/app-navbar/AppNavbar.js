@@ -1,6 +1,6 @@
 import moment from 'moment';
-import { mapGetters } from 'vuex';
-import { AUTH_LOGOUT } from '../../store/actions/auth';
+import {mapGetters} from 'vuex';
+import {AUTH_LOGOUT} from '../../store/actions/auth';
 import {api} from "@/config";
 
 export default {
@@ -9,16 +9,17 @@ export default {
     token: '',
     isBurgerActive: false,
     notifications: [],
-    countNotification: 0
+    countNotification: 0,
+    libelleSite: ''
   }),
   methods: {
     toggle() {
       this.isBurgerActive = !this.isBurgerActive;
     },
-    logout: function() {
+    logout: function () {
       this.$store.dispatch(AUTH_LOGOUT).then(() => this.$router.push('/login'));
     },
-    messageVariant(typeNotif){
+    messageVariant(typeNotif) {
       let variant = '';
       switch (typeNotif) {
         case 1:
@@ -43,24 +44,24 @@ export default {
 
       switch (typeNotif) {
         case 1:
-          message = 'Un commentaire a été ajouté à votre réservation du '+ dateResa;
+          message = 'Un commentaire a été ajouté à votre réservation du ' + dateResa;
           break;
         case 2:
-          message = 'Réservation du '+ dateResa +' est acceptée';
+          message = 'Réservation du ' + dateResa + ' est acceptée';
           break;
         case 3:
-          message = 'Réservation du '+ dateResa +' est refusée';
+          message = 'Réservation du ' + dateResa + ' est refusée';
           break;
         case 4:
-          message = 'Réservation du '+ dateResa +' est clôturée';
+          message = 'Réservation du ' + dateResa + ' est clôturée';
           break;
       }
       return message;
     },
     getThisReservation(notification) {
       const routeName = this.$route.name;
-      if(routeName !== 'ReserveListUser') {
-        this.$router.push({ name: 'ReserveListUser'}).then(() => {
+      if (routeName !== 'ReserveListUser') {
+        this.$router.push({name: 'ReserveListUser'}).then(() => {
           this.openNotification(notification);
         });
       } else {
@@ -70,7 +71,7 @@ export default {
     openNotification(notification) {
       this.updateNotification(notification.id);
       this.$parent.$children[2].filterReservation = notification.idResa;
-      this.$parent.$children[2].$refs.formReservationAction.infoModalNotification(notification);
+      this.$parent.$children[2].$refs.formReservationAction.infoModalNotification(notification, 'notif');
     },
     async getNotificationsByUser() {
       this.token = localStorage.getItem('user-token');
@@ -85,7 +86,7 @@ export default {
           this.countNotification = 0;
           data.forEach((d) => {
             this.notifications.push(d);
-            if(d.checked === false) {
+            if (d.checked === false) {
               this.countNotification += 1;
             }
           });
@@ -104,11 +105,30 @@ export default {
         .put(bodyNotification)
         .badRequest(err => console.log(err))
         .res(r => {
-          if(r.ok) {
+          if (r.ok) {
             this.getNotificationsByUser();
           }
         });
-    }
+    },
+    async getCurrentLibelleSite() {
+      const currentRoute = this.$route.name;
+
+      if (currentRoute === 'ParkCar'
+        || currentRoute === 'UserList'
+        || currentRoute === 'ReserveListSite'
+      ) {
+        const idSite = this.$route.params.id;
+        await api.url(`/api/Sites/${idSite}`)
+          .headers({"Authorization": "Bearer " + this.token})
+          .get()
+          .json()
+          .then(data => {
+            this.libelleSite = data.libelle;
+          });
+      } else {
+        this.libelleSite= '';
+      }
+    },
   },
   computed: {
     ...mapGetters(['userLogged', 'isAdmin', 'isAuthenticated']),
@@ -117,18 +137,22 @@ export default {
     }
   },
   mounted() {
-    if(this.isAuthenticated)
-    {
+    if (this.isAuthenticated) {
       this.getNotificationsByUser();
+      this.getCurrentLibelleSite();
     }
   },
   created() {
     this.interval = setInterval(function () {
-      if(this.isAuthenticated)
-      {
+      if (this.isAuthenticated) {
         this.getNotificationsByUser();
       }
-    }.bind(this),10000);
+    }.bind(this), 10000);
+  },
+  watch: {
+    $route (){
+      this.getCurrentLibelleSite();
+    }
   }
 };
 

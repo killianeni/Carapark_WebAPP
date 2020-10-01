@@ -189,7 +189,7 @@
         this.$refs.formReservationAction.deleteModalReserve(reserve);
       },
       notificationReserveModal(reserve) {
-        this.$refs.formReservationAction.infoModalNotification(reserve);
+        this.$refs.formReservationAction.infoModalNotification(reserve,'reserve');
       },
       addReserveModal() {
         this.$refs.formReservation.addModalReserve();

@@ -14,9 +14,7 @@
           </div>
         </button>
         <div class="current-title-page">
-          <span v-if="$route.name === 'ParkCar'">{{ $route.meta.title }} LIBELLE</span>
-          <span v-else-if="$route.name === 'UserList'">{{ $route.meta.title }} LIBELLE SITE</span>
-          <span v-else>{{ $route.meta.title }}</span>
+          <span>{{ $route.meta.title }} {{ libelleSite }}</span>
         </div>
       </div>
       <div v-if="isAuthenticated" class="profil">

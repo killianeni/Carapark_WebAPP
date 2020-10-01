@@ -6,13 +6,13 @@
           <h3>Choix du site :</h3>
         </div>
         <div class="col-6 text-right mt-3 mb-3">
-          <b-button variant="primary" v-b-modal.modal-site>
+          <b-button variant="primary" @click="addSiteModal">
             <i class="kmap-icons icon-add mr-2"></i>
             Ajouter un site
           </b-button>
         </div>
       </div>
-      <AppSite type-page="park"></AppSite>
+      <AppSite ref="formSite" type-page="park"></AppSite>
     </div>
   </div>
 </template>
@@ -25,6 +25,11 @@
     components: {
       AppSite
     },
+    methods: {
+      addSiteModal() {
+        this.$refs.formSite.addSiteModal();
+      }
+    }
   };
 </script>
 
