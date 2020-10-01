@@ -68,7 +68,7 @@ const routes = [
     name: 'ParkCar',
     component: ParkCar,
     meta: {
-      title: 'Voitures du site :',
+      title: 'Voitures de',
     },
     beforeEnter: ifAuthenticated
   },
@@ -86,7 +86,7 @@ const routes = [
     name: 'ReservePortal',
     component: ReservePortal,
     meta: {
-      title: 'Les Réservations',
+      title: 'Réservations',
     },
     beforeEnter: ifAuthenticated
   },
@@ -95,7 +95,7 @@ const routes = [
     name: 'ReserveListSite',
     component: ReserveListSite,
     meta: {
-      title: 'Liste des réservations de ',
+      title: 'Réservations de',
     },
     beforeEnter: ifAuthenticated
   },
@@ -113,7 +113,7 @@ const routes = [
     name: 'UserList',
     component: UserList,
     meta: {
-      title: 'Utilisateurs du site :',
+      title: 'Utilisateurs de',
     },
     beforeEnter: ifAuthenticated
   }

@@ -16,23 +16,50 @@
         </b-card-text>
         <div class="text-right">
           <b-button-group v-if="typePage === 'park'">
-            <router-link :to="{ name: 'ParkCar', params: { id: dataSite.id }}" class="btn btn-dark">
+            <router-link
+              :to="{ name: 'ParkCar', params: { id: dataSite.id }}"
+              class="btn btn-dark"
+            >
               <i class="kmap-icons icon-see"></i>
             </router-link>
-<!--            <b-button variant="primary" @click="editSite(dataSite)">-->
-<!--              <i class="kmap-icons icon-edit"></i>-->
-<!--            </b-button>-->
-<!--            <b-button variant="danger" @click="deleteSite(dataSite)">-->
-<!--              <i class="kmap-icons icon-delete"></i>-->
-<!--            </b-button>-->
+            <b-button variant="primary" @click="editSiteModal(dataSite)">
+              <i class="kmap-icons icon-edit"></i>
+            </b-button>
+            <b-button
+              variant="danger"
+              @click="deleteSiteModal(dataSite)"
+              :disabled="checkCanDelete(dataSite)"
+            >
+              <i class="kmap-icons icon-delete" :id="'delete-site-' + dataSite.id"></i>
+            </b-button>
+            <b-popover
+              :target="'delete-site-' + dataSite.id"
+              triggers="hover"
+              placement="top"
+              v-if="checkCanDelete(dataSite)"
+            >
+              <template v-slot:title>Condition de suppression</template>
+              Veuillez supprimer les éléments suivant en liens :
+              <ul>
+                <li v-if="dataSite.nbUtilisateurs">Utilisateurs</li>
+                <li v-if="dataSite.nbReservations">Réservations</li>
+                <li v-if="dataSite.nbVehicules">Véhicules</li>
+              </ul>
+            </b-popover>
           </b-button-group>
           <b-button-group v-if="typePage === 'user'">
-            <router-link :to="{ name: 'UserList', params: { id: dataSite.id }}" class="btn btn-dark">
+            <router-link
+              :to="{ name: 'UserList', params: { id: dataSite.id }}"
+              class="btn btn-dark"
+            >
               <i class="kmap-icons icon-see"></i>
             </router-link>
           </b-button-group>
           <b-button-group v-if="typePage === 'reservation'">
-            <router-link :to="{ name: 'ReserveListSite', params: { id: dataSite.id }}" class="btn btn-dark">
+            <router-link
+              :to="{ name: 'ReserveListSite', params: { id: dataSite.id }}"
+              class="btn btn-dark"
+            >
               <i class="kmap-icons icon-see"></i>
             </router-link>
           </b-button-group>
@@ -43,7 +70,7 @@
       <b-modal
         id="modal-site"
         ref="modal"
-        title="Ajouter un site"
+        :title="titleSiteModal"
         cancel-title="Annuler"
         ok-title="Valider"
         cancel-variant="danger"
@@ -55,7 +82,7 @@
         @ok="okSite"
         centered
       >
-        <form ref="form" @submit.stop.prevent="submitSite">
+        <form ref="formSite" @submit.stop.prevent="submitSite">
           <b-form-group
             label="Libelle"
             label-for="name-input"
@@ -63,7 +90,7 @@
           >
             <b-form-input
               id="name-input"
-              v-model="form.libelle"
+              v-model="formSite.libelle"
               required
             ></b-form-input>
           </b-form-group>

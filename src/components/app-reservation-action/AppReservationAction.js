@@ -97,9 +97,13 @@ export default {
       }
       this.$bvModal.show("modal-notification");
     },
-    infoModalNotification(reserve) {
-      this.getNotificationsByReservation(reserve.idResa);
-      this.formReservationNotification.currentReserve = reserve;
+    infoModalNotification(reserve, type) {
+      if (type === 'reserve') {
+        this.getNotificationsByReservation(reserve.id);
+        this.formReservationNotification.currentReserve = reserve;
+      } else if (type === 'notif') {
+        this.getNotificationsByReservation(reserve.idResa);
+      }
       this.formReservationNotification.disabled = true;
       this.formReservationNotification.isVisible = false;
       this.$bvModal.show("modal-notification");

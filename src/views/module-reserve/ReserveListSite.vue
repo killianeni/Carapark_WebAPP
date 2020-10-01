@@ -164,6 +164,7 @@
             label: 'Actions'
           },
         ],
+        token: localStorage.getItem('user-token'),
         items: [],
         totalRows: 1,
         currentPage: 1,
@@ -201,9 +202,8 @@
       },
       async getReservationsBySite() {
         const idSite = this.$route.params.id;
-        const token = localStorage.getItem('user-token');
         await api.url(`/api/Reservations/GetReservationsBySite/${idSite}`)
-          .headers({"Authorization": "Bearer " + token})
+          .headers({"Authorization": "Bearer " + this.token})
           .get()
           .json()
           .then(data => {
