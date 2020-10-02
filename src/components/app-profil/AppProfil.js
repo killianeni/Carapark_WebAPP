@@ -39,6 +39,10 @@ export default {
       this.form.oldPass = '';
       this.form.newPass = '';
       this.form.confirmPass = '';
+      this.emptyPassError.oldPass = '';
+      this.emptyPassError.newPass = '';
+      this.emptyPassError.confirmPass = '';
+      this.passNotEqual = '';
     },
     okModalProfil(bvModalEvt) {
       bvModalEvt.preventDefault();

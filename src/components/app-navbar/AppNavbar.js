@@ -73,8 +73,8 @@ export default {
     },
     openNotification(notification) {
       this.updateNotification(notification.id);
-      this.$parent.$children[2].filterReservation = notification.idResa;
-      this.$parent.$children[2].$refs.formReservationAction.infoModalNotification(notification, 'notif');
+      this.$parent.$children[3].filterReservation = notification.idResa;
+      this.$parent.$children[3].$refs.formReservationAction.infoModalNotification(notification, 'notif');
     },
     async getNotificationsByUser() {
       this.token = localStorage.getItem('user-token');

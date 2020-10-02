@@ -9,6 +9,7 @@ import ReserveListSite from '../views/module-reserve/ReserveListSite.vue';
 import ReserveListUser from '../views/module-reserve/ReserveListUser.vue';
 import UserPortal from '../views/module-user/UserPortal.vue';
 import UserList from '../views/module-user/UserList.vue';
+import About from '../views/About.vue';
 import store from '../store';
 
 Vue.use(VueRouter);
@@ -108,6 +109,15 @@ const routes = [
     component: UserList,
     meta: {
       title: 'Utilisateurs de',
+    },
+    beforeEnter: ifAuthenticated
+  },
+  {
+    path: '/about-kmap',
+    name: 'About',
+    component: About,
+    meta: {
+      title: 'A propos de KMAP',
     },
     beforeEnter: ifAuthenticated
   }

@@ -26,7 +26,7 @@ const actions = {
       commit(AUTH_REQUEST);
       const body = {
         "Mail": user.username,
-        "Password": user.password
+        "Password": user.hashPassword
       };
       const token = api.url('/api/token')
         .headers({"Content-Type": "application/json", Accept: "application/json"})
