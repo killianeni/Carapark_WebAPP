@@ -39,7 +39,7 @@
               v-if="checkCanDelete(dataSite)"
             >
               <template v-slot:title>Condition de suppression</template>
-              Veuillez supprimer les éléments suivant en liens :
+              Veuillez supprimer les éléments suivants en liens :
               <ul>
                 <li v-if="dataSite.nbUtilisateurs">Utilisateurs</li>
                 <li v-if="dataSite.nbReservations">Réservations</li>

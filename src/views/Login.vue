@@ -15,7 +15,7 @@
             v-model="username"
             required
             placeholder="Identifiant"
-          />
+          ></b-form-input>
         </b-form-group>
 
         <b-form-group
@@ -29,14 +29,8 @@
             type="password"
             required
             placeholder="Mot de passe"
-          />
+          ></b-form-input>
         </b-form-group>
-
-        <div class="forgot-password">
-          <router-link to="/">
-            Mot de passe oublié ?
-          </router-link>
-        </div>
 
         <div class="container-submit">
           <b-button
@@ -54,8 +48,8 @@
 </template>
 
 <script>
-  // import bcrypt from 'bcryptjs';
   import {AUTH_REQUEST} from '../store/actions/auth';
+  import sha512 from  'js-sha512';
 
   export default {
     name: 'LoginVue',
@@ -67,19 +61,17 @@
     },
     methods: {
       async hashMdp() {
-        // await bcrypt.hash(this.password, 8, function(err, hash) {
-        //   // store password in db
-        //   console.log(hash);
-        // });
+        this.password = sha512(this.password);
         const {username, password} = this;
         await this.$store.dispatch(AUTH_REQUEST, {username, password})
           .then(() => {
             this.$parent.$children[0].getNotificationsByUser();
             this.$router.push({ name: 'Dashboard' });
+            this.$parent.$refs.appToast.customToast('success',"Connexion réussie");
           })
           .catch((error) => {
-            console.log(error.status);
-            console.log(error);
+            const text = "Code " + error.status + " : Identifiant ou mot de passe incorrecte";
+            this.$parent.$refs.appToast.customToast('danger',text);
           })
         ;
       }
