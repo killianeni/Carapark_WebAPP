@@ -22,5 +22,10 @@ export default {
       this.toast.text = 'Une erreur est rencontrée';
       this.$bvToast.show('app-toast');
     },
+    customToast(variant,text) {
+      this.toast.variant = variant;
+      this.toast.text = text;
+      this.$bvToast.show('app-toast');
+    },
    }
 }

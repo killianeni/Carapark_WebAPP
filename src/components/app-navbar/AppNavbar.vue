@@ -76,7 +76,10 @@
               <span>{{ userLogged.role.libelle === 'user' ? 'Utilisateur' : 'Administrateur' }}</span>
             </div>
             <div class="deco m-3">
-              <b-button variant="primary" @click="logout">Déconnexion</b-button>
+              <b-button-group>
+                <b-button variant="primary" @click="profil">Profil</b-button>
+                <b-button variant="primary" @click="logout">Déconnexion</b-button>
+              </b-button-group>
             </div>
           </div>
         </b-dropdown>
@@ -84,7 +87,7 @@
     </div>
     <div class="menu-navigation-container" :class="{ 'open' : isBurgerActive }">
       <div class="menu-navigation">
-        <img src="~@/assets/img/kmap_logo.svg" alt="" class="logo">
+        <img src="~@/assets/img/caraPark_logo.svg" alt="" class="logo">
         <nav class="nav-module">
           <ul v-if="isAuthenticated">
             <li>

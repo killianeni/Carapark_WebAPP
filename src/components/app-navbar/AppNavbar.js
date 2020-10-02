@@ -19,6 +19,9 @@ export default {
     logout: function () {
       this.$store.dispatch(AUTH_LOGOUT).then(() => this.$router.push('/login'));
     },
+    profil() {
+      this.$parent.$refs.appProfil.initCurrentUser();
+    },
     messageVariant(typeNotif) {
       let variant = '';
       switch (typeNotif) {

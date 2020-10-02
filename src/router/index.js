@@ -1,7 +1,6 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import Login from '../views/Login';
-import Register from '../views/Register';
 import Dashboard from '../views/Dashboard.vue';
 import ParkPortal from '../views/module-park/ParkPortal.vue';
 import ParkCar from '../views/module-park/ParkCar.vue';
@@ -48,11 +47,6 @@ const routes = [
       title: 'Connexion',
     },
     beforeEnter: ifNotAuthenticated
-  },
-  {
-    path: '/register',
-    name: 'Register',
-    component: Register
   },
   {
     path: '/park-portal',

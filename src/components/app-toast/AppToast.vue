@@ -7,7 +7,7 @@
     toaster="b-toaster-bottom-right"
     append-toast
   >
-    <template v-slot:toast-title>
+    <template slot="toast-title">
       <div class="d-flex flex-grow-1 align-items-baseline">
         <strong class="mr-auto">Information</strong>
       </div>
