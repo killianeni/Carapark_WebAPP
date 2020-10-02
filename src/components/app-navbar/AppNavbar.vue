@@ -127,6 +127,18 @@
             </li>
           </ul>
         </nav>
+        <nav class="nav-module about">
+          <ul>
+            <li>
+              <router-link :to="{ name: 'About' }" class="nav-module-item"
+                           v-bind:class="[$route.name === 'About' ? 'active' : '']">
+                <i class="kmap-icons icon-info nav-module-item-icon"></i>
+                <span class="nav-module-item-name">KMAP</span>
+              </router-link>
+            </li>
+          </ul>
+        </nav>
+
       </div>
       <div class="menu-navigation-shadow" @click.prevent="toggle"></div>
     </div>

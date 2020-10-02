@@ -2,7 +2,7 @@
   <div class="login-page">
     <b-card>
       <div class="container-logo">
-        <img class="logo img-fluid" src="../assets/img/kmap_logo.svg" alt="kmap_logo.svg"/>
+        <img class="logo img-fluid" src="../assets/img/caraPark_logo.svg" alt="kmap_logo.svg"/>
       </div>
       <b-form>
         <b-form-group
@@ -56,14 +56,16 @@
     data() {
       return {
         username: '',
-        password: ''
+        password: '',
+        hashPassword: ''
       };
     },
     methods: {
       async hashMdp() {
-        this.password = sha512(this.password);
-        const {username, password} = this;
-        await this.$store.dispatch(AUTH_REQUEST, {username, password})
+        this.hashPassword = sha512(this.password);
+        const {username, hashPassword} = this;
+
+        await this.$store.dispatch(AUTH_REQUEST, {username, hashPassword})
           .then(() => {
             this.$parent.$children[0].getNotificationsByUser();
             this.$router.push({ name: 'Dashboard' });
