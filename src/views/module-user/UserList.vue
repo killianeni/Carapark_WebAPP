@@ -325,11 +325,6 @@ export default {
         .json();
     },
     async postUsers() {
-      this.form.idSite = this.idSite;
-      this.form.actif = !!this.form.actif;
-      this.form.cles = [];
-      this.form.cles.push({"libelle": this.form.cleA});
-      this.form.cles.push({"libelle": this.form.cleB});
       const body = JSON.stringify(this.form);
       await api.url('/api/Utilisateurs/UpUtilisateurs')
         .headers({
