@@ -406,7 +406,7 @@ export default {
               this.vehiculeOptions.push(this.currentReserve.vehicule);
               this.vehiculeCle = this.currentReserve.vehicule.cles;
               this.maxPersonnel = this.currentReserve.vehicule.nbPlaces - 1;
-              this.getPersonnelsBySite(this.currentReserve);
+              this.getPersonnelsNonResaBySiteAndDate(dateDebut,dateFin);
             } else {
               this.vehiculeOptions = [];
               this.vehiculeErreur = false;
@@ -415,7 +415,7 @@ export default {
 
             this.vehiculeOptions = data;
             this.vehiculeErreur = null;
-            this.getPersonnelsBySite(this.currentReserve);
+            this.getPersonnelsNonResaBySiteAndDate(dateDebut,dateFin);
 
             if(this.action === 'edit') {
               this.vehiculeOptions.push(this.currentReserve.vehicule);
@@ -425,14 +425,14 @@ export default {
           }
         });
     },
-    async getPersonnelsBySite(editReserve) {
+    async getPersonnelsNonResaBySiteAndDate(dateDebut,dateFin) {
       let userSiteId = null;
       if(this.action === 'add') {
         userSiteId = this.userLogged.site.id;
       } else if (this.action === 'edit') {
-        userSiteId = editReserve.utilisateur.site.id;
+        userSiteId = this.currentReserve.utilisateur.site.id;
       }
-      await api.url(`/api/Personnel/GetPersonnelsBySite/${userSiteId}`)
+      await api.url(`/api/Personnel/GetPersonnelsNonResaBySiteAndDate/${userSiteId}/${dateDebut}/${dateFin}`)
         .headers({'Authorization': 'Bearer ' + this.token})
         .get()
         .json()
@@ -443,6 +443,11 @@ export default {
               this.personnelsOptions.push(d);
             }
           });
+          if(this.action === 'edit') {
+            this.currentReserve.personnels.forEach((d) => {
+              this.personnelsOptions.push(d);
+            });
+          }
         });
     },
     async getFullReservedDays(date) {
