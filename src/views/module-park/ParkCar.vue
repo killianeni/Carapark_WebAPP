@@ -177,11 +177,20 @@
             v-model="form.actif"
           >
             Actif
+            <i class="kmap-icons icon-info" :id="'info-car'"></i>
           </b-form-checkbox>
+          <b-popover
+            :target="'info-car'"
+            triggers="hover"
+            placement="bottom"
+          >
+            <template v-slot:title>Informations</template>
+            Actif = Vehicule en état de fonctionnement<br>
+            NonActif = Vehicule en mauvais état et donc retiré de la sélection
+          </b-popover>
         </b-form-group>
       </form>
     </b-modal>
-
   </div>
 </template>
 
@@ -314,8 +323,8 @@ export default {
       this.form.idSite = this.idSite;
       this.form.actif = !!this.form.actif;
       this.form.cles = [];
-      this.form.cles.push({"id": this.form.idCleA , "libelle": this.form.cleA});
-      this.form.cles.push({"id": this.form.idCleB , "libelle": this.form.cleB});
+      this.form.cles.push({"id": this.form.idCleA, "libelle": this.form.cleA});
+      this.form.cles.push({"id": this.form.idCleB, "libelle": this.form.cleB});
       const body = JSON.stringify(this.form);
       await api.url(`/api/Vehicules/${this.form.idVehicule}`)
         .headers({
@@ -338,7 +347,7 @@ export default {
       await this.submitCar()
     },
     async submitCar() {
-      if(!(this.action === 'put')) await this.postCar();
+      if (!(this.action === 'put')) await this.postCar();
       else await this.putCar();
       await this.getCars();
       this.$nextTick(() => {
@@ -385,8 +394,7 @@ export default {
         centered: true
       })
         .then(async value => {
-          if(value) await this.deleteCar(item.id);
-          // console.log(item);
+          if (value) await this.deleteCar(item.id);
         })
         .catch(err => {
           console.log(err);
@@ -399,4 +407,3 @@ export default {
 <style scoped lang="scss">
 
 </style>
-
