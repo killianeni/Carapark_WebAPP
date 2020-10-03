@@ -54,6 +54,7 @@
                 today-variant="danger"
                 button-variant="primary"
                 hide-header
+                start-weekday="1"
                 :disabled="formReservation.disabled"
               >
               </b-form-datepicker>
@@ -105,6 +106,7 @@
                 today-variant="danger"
                 button-variant="primary"
                 hide-header
+                start-weekday="1"
                 :disabled="formReservation.disabled"
               ></b-form-datepicker>
             </b-input-group-append>
