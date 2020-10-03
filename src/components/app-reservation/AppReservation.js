@@ -34,6 +34,7 @@ export default {
         description: '',
         status: ''
       },
+      currentReserve: '',
       cTitleReserveModal: 'Ajouter une réservation',
       initialDateStart: '',
       initialDateEnd: '',
@@ -165,8 +166,11 @@ export default {
     },
     resetModalReserve() {
       this.cTitleReserveModal = 'Ajouter une réservation';
+      this.currentReserve = '';
       this.initialDateStart = '';
       this.initialDateEnd = '';
+      this.valueEnd = '';
+      this.calendarDateFinStart = '';
       this.contact = '';
       this.formReservation.id = null;
       this.formReservation.disabled = false;
@@ -202,6 +206,7 @@ export default {
     },
     editModalReserve(reserve) {
       this.cTitleReserveModal = 'Réservation de ' + reserve.utilisateur.nom + ' ' + reserve.utilisateur.prenom;
+      this.currentReserve = reserve;
       this.contact = reserve.utilisateur.mail;
       this.action = 'edit';
       this.hideReservation.hideVehicule = true;
@@ -213,18 +218,16 @@ export default {
       this.hideReservation.hideTimeEnd.am = true;
       this.hideReservation.hideTimeEnd.pm = true;
 
-      this.$bvModal.show('modal-reservation');
+      this.initializeData(reserve);
 
       if (reserve.status > 1) {
         this.formReservation.disabled = true;
-        this.vehiculeOptions = [reserve.vehicule];
+        this.vehiculeOptions.push(reserve.vehicule);
         this.vehiculeCle = reserve.vehicule.cles;
       } else {
-        this.getVehiculesBySite(reserve);
-        this.getPersonnelsBySite(reserve);
-        this.vehiculeCle = reserve.vehicule.cles;
+        this.selectDate();
       }
-      this.initializeData(reserve);
+      this.$bvModal.show('modal-reservation');
     },
     seeModalReserve(reserve) {
       this.action = 'see';
@@ -239,7 +242,7 @@ export default {
       this.hideReservation.hideTimeEnd.pm = true;
 
       this.$bvModal.show('modal-reservation');
-      this.getVehiculesBySite(reserve);
+      this.vehiculeOptions.push(reserve.vehicule);
       this.vehiculeCle = reserve.vehicule.cles;
       this.initializeData(reserve);
     },
@@ -365,7 +368,7 @@ export default {
         if(v.id === idVehicule)
         {
           this.vehiculeCle = v.cles;
-          this.maxPersonnel = v.nbPlaces;
+          this.maxPersonnel = v.nbPlaces - 1;
           this.formReservation.personnels = [];
           this.hideReservation.hidePersonnels = true;
           this.hideReservation.hideSiteDestination = true;
@@ -388,16 +391,6 @@ export default {
       this.formReservation.description = reserve.description;
       this.formReservation.status = reserve.status;
     },
-    async getVehiculesBySite(editReserve) {
-      let userSiteId = null;
-      if (this.action === 'edit' || this.action === 'see') {
-        userSiteId = editReserve.utilisateur.site.id;
-      }
-      this.vehiculeOptions = await api.url(`/api/Vehicules/GetVehiculesBySite/${userSiteId}`)
-        .headers({'Authorization': 'Bearer ' + this.token})
-        .get()
-        .json();
-    },
     async getVehiculeNonResaBySiteAndDate(dateDebut,dateFin) {
       const userSiteId = this.userLogged.site.id;
       this.initialDateStart = dateDebut;
@@ -409,12 +402,26 @@ export default {
         .json()
         .then(data => {
           if(data.length === 0) {
-            this.vehiculeOptions = [];
-            this.vehiculeErreur = false;
+            if(this.action === 'edit') {
+              this.vehiculeOptions.push(this.currentReserve.vehicule);
+              this.vehiculeCle = this.currentReserve.vehicule.cles;
+              this.maxPersonnel = this.currentReserve.vehicule.nbPlaces - 1;
+              this.getPersonnelsBySite(this.currentReserve);
+            } else {
+              this.vehiculeOptions = [];
+              this.vehiculeErreur = false;
+            }
           } else {
+
             this.vehiculeOptions = data;
             this.vehiculeErreur = null;
-            this.getPersonnelsBySite();
+            this.getPersonnelsBySite(this.currentReserve);
+
+            if(this.action === 'edit') {
+              this.vehiculeOptions.push(this.currentReserve.vehicule);
+              this.vehiculeCle = this.currentReserve.vehicule.cles;
+              this.maxPersonnel = this.currentReserve.vehicule.nbPlaces - 1;
+            }
           }
         });
     },
