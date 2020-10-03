@@ -276,7 +276,7 @@ export default {
           sortable: true,
         },
         {
-          key: 'role',
+          key: 'role.libelle',
           label: 'Role',
           sortable: true,
         },
@@ -294,34 +294,18 @@ export default {
         personnels: [],
         role : []
       },
-      personnels: [
-        {id: 1, nom: 'Andrews ', prenom: 'Baxter'},
-        {id: 2, nom: 'Burke ', prenom: 'Mcfadden'},
-        {id: 3, nom: 'Flynn ', prenom: 'Barnes'},
-        {id: 4, nom: 'Dorsey ', prenom: 'Blackwell'},
-        {id: 5, nom: 'Thelma ', prenom: 'Gay'},
-        {id: 6, nom: 'Nell ', prenom: 'Silva'},
-        {id: 7, nom: 'Nettie ', prenom: 'Dixon'},
-        {id: 8, nom: 'Bailey ', prenom: 'Carver'},
-        {id: 9, nom: 'Maryann ', prenom: 'Erickson'},
-        {id: 10, nom: 'Imelda ', prenom: 'Kirk'},
-        {id: 11, nom: 'Nettie ', prenom: 'Carver'},
-        {id: 12, nom: 'Barnes', prenom: 'Kirk'},
-        {id: 13, nom: 'Erickson ', prenom: 'Blackwell'},
-        {id: 14, nom: 'Maryann ', prenom: 'Kirk'},
-        {id: 15, nom: 'Silva ', prenom: 'Nettie'},
-        {id: 16, nom: 'Blackwell ', prenom: 'Dorsey'},
-      ],
+      personnels: [],
       roles: [
-        { text: 'Utilisateur', value: 2 },
-        { text: 'Admin', value: 3 },
+        { text: 'Utilisateur', value: 'user' },
+        { text: 'Admin', value: 'admin' },
       ],
       idSite: this.$route.params.id,
+      token: localStorage.getItem('user-token')
     }
   },
   mounted() {
     this.getUsers();
-    this.getPersonnels()
+    this.getPersonnels();
     this.totalRows = this.items.length;
   },
   computed: {
@@ -329,20 +313,32 @@ export default {
   },
   methods: {
     async getPersonnels(){
-      const idSite = this.idSite;
-      const token = localStorage.getItem('user-token');
-      this.personnels = await api.url(`/api/Personnel/GetPersonnelsBySite/${idSite}`)
-        .headers({"Authorization": "Bearer " + token})
+      this.personnels = await api.url(`/api/Personnel/GetPersonnelsBySite/${this.idSite}`)
+        .headers({"Authorization": "Bearer " + this.token})
         .get()
         .json();
     },
     async getUsers(){
-      const idSite = this.$route.params.id;
-      const token = localStorage.getItem('user-token');
-      this.items = await api.url(`/api/Utilisateurs/GetUtilisateursbySite/${idSite}`)
-        .headers({"Authorization": "Bearer " + token})
+      this.items = await api.url(`/api/Utilisateurs/GetUtilisateursbySite/${this.idSite}`)
+        .headers({"Authorization": "Bearer " + this.token})
         .get()
         .json();
+    },
+    async postUsers() {
+      this.form.idSite = this.idSite;
+      this.form.actif = !!this.form.actif;
+      this.form.cles = [];
+      this.form.cles.push({"libelle": this.form.cleA});
+      this.form.cles.push({"libelle": this.form.cleB});
+      const body = JSON.stringify(this.form);
+      await api.url('/api/Utilisateurs/UpUtilisateurs')
+        .headers({
+          "Authorization": "Bearer " + this.token,
+          "Content-Type": "application/json",
+          Accept: "application/json"
+        })
+        .post(body);
+      await this.getCars();
     },
     customLabel({nom, prenom}) {
       return `${nom} – ${prenom}`
@@ -376,7 +372,7 @@ export default {
       this.form.prenom = item.prenom;
       this.form.mail = item.mail;
       this.form.permis = item.permis;
-      this.form.role = '';
+      this.form.role = item.role.libelle;
       console.log(item);
     },
     deleteModalUser(item) {
