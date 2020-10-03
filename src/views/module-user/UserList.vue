@@ -315,17 +315,27 @@ export default {
       roles: [
         { text: 'Utilisateur', value: 2 },
         { text: 'Admin', value: 3 },
-      ]
+      ],
+      idSite: this.$route.params.id,
     }
   },
   mounted() {
     this.getUsers();
+    this.getPersonnels()
     this.totalRows = this.items.length;
   },
   computed: {
     ...mapGetters(['siteByCompany'])
   },
   methods: {
+    async getPersonnels(){
+      const idSite = this.idSite;
+      const token = localStorage.getItem('user-token');
+      this.personnels = await api.url(`/api/Personnel/GetPersonnelsBySite/${idSite}`)
+        .headers({"Authorization": "Bearer " + token})
+        .get()
+        .json();
+    },
     async getUsers(){
       const idSite = this.$route.params.id;
       const token = localStorage.getItem('user-token');
@@ -333,7 +343,6 @@ export default {
         .headers({"Authorization": "Bearer " + token})
         .get()
         .json();
-      console.log(this.items);
     },
     customLabel({nom, prenom}) {
       return `${nom} – ${prenom}`
