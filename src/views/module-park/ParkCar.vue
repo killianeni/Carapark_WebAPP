@@ -27,7 +27,7 @@
                   placeholder="Rechercher"
                 ></b-form-input>
                 <b-input-group-append>
-                  <b-button  variant="primary" :disabled="!filterCar" @click="filterCar = ''">Effacer</b-button>
+                  <b-button variant="primary" :disabled="!filterCar" @click="filterCar = ''">Effacer</b-button>
                 </b-input-group-append>
               </b-input-group>
             </div>
@@ -53,10 +53,10 @@
           :filter="filterCar">
           <template v-slot:cell(actions)="{item}">
             <b-button-group>
-              <b-button variant="primary" @click="editCar(item)">
+              <b-button variant="primary" @click="updateCar(item)">
                 <i class="kmap-icons icon-edit"></i>
               </b-button>
-              <b-button variant="danger" @click="deleteCar(item)">
+              <b-button variant="danger" @click="removeCar(item)">
                 <i class="kmap-icons icon-delete"></i>
               </b-button>
             </b-button-group>
@@ -149,6 +149,28 @@
             required
           ></b-form-select>
         </b-form-group>
+        <b-form-group
+          label="Clé 1"
+          label-for="car-cle-a"
+          invalid-feedback=""
+        >
+          <b-form-input
+            id="car-cle-a"
+            v-model="form.cleA"
+            required
+          ></b-form-input>
+        </b-form-group>
+        <b-form-group
+          label="Clé 2"
+          label-for="car-cle-b"
+          invalid-feedback=""
+        >
+          <b-form-input
+            id="car-cle-b"
+            v-model="form.cleB"
+            required
+          ></b-form-input>
+        </b-form-group>
         <b-form-group>
           <b-form-checkbox
             value="true"
@@ -164,159 +186,214 @@
 </template>
 
 <script>
-  import {api} from "@/config";
+import {api} from "@/config";
 
-  export default {
-    name: 'ParkCar',
-    data() {
-      return {
-        form: {
-          numImmat: '',
-          modele: '',
-          nbPlaces: '',
-          nbPortes: '',
-          typeCarbu: '',
-          actif: null
+export default {
+  name: 'ParkCar',
+  data() {
+    return {
+      form: {
+        numImmat: '',
+        modele: '',
+        nbPlaces: '',
+        nbPortes: '',
+        typeCarbu: '',
+        cleA: '',
+        cleB: '',
+        actif: null
+      },
+      nbPlaces: [
+        {text: '-', value: null},
+        {text: '1', value: 1},
+        {text: '2', value: 2},
+        {text: '3', value: 3},
+        {text: '4', value: 4},
+        {text: '5', value: 5},
+        {text: '6', value: 6},
+      ],
+      nbPortes: [
+        {text: '-', value: null},
+        {text: '1', value: 1},
+        {text: '2', value: 2},
+        {text: '3', value: 3},
+        {text: '4', value: 4},
+        {text: '5', value: 5},
+        {text: '6', value: 6},
+      ],
+      typeCarbu: [
+        {text: '-', value: null},
+        {text: 'Essence', value: 'Essence'},
+        {text: 'Diesel', value: 'Diesel'},
+        {text: 'Électrique', value: 'Electrique'},
+        {text: 'Hybride', value: 'Hybride'},
+      ],
+      fields: [
+        {
+          key: 'numImmat',
+          label: 'Numéro de matricule',
+          sortable: true,
         },
-        nbPlaces: [
-          { text: '-', value: null },
-          { text: '1', value: 1 },
-          { text: '2', value: 2 },
-          { text: '3', value: 3 },
-          { text: '4', value: 4 },
-          { text: '5', value: 5 },
-          { text: '6', value: 6 },
-        ],
-        nbPortes: [
-          { text: '-', value: null },
-          { text: '1', value: 1 },
-          { text: '2', value: 2 },
-          { text: '3', value: 3 },
-          { text: '4', value: 4 },
-          { text: '5', value: 5 },
-          { text: '6', value: 6 },
-        ],
-        typeCarbu: [
-          { text: '-', value: null },
-          { text: 'Essence', value: 'essence' },
-          { text: 'Diesel', value: 'diesel' },
-          { text: 'Électrique', value: 'electrique' },
-          { text: 'Hybride', value: 'hybride' },
-        ],
-        fields: [
-          {
-            key: 'numImmat',
-            label: 'Numéro de matricule',
-            sortable: true,
-          },
-          {
-            key: 'modele',
-            label: 'Modèle de la voiture',
-            sortable: true,
-          },
-          {
-            key: 'nbPlaces',
-            label: 'Nombre de places',
-            sortable: true,
-          },
-          {
-            key: 'nbPortes',
-            label: 'Nombre de portes',
-            sortable: true,
-          },
-          {
-            key: 'typeCarbu',
-            label: 'Type de carburant',
-            sortable: true,
-          },
-          {
-            key: 'actif',
-            label: 'Actif',
-            sortable: true,
-          },
-          {
-            key: 'actions',
-            label: 'Actions'
-          },
-        ],
-        items: [],
-        totalRows: 1,
-        currentPage: 1,
-        perPage: 10,
-        filterCar: null,
-       }
+        {
+          key: 'modele',
+          label: 'Modèle de la voiture',
+          sortable: true,
+        },
+        {
+          key: 'nbPlaces',
+          label: 'Nombre de places',
+          sortable: true,
+        },
+        {
+          key: 'nbPortes',
+          label: 'Nombre de portes',
+          sortable: true,
+        },
+        {
+          key: 'typeCarbu',
+          label: 'Type de carburant',
+          sortable: true,
+        },
+        {
+          key: 'cles[0].libelle',
+          label: 'Clé A',
+          sortable: true,
+        },
+        {
+          key: 'cles[1].libelle',
+          label: 'Clé B',
+          sortable: true,
+        },
+        {
+          key: 'actif',
+          label: 'Actif',
+          sortable: true,
+        },
+        {
+          key: 'actions',
+          label: 'Actions'
+        },
+      ],
+      items: [],
+      totalRows: 1,
+      currentPage: 1,
+      perPage: 10,
+      filterCar: null,
+      idSite: this.$route.params.id,
+      token: localStorage.getItem('user-token'),
+      action: 'post'
+    }
+  },
+  mounted() {
+    this.getCars();
+    this.totalRows = this.items.length
+  },
+  methods: {
+    async getCars() {
+      this.items = await api.url(`/api/Vehicules/GetVehiculesbySite/${this.idSite}`)
+        .headers({"Authorization": "Bearer " + this.token})
+        .get()
+        .json();
     },
-    mounted() {
-      this.getCars();
-      this.totalRows = this.items.length
+    async postCar() {
+      this.form.idSite = this.idSite;
+      this.form.actif = !!this.form.actif;
+      this.form.cles = [];
+      this.form.cles.push({"libelle": this.form.cleA});
+      this.form.cles.push({"libelle": this.form.cleB});
+      const body = JSON.stringify(this.form);
+      await api.url('/api/Vehicules')
+        .headers({
+          "Authorization": "Bearer " + this.token,
+          "Content-Type": "application/json",
+          Accept: "application/json"
+        })
+        .post(body);
+      await this.getCars();
     },
-    methods: {
-      async getCars(){
-        const idSite = this.$route.params.id;
-        const token = localStorage.getItem('user-token');
-        this.items = await api.url(`/api/Vehicules/GetVehiculesbySite/${idSite}`)
-          .headers({"Authorization": "Bearer " + token})
-          .get()
-          .json();
-      },
-      async postCar(){
-        console.log(JSON.stringify(this.form));
-        // const body = JSON.stringify(this.form);
-        // await api.url('/api/Sites')
-        //   .headers({"Content-Type": "application/json", Accept: "application/json"})
-        //   .post(body).json();
-      },
-      okCar(bvModalEvt) {
-        bvModalEvt.preventDefault();
-        this.submitCar()
-      },
-      submitCar() {
-        this.postCar();
-        this.getCars();
-        this.$nextTick(() => {
-          this.$bvModal.hide('modal-car')
+    async putCar() {
+      this.form.idSite = this.idSite;
+      this.form.actif = !!this.form.actif;
+      this.form.cles = [];
+      this.form.cles.push({"id": this.form.idCleA , "libelle": this.form.cleA});
+      this.form.cles.push({"id": this.form.idCleB , "libelle": this.form.cleB});
+      const body = JSON.stringify(this.form);
+      await api.url(`/api/Vehicules/${this.form.idVehicule}`)
+        .headers({
+          "Authorization": "Bearer " + this.token,
+          "Content-Type": "application/json",
+          Accept: "application/json"
         })
-      },
-      resetModalCar() {
-          this.form.numImmat = '';
-          this.form.modele = '';
-          this.form.nbPlaces = '';
-          this.form.nbPortes = '';
-          this.form.typeCarbu = '';
-          this.form.actif = null
-      },
-      editCar(item) {
-        this.$bvModal.show("modal-car");
-        this.form.numImmat = item.numImmat;
-        this.form.modele = item.modele;
-        this.form.nbPlaces = item.nbPlaces;
-        this.form.nbPortes = item.nbPortes;
-        this.form.typeCarbu = item.typeCarbu;
-        this.form.actif = item.actif;
-      },
-      deleteCar(item) {
-        this.$bvModal.msgBoxConfirm('Veuillez confirmer que vous souhaitez supprimer cette voiture.', {
-          title: 'Veuillez confirmer',
-          size: 'md',
-          buttonSize: 'md',
-          okVariant: 'primary',
-          cancelVariant: 'danger',
-          okTitle: 'Valider',
-          cancelTitle: 'Annuler',
-          footerClass: 'p-2',
-          hideHeaderClose: false,
-          centered: true
-        })
-        .then(value => {
-          console.log(value);
-          console.log(item);
+        .put(body);
+      await this.getCars();
+    },
+    async deleteCar(idVehicule) {
+      // await api.url(`/api/Vehicules/${idVehicule}`)
+      //   .headers({"Authorization": "Bearer " + this.token})
+      //   .delete();
+      console.log(idVehicule);
+      await this.getCars();
+    },
+    async okCar(bvModalEvt) {
+      bvModalEvt.preventDefault();
+      await this.submitCar()
+    },
+    async submitCar() {
+      if(!(this.action === 'put')) await this.postCar();
+      else await this.putCar();
+      await this.getCars();
+      this.$nextTick(() => {
+        this.$bvModal.hide('modal-car')
+      })
+    },
+    resetModalCar() {
+      this.form.numImmat = '';
+      this.form.modele = '';
+      this.form.nbPlaces = '';
+      this.form.nbPortes = '';
+      this.form.typeCarbu = '';
+      this.form.cleA = '';
+      this.form.cleB = '';
+      this.form.actif = null;
+      this.action = 'post';
+    },
+    updateCar(item) {
+      this.action = 'put';
+      this.$bvModal.show("modal-car");
+      this.form.idVehicule = item.id;
+      this.form.numImmat = item.numImmat;
+      this.form.modele = item.modele;
+      this.form.nbPlaces = item.nbPlaces;
+      this.form.nbPortes = item.nbPortes;
+      this.form.typeCarbu = item.typeCarbu;
+      this.form.idCleA = item.cles[0].id;
+      this.form.cleA = item.cles[0].libelle;
+      this.form.idCleB = item.cles[1].id;
+      this.form.cleB = item.cles[1].libelle;
+      this.form.actif = item.actif;
+    },
+    removeCar(item) {
+      this.$bvModal.msgBoxConfirm('Veuillez confirmer que vous souhaitez supprimer cette voiture.', {
+        title: 'Veuillez confirmer',
+        size: 'md',
+        buttonSize: 'md',
+        okVariant: 'primary',
+        cancelVariant: 'danger',
+        okTitle: 'Valider',
+        cancelTitle: 'Annuler',
+        footerClass: 'p-2',
+        hideHeaderClose: false,
+        centered: true
+      })
+        .then(async value => {
+          if(value) await this.deleteCar(item.id);
+          // console.log(item);
         })
         .catch(err => {
           console.log(err);
         })
-      }
     }
-  };
+  }
+};
 </script>
 
 <style scoped lang="scss">
