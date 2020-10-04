@@ -336,10 +336,9 @@ export default {
       await this.getCars();
     },
     async deleteCar(idVehicule) {
-      // await api.url(`/api/Vehicules/${idVehicule}`)
-      //   .headers({"Authorization": "Bearer " + this.token})
-      //   .delete();
-      console.log(idVehicule);
+      await api.url(`/api/Vehicules/${idVehicule}`)
+        .headers({"Authorization": "Bearer " + this.token})
+        .delete();
       await this.getCars();
     },
     async okCar(bvModalEvt) {
@@ -395,6 +394,7 @@ export default {
       })
         .then(async value => {
           if (value) await this.deleteCar(item.id);
+          await this.getCars();
         })
         .catch(err => {
           console.log(err);
