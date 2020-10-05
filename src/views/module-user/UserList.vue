@@ -147,25 +147,6 @@
             required
           ></b-form-input>
         </b-form-group>
-        <b-form-group v-if="!isEdit">
-          <b-form-checkbox
-            value="true"
-            v-model="isUser"
-          >
-            Role Utilisateur
-          </b-form-checkbox>
-        </b-form-group>
-        <b-form-group
-          label="Role"
-          label-for="user-role"
-          v-if="isEdit">
-          <b-form-select
-            id="user-role"
-            v-model="form.role"
-            :options="roles"
-            required
-          ></b-form-select>
-        </b-form-group>
       </form>
     </b-modal>
 
@@ -235,6 +216,7 @@
 import Multiselect from 'vue-multiselect';
 import {mapGetters} from "vuex";
 import {api} from '@/config';
+import sha512 from 'js-sha512';
 
 export default {
   name: 'UserList',
@@ -252,7 +234,7 @@ export default {
         mail: '',
         permis: '',
         role: '',
-        site: this.$route.params.id
+        siteId: this.$route.params.id
       },
       fields: [
         {
@@ -276,7 +258,7 @@ export default {
           sortable: true,
         },
         {
-          key: 'role',
+          key: 'role.libelle',
           label: 'Role',
           sortable: true,
         },
@@ -292,48 +274,71 @@ export default {
       filterUser: null,
       formUpgrade: {
         personnels: [],
-        role : []
+        role: []
       },
-      personnels: [
-        {id: 1, nom: 'Andrews ', prenom: 'Baxter'},
-        {id: 2, nom: 'Burke ', prenom: 'Mcfadden'},
-        {id: 3, nom: 'Flynn ', prenom: 'Barnes'},
-        {id: 4, nom: 'Dorsey ', prenom: 'Blackwell'},
-        {id: 5, nom: 'Thelma ', prenom: 'Gay'},
-        {id: 6, nom: 'Nell ', prenom: 'Silva'},
-        {id: 7, nom: 'Nettie ', prenom: 'Dixon'},
-        {id: 8, nom: 'Bailey ', prenom: 'Carver'},
-        {id: 9, nom: 'Maryann ', prenom: 'Erickson'},
-        {id: 10, nom: 'Imelda ', prenom: 'Kirk'},
-        {id: 11, nom: 'Nettie ', prenom: 'Carver'},
-        {id: 12, nom: 'Barnes', prenom: 'Kirk'},
-        {id: 13, nom: 'Erickson ', prenom: 'Blackwell'},
-        {id: 14, nom: 'Maryann ', prenom: 'Kirk'},
-        {id: 15, nom: 'Silva ', prenom: 'Nettie'},
-        {id: 16, nom: 'Blackwell ', prenom: 'Dorsey'},
-      ],
+      personnels: [],
       roles: [
-        { text: 'Utilisateur', value: 2 },
-        { text: 'Admin', value: 3 },
-      ]
+        {text: 'Utilisateur', value: 'user'},
+        {text: 'Admin', value: 'admin'},
+      ],
+      rolesAPI: [
+        {
+          id: "5280a0cb-71ed-4757-b1fd-f3f595dee92b",
+          libelle: "user"
+        },
+        {
+          id: "a4828836-eff3-4151-b1b9-ab5d6a3cd3ca",
+          libelle: "admin"
+        },
+        {
+          id: "4a3b872b-ae9f-4b04-89ca-ddbb26e2dc25",
+          libelle: "super-admin"
+        }
+      ],
+      idSite: this.$route.params.id,
+      token: localStorage.getItem('user-token')
     }
   },
   mounted() {
     this.getUsers();
+    this.getPersonnels();
     this.totalRows = this.items.length;
   },
   computed: {
     ...mapGetters(['siteByCompany'])
   },
   methods: {
-    async getUsers(){
-      const idSite = this.$route.params.id;
-      const token = localStorage.getItem('user-token');
-      this.items = await api.url(`/api/Utilisateurs/GetUtilisateursbySite/${idSite}`)
-        .headers({"Authorization": "Bearer " + token})
+    async getUsers() {
+      this.items = await api.url(`/api/Utilisateurs/GetUtilisateursbySite/${this.idSite}`)
+        .headers({"Authorization": "Bearer " + this.token})
         .get()
         .json();
-      console.log(this.items);
+    },
+    async getPersonnels() {
+      this.personnels = await api.url(`/api/Personnel/GetPersonnelsBySite/${this.idSite}`)
+        .headers({"Authorization": "Bearer " + this.token})
+        .get()
+        .json();
+    },
+    async postPersonnel(personnel) {
+      await api.url('/api/Personnel')
+        .headers({
+          "Authorization": "Bearer " + this.token,
+          "Content-Type": "application/json",
+          Accept: "application/json"
+        })
+        .post(personnel);
+      await this.getPersonnels();
+    },
+    async upUsers(user) {
+      await api.url('/api/Utilisateurs/UpUtilisateur')
+        .headers({
+          "Authorization": "Bearer " + this.token,
+          "Content-Type": "application/json",
+          Accept: "application/json"
+        })
+        .post(user);
+      await this.getUsers();
     },
     customLabel({nom, prenom}) {
       return `${nom} – ${prenom}`
@@ -342,9 +347,9 @@ export default {
       bvModalEvt.preventDefault();
       this.submitModalUser();
     },
-    submitModalUser() {
-      console.log(JSON.stringify(this.form));
-      console.log(this.isUser);
+    async submitModalUser() {
+      await this.postPersonnel(JSON.stringify(this.form));
+      await this.getPersonnels();
       this.$nextTick(() => {
         this.$bvModal.hide('modal-personnel')
       })
@@ -367,7 +372,7 @@ export default {
       this.form.prenom = item.prenom;
       this.form.mail = item.mail;
       this.form.permis = item.permis;
-      this.form.role = '';
+      this.form.role = item.role.libelle;
       console.log(item);
     },
     deleteModalUser(item) {
@@ -395,12 +400,20 @@ export default {
       this.formUpgrade.personnels = [];
       this.formUpgrade.role = [];
     },
-    okModalUpgrade(bvModalEvt) {
+    async okModalUpgrade(bvModalEvt) {
       bvModalEvt.preventDefault();
-      this.submitModalUpgrade();
+      await this.submitModalUpgrade();
     },
-    submitModalUpgrade() {
-      console.log(JSON.stringify(this.formUpgrade));
+    async submitModalUpgrade() {
+      let mail = this.formUpgrade.personnels[0].mail;
+      let role = this.rolesAPI.find(role => role.libelle === this.formUpgrade.role);
+      let user = {
+        role: {id: role.id},
+        id: this.formUpgrade.personnels[0].id,
+        password: sha512(mail.substring(0, mail.indexOf('@')))
+      };
+      await this.upUsers(JSON.stringify(user));
+      await this.getUsers();
       this.$nextTick(() => {
         this.$bvModal.hide('modal-upgrade');
       })
@@ -410,17 +423,17 @@ export default {
 </script>
 
 <style scoped lang="scss">
-  #modal-upgrade {
-    .form-upgrade {
-      .option-list-personnel {
-        display: flex;
-        align-items: center;
+#modal-upgrade {
+  .form-upgrade {
+    .option-list-personnel {
+      display: flex;
+      align-items: center;
 
-        .nom-prenom {
-          padding-left: 10px;
-        }
+      .nom-prenom {
+        padding-left: 10px;
       }
     }
   }
+}
 </style>
 
