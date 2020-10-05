@@ -14,7 +14,7 @@
       >
         <template slot="modal-title">
           <template v-if="!formReservationNotification.isRejeted">
-            <h5>Historique des échanges</h5>
+            <h5>Historique des notifications</h5>
           </template>
           <template v-else>
             <h5>Rejeté la réservation</h5>
