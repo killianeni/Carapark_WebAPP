@@ -119,11 +119,11 @@ const routes = [
     meta: {
       title: 'A propos de KMAP',
     },
-    beforeEnter: ifAuthenticated
   }
 ];
 
 const router = new VueRouter({
+  mode: 'history',
   routes
 });
 
