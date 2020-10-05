@@ -207,6 +207,7 @@ export default {
     editModalReserve(reserve) {
       this.cTitleReserveModal = 'Réservation de ' + reserve.utilisateur.nom + ' ' + reserve.utilisateur.prenom;
       this.currentReserve = reserve;
+
       this.contact = reserve.utilisateur.mail;
       this.action = 'edit';
       this.hideReservation.hideVehicule = true;
@@ -217,6 +218,10 @@ export default {
       this.hideReservation.hideTimeStart.pm = true;
       this.hideReservation.hideTimeEnd.am = true;
       this.hideReservation.hideTimeEnd.pm = true;
+
+      if(this.currentReserve.utilisateur.id !== this.userLogged.id) {
+        this.formReservation.disabled = true;
+      }
 
       this.initializeData(reserve);
 
@@ -231,6 +236,7 @@ export default {
     },
     seeModalReserve(reserve) {
       this.action = 'see';
+      this.cTitleReserveModal = 'Réservation de ' + reserve.utilisateur.nom + ' ' + reserve.utilisateur.prenom;
       this.hideReservation.hideVehicule = true;
       this.hideReservation.hidePersonnels = true;
       this.hideReservation.hideSiteDestination = true;
