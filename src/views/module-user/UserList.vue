@@ -374,7 +374,7 @@ export default {
         .post(bodyPersonnel)
         .res(r => {
           if(r.ok === true) {
-            const text = "Le personnel" + this.bodyPersonnel.nom + this.bodyPersonnel.prenom + "est créé";
+            const text = "Le personnel " + bodyPersonnel.nom + " " + bodyPersonnel.prenom + " est créé";
 
             this.$parent.$refs.appToast.customToast('success',text);
             this.getPersonnelsBySite();
