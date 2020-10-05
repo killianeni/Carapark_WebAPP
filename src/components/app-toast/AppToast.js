@@ -17,6 +17,11 @@ export default {
       this.toast.text = 'La mise à jour est bien réalisée';
       this.$bvToast.show('app-toast');
     },
+    deleteToast() {
+      this.toast.variant = 'info';
+      this.toast.text = 'La suppression est bien réalisée';
+      this.$bvToast.show('app-toast');
+    },
     errorToast() {
       this.toast.variant = 'danger';
       this.toast.text = 'Une erreur est rencontrée';
