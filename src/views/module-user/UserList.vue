@@ -13,7 +13,7 @@
             <i class="kmap-icons icon-add mr-2"></i>
             Ajouter
           </b-button>
-          <b-button variant="primary" v-b-modal.modal-upgrade>
+          <b-button variant="primary" @click="openModalUpgrade">
             <i class="kmap-icons icon-add mr-2"></i>
             Mise à niveau
           </b-button>
@@ -68,7 +68,7 @@
             </b-button-group>
           </template>
           <template v-slot:cell(role)="{item}">
-            {{ item.nomRole }}
+            {{ item.role.libelle === 'user' ? 'Utilisateur' : 'Admin' }}
           </template>
         </b-table>
         <div class="container-fluid d-md-none">
@@ -147,6 +147,31 @@
             required
           ></b-form-input>
         </b-form-group>
+        <b-form-group
+          label="Role"
+          label-for="utilisateur-role"
+          invalid-feedback=""
+          v-if="isEdit"
+        >
+          <b-form-select
+            id="utilisateur-role"
+            v-model="form.role.id"
+            value-field="id"
+            text-field="modele_role">
+            <b-form-select-option :value="null" disabled>-- Choix du role --</b-form-select-option>
+            <b-form-select-option v-for="(role) in rolesAPI" v-bind:key="role.id" :value="role.id">
+              {{ role.libelle }}
+            </b-form-select-option>
+          </b-form-select>
+        </b-form-group>
+        <b-form-group v-if="isEdit">
+          <b-form-checkbox
+            value="true"
+            v-model="form.resetPass"
+          >
+            Reset le mot de passe
+          </b-form-checkbox>
+        </b-form-group>
       </form>
     </b-modal>
 
@@ -202,10 +227,14 @@
           label-for="role">
           <b-form-select
             id="role"
-            v-model="formUpgrade.role"
-            :options="roles"
-            required
-          ></b-form-select>
+            v-model="formUpgrade.roleId"
+            value-field="id"
+            text-field="modele_role">
+            <b-form-select-option :value="null" disabled>-- Choix du role --</b-form-select-option>
+            <b-form-select-option v-for="(role) in rolesAPI" v-bind:key="role.id" :value="role.id">
+              {{ role.libelle }}
+            </b-form-select-option>
+          </b-form-select>
         </b-form-group>
       </form>
     </b-modal>
@@ -229,11 +258,13 @@ export default {
       isUser: false,
       isEdit: false,
       form: {
+        id: '',
         nom: '',
         prenom: '',
         mail: '',
         permis: '',
         role: '',
+        resetPass: false,
         siteId: this.$route.params.id
       },
       fields: [
@@ -258,7 +289,7 @@ export default {
           sortable: true,
         },
         {
-          key: 'role.libelle',
+          key: 'role',
           label: 'Role',
           sortable: true,
         },
@@ -274,61 +305,82 @@ export default {
       filterUser: null,
       formUpgrade: {
         personnels: [],
-        role: []
+        roleId: ''
       },
       personnels: [],
-      roles: [
-        {text: 'Utilisateur', value: 'user'},
-        {text: 'Admin', value: 'admin'},
-      ],
       rolesAPI: [
         {
           id: "5280a0cb-71ed-4757-b1fd-f3f595dee92b",
-          libelle: "user"
+          libelle: "Utilisateur"
         },
         {
           id: "a4828836-eff3-4151-b1b9-ab5d6a3cd3ca",
-          libelle: "admin"
+          libelle: "Administrateur"
         },
-        {
-          id: "4a3b872b-ae9f-4b04-89ca-ddbb26e2dc25",
-          libelle: "super-admin"
-        }
       ],
       idSite: this.$route.params.id,
       token: localStorage.getItem('user-token')
     }
   },
   mounted() {
-    this.getUsers();
-    this.getPersonnels();
-    this.totalRows = this.items.length;
+    this.getUsersBySite();
   },
   computed: {
     ...mapGetters(['siteByCompany'])
   },
   methods: {
-    async getUsers() {
-      this.items = await api.url(`/api/Utilisateurs/GetUtilisateursbySite/${this.idSite}`)
+    async getUsersBySite() {
+      await api.url(`/api/Utilisateurs/GetUtilisateursbySite/${this.idSite}`)
         .headers({"Authorization": "Bearer " + this.token})
         .get()
-        .json();
+        .json()
+        .then(data => {
+          this.items = data;
+          this.totalRows = data.length;
+        });
     },
-    async getPersonnels() {
-      this.personnels = await api.url(`/api/Personnel/GetPersonnelsBySite/${this.idSite}`)
+    async getPersonnelsBySite() {
+      await api.url(`/api/Personnel/GetPersonnelsBySite/${this.idSite}`)
         .headers({"Authorization": "Bearer " + this.token})
         .get()
-        .json();
+        .json()
+        .then(data => {
+          this.personnels = data;
+          this.items.forEach((user) => {
+            data.filter((d) => {
+              if(user.id === d.id) {
+                data.splice(data.indexOf(d), 1);
+              }
+            })
+          });
+        });
     },
-    async postPersonnel(personnel) {
+    async postPersonnel() {
+
+      const bodyPersonnel = {
+        nom: this.form.nom,
+        prenom: this.form.prenom,
+        mail: this.form.mail,
+        permis: this.form.permis,
+        siteId: this.form.siteId
+      };
+
       await api.url('/api/Personnel')
         .headers({
           "Authorization": "Bearer " + this.token,
           "Content-Type": "application/json",
           Accept: "application/json"
         })
-        .post(personnel);
-      await this.getPersonnels();
+        .post(bodyPersonnel)
+        .res(r => {
+          if(r.ok === true) {
+            const text = "Le personnel" + this.bodyPersonnel.nom + this.bodyPersonnel.prenom + "est créé";
+
+            this.$parent.$refs.appToast.customToast('success',text);
+            this.getPersonnelsBySite();
+            this.$bvModal.hide('modal-personnel')
+          }
+        });
     },
     async upUsers(user) {
       await api.url('/api/Utilisateurs/UpUtilisateur')
@@ -337,8 +389,57 @@ export default {
           "Content-Type": "application/json",
           Accept: "application/json"
         })
-        .post(user);
-      await this.getUsers();
+        .post(user)
+        .res(r => {
+          if(r.ok === true) {
+            this.$parent.$refs.appToast.successToast();
+            this.getUsersBySite();
+          }
+        });
+    },
+    async putUtilisateurs() {
+
+      const idUtilisateur = this.form.id;
+
+      const bodyUtilisateur = {
+        nom: this.form.nom,
+        prenom: this.form.prenom,
+        mail: this.form.mail,
+        permis: this.form.permis,
+        siteId: this.form.siteId
+      };
+
+      if(this.form.resetPass) {
+        bodyUtilisateur.resetPass = true;
+        bodyUtilisateur.password = sha512(this.form.mail.substring(0, this.form.mail.indexOf('@')));
+      }
+
+      await api.url(`/api/Utilisateurs/${idUtilisateur}`)
+        .headers({
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+          'Authorization': 'Bearer ' + this.token
+        })
+        .put(bodyUtilisateur)
+        .badRequest(err => console.log(err))
+        .res(r => {
+          if(r.ok === true) {
+            this.getUsersBySite();
+            this.$parent.$refs.appToast.updateToast();
+            this.$bvModal.hide('modal-personnel')
+          }
+        });
+    },
+    async deleteUtilisateur(idUtilisateur) {
+      await api.url(`/api/Utilisateurs/${idUtilisateur}`)
+        .headers({"Authorization": "Bearer " + this.token})
+        .delete()
+        .res(r => {
+          if (r.ok === true) {
+            this.$parent.$refs.appToast.deleteToast();
+            this.getUsersBySite();
+          }
+        });
     },
     customLabel({nom, prenom}) {
       return `${nom} – ${prenom}`
@@ -348,32 +449,34 @@ export default {
       this.submitModalUser();
     },
     async submitModalUser() {
-      await this.postPersonnel(JSON.stringify(this.form));
-      await this.getPersonnels();
-      this.$nextTick(() => {
-        this.$bvModal.hide('modal-personnel')
-      })
+      if(this.isEdit) {
+        await this.putUtilisateurs();
+      } else {
+        await this.postPersonnel();
+      }
     },
     resetModalUser() {
       this.titleModalPersonnel = 'Ajouter un personnel';
+      this.form.id = '';
       this.form.nom = '';
       this.form.prenom = '';
       this.form.mail = '';
       this.form.permis = '';
       this.form.role = '';
+      this.form.resetPass = false;
       this.isUser = false;
       this.isEdit = false;
     },
     editModalUser(item) {
       this.titleModalPersonnel = 'Modifier un utilisateur';
       this.isEdit = true;
-      this.$bvModal.show("modal-personnel");
+      this.form.id = item.id;
       this.form.nom = item.nom;
       this.form.prenom = item.prenom;
       this.form.mail = item.mail;
       this.form.permis = item.permis;
-      this.form.role = item.role.libelle;
-      console.log(item);
+      this.form.role = {id: item.role.id};
+      this.$bvModal.show("modal-personnel");
     },
     deleteModalUser(item) {
       this.$bvModal.msgBoxConfirm('Veuillez confirmer que vous souhaitez supprimer cette utilisateur.', {
@@ -389,31 +492,44 @@ export default {
         centered: true
       })
         .then(value => {
-          console.log(value);
-          console.log(item);
+          if (value)
+          {
+            this.deleteUtilisateur(item.id);
+          }
         })
         .catch(err => {
           console.log(err);
         })
     },
+    openModalUpgrade() {
+      this.getPersonnelsBySite();
+      this.$bvModal.show('modal-upgrade');
+    },
     resetModalUpgrade() {
       this.formUpgrade.personnels = [];
-      this.formUpgrade.role = [];
+      this.formUpgrade.roleId = '';
     },
     async okModalUpgrade(bvModalEvt) {
       bvModalEvt.preventDefault();
       await this.submitModalUpgrade();
     },
     async submitModalUpgrade() {
-      let mail = this.formUpgrade.personnels[0].mail;
-      let role = this.rolesAPI.find(role => role.libelle === this.formUpgrade.role);
-      let user = {
-        role: {id: role.id},
-        id: this.formUpgrade.personnels[0].id,
-        password: sha512(mail.substring(0, mail.indexOf('@')))
-      };
-      await this.upUsers(JSON.stringify(user));
-      await this.getUsers();
+      const listPersonnels = this.formUpgrade.personnels;
+      const roleId = this.formUpgrade.roleId;
+      const users = [];
+
+      listPersonnels.forEach(p => {
+        let user = {
+          "id": p.id,
+          "role": {
+            "id": roleId
+          },
+          "password": sha512(p.mail.substring(0, p.mail.indexOf('@')))
+        };
+        users.push(user);
+      });
+
+      await this.upUsers(JSON.stringify(users));
       this.$nextTick(() => {
         this.$bvModal.hide('modal-upgrade');
       })

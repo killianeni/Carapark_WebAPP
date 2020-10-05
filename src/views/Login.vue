@@ -72,7 +72,7 @@
             this.$parent.$refs.appToast.customToast('success',"Connexion réussie");
           })
           .catch((error) => {
-            const text = "Code " + error.status + " : Identifiant ou mot de passe incorrecte";
+            const text = "Code " + error.status + " : Identifiant ou mot de passe incorrect";
             this.$parent.$refs.appToast.customToast('danger',text);
           })
         ;

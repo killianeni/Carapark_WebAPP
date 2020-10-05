@@ -172,23 +172,23 @@
           ></b-form-input>
         </b-form-group>
         <b-form-group>
-          <b-form-checkbox
-            value="true"
-            v-model="form.actif"
-          >
-            Actif
-            <i class="kmap-icons icon-info" :id="'info-car'"></i>
-          </b-form-checkbox>
-          <b-popover
-            :target="'info-car'"
-            triggers="hover"
-            placement="bottom"
-          >
-            <template v-slot:title>Informations</template>
-            Actif = Vehicule en état de fonctionnement<br>
-            NonActif = Vehicule en mauvais état et donc retiré de la sélection
-          </b-popover>
-        </b-form-group>
+        <b-form-checkbox
+          value="true"
+          v-model="form.actif"
+        >
+          Actif
+          <i class="kmap-icons icon-info" :id="'info-car'"></i>
+        </b-form-checkbox>
+        <b-popover
+          :target="'info-car'"
+          triggers="hover"
+          placement="bottom"
+        >
+          <template v-slot:title>Informations</template>
+          Actif = Vehicule en état de fonctionnement<br>
+          NonActif = Vehicule en mauvais état et donc retiré de la sélection
+        </b-popover>
+      </b-form-group>
       </form>
     </b-modal>
   </div>
@@ -293,15 +293,18 @@ export default {
     }
   },
   mounted() {
-    this.getCars();
-    this.totalRows = this.items.length
+    this.getCarsBySite();
   },
   methods: {
-    async getCars() {
-      this.items = await api.url(`/api/Vehicules/GetVehiculesbySite/${this.idSite}`)
+    async getCarsBySite() {
+      await api.url(`/api/Vehicules/GetVehiculesbySite/${this.idSite}`)
         .headers({"Authorization": "Bearer " + this.token})
         .get()
-        .json();
+        .json()
+        .then(data => {
+          this.items = data;
+          this.totalRows = data.length
+        })
     },
     async postCar() {
       this.form.idSite = this.idSite;
@@ -316,8 +319,13 @@ export default {
           "Content-Type": "application/json",
           Accept: "application/json"
         })
-        .post(body);
-      await this.getCars();
+        .post(body)
+        .res(r => {
+          if (r.ok === true) {
+            this.$parent.$refs.appToast.successToast();
+            this.getCarsBySite();
+          }
+        });
     },
     async putCar() {
       this.form.idSite = this.idSite;
@@ -332,14 +340,24 @@ export default {
           "Content-Type": "application/json",
           Accept: "application/json"
         })
-        .put(body);
-      await this.getCars();
+        .put(body)
+        .res(r => {
+          if (r.ok === true) {
+            this.$parent.$refs.appToast.updateToast();
+            this.getCarsBySite();
+          }
+        });
     },
     async deleteCar(idVehicule) {
       await api.url(`/api/Vehicules/${idVehicule}`)
         .headers({"Authorization": "Bearer " + this.token})
-        .delete();
-      await this.getCars();
+        .delete()
+        .res(r => {
+          if (r.ok === true) {
+            this.$parent.$refs.appToast.deleteToast();
+            this.getCarsBySite();
+          }
+        });
     },
     async okCar(bvModalEvt) {
       bvModalEvt.preventDefault();
@@ -348,7 +366,6 @@ export default {
     async submitCar() {
       if (!(this.action === 'put')) await this.postCar();
       else await this.putCar();
-      await this.getCars();
       this.$nextTick(() => {
         this.$bvModal.hide('modal-car')
       })
@@ -394,7 +411,6 @@ export default {
       })
         .then(async value => {
           if (value) await this.deleteCar(item.id);
-          await this.getCars();
         })
         .catch(err => {
           console.log(err);
