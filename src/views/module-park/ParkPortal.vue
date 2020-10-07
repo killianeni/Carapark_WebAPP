@@ -7,12 +7,12 @@
         </div>
         <div class="col-6 text-right mt-3 mb-3">
           <b-button variant="primary" @click="addSiteModal">
-            <i class="kmap-icons icon-add mr-2"></i>
+            <i class="kmap-icons icon-add mr-2" />
             Ajouter un site
           </b-button>
         </div>
       </div>
-      <AppSite ref="formSite" type-page="park"></AppSite>
+      <AppSite ref="formSite" type-page="park" />
     </div>
   </div>
 </template>

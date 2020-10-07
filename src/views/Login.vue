@@ -2,7 +2,7 @@
   <div class="login-page">
     <b-card>
       <div class="container-logo">
-        <img class="logo img-fluid" src="../assets/img/caraPark_logo.svg" alt="kmap_logo.svg"/>
+        <img class="logo img-fluid" src="../assets/img/caraPark_logo.svg" alt="kmap_logo.svg" />
       </div>
       <b-form>
         <b-form-group
@@ -15,7 +15,7 @@
             v-model="username"
             required
             placeholder="Identifiant"
-          ></b-form-input>
+          />
         </b-form-group>
 
         <b-form-group
@@ -29,7 +29,7 @@
             type="password"
             required
             placeholder="Mot de passe"
-          ></b-form-input>
+          />
         </b-form-group>
 
         <div class="container-submit">
@@ -69,10 +69,10 @@
           .then(() => {
             this.$parent.$children[0].getNotificationsByUser();
             this.$router.push({ name: 'Dashboard' });
-            this.$parent.$refs.appToast.customToast('success',"Connexion réussie");
+            this.$parent.$refs.appToast.customToast('success','Connexion réussie');
           })
-          .catch((error) => {
-            const text = "Code " + error.status + " : Identifiant ou mot de passe incorrect";
+          .catch(error => {
+            const text = 'Code ' + error.status + ' : Identifiant ou mot de passe incorrect';
             this.$parent.$refs.appToast.customToast('danger',text);
           })
         ;

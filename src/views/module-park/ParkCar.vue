@@ -4,13 +4,13 @@
       <div class="row justify-content-between">
         <div class="col-6 mt-3 mb-3">
           <router-link :to="{ name: 'ParkPortal' }" class="btn btn-primary">
-            <i class="kmap-icons icon-back mr-2"></i>
+            <i class="kmap-icons icon-back mr-2" />
             Retour
           </router-link>
         </div>
         <div class="col-6 text-right mt-3 mb-3">
           <b-button variant="primary" v-b-modal.modal-car>
-            <i class="kmap-icons icon-add mr-2"></i>
+            <i class="kmap-icons icon-add mr-2" />
             Ajouter une voiture
           </b-button>
         </div>
@@ -25,9 +25,11 @@
                   type="search"
                   id="filterInput"
                   placeholder="Rechercher"
-                ></b-form-input>
+                />
                 <b-input-group-append>
-                  <b-button variant="primary" :disabled="!filterCar" @click="filterCar = ''">Effacer</b-button>
+                  <b-button variant="primary" :disabled="!filterCar" @click="filterCar = ''">
+                    Effacer
+                  </b-button>
                 </b-input-group-append>
               </b-input-group>
             </div>
@@ -38,7 +40,7 @@
                 :per-page="perPage"
                 size="md"
                 class="my-0 justify-content-end"
-              ></b-pagination>
+              />
             </div>
           </div>
         </div>
@@ -50,14 +52,15 @@
           stacked="md"
           :current-page="currentPage"
           :per-page="perPage"
-          :filter="filterCar">
+          :filter="filterCar"
+        >
           <template v-slot:cell(actions)="{item}">
             <b-button-group>
               <b-button variant="primary" @click="updateCar(item)">
-                <i class="kmap-icons icon-edit"></i>
+                <i class="kmap-icons icon-edit" />
               </b-button>
               <b-button variant="danger" @click="removeCar(item)">
-                <i class="kmap-icons icon-delete"></i>
+                <i class="kmap-icons icon-delete" />
               </b-button>
             </b-button-group>
           </template>
@@ -74,7 +77,7 @@
                 :per-page="perPage"
                 size="md"
                 class="my-0 justify-content-end"
-              ></b-pagination>
+              />
             </div>
           </div>
         </div>
@@ -106,7 +109,7 @@
             id="car-matricule"
             v-model="form.numImmat"
             required
-          ></b-form-input>
+          />
         </b-form-group>
         <b-form-group
           label="Modèle de la voiture"
@@ -117,37 +120,40 @@
             id="car-modele"
             v-model="form.modele"
             required
-          ></b-form-input>
+          />
         </b-form-group>
         <b-form-group
           label="Places"
-          label-for="car-places">
+          label-for="car-places"
+        >
           <b-form-select
             id="car-places"
             v-model="form.nbPlaces"
             :options="nbPlaces"
             required
-          ></b-form-select>
+          />
         </b-form-group>
         <b-form-group
           label="Portes"
-          label-for="car-portes">
+          label-for="car-portes"
+        >
           <b-form-select
             id="car-portes"
             v-model="form.nbPortes"
             :options="nbPortes"
             required
-          ></b-form-select>
+          />
         </b-form-group>
         <b-form-group
           label="Type de carburant"
-          label-for="car-carburant">
+          label-for="car-carburant"
+        >
           <b-form-select
             id="car-carburant"
             v-model="form.typeCarbu"
             :options="typeCarbu"
             required
-          ></b-form-select>
+          />
         </b-form-group>
         <b-form-group
           label="Clé 1"
@@ -158,7 +164,7 @@
             id="car-cle-a"
             v-model="form.cleA"
             required
-          ></b-form-input>
+          />
         </b-form-group>
         <b-form-group
           label="Clé 2"
@@ -169,33 +175,35 @@
             id="car-cle-b"
             v-model="form.cleB"
             required
-          ></b-form-input>
+          />
         </b-form-group>
         <b-form-group>
-        <b-form-checkbox
-          value="true"
-          v-model="form.actif"
-        >
-          Actif
-          <i class="kmap-icons icon-info" :id="'info-car'"></i>
-        </b-form-checkbox>
-        <b-popover
-          :target="'info-car'"
-          triggers="hover"
-          placement="bottom"
-        >
-          <template v-slot:title>Informations</template>
-          Actif = Vehicule en état de fonctionnement<br>
-          NonActif = Vehicule en mauvais état et donc retiré de la sélection
-        </b-popover>
-      </b-form-group>
+          <b-form-checkbox
+            value="true"
+            v-model="form.actif"
+          >
+            Actif
+            <i class="kmap-icons icon-info" :id="'info-car'" />
+          </b-form-checkbox>
+          <b-popover
+            :target="'info-car'"
+            triggers="hover"
+            placement="bottom"
+          >
+            <template v-slot:title>
+              Informations
+            </template>
+            Actif = Vehicule en état de fonctionnement<br>
+            NonActif = Vehicule en mauvais état et donc retiré de la sélection
+          </b-popover>
+        </b-form-group>
       </form>
     </b-modal>
   </div>
 </template>
 
 <script>
-import {api} from "@/config";
+import {api} from '@/config';
 
 export default {
   name: 'ParkCar',
@@ -290,7 +298,7 @@ export default {
       idSite: this.$route.params.id,
       token: localStorage.getItem('user-token'),
       action: 'post'
-    }
+    };
   },
   mounted() {
     this.getCarsBySite();
@@ -298,26 +306,26 @@ export default {
   methods: {
     async getCarsBySite() {
       await api.url(`/api/Vehicules/GetVehiculesbySite/${this.idSite}`)
-        .headers({"Authorization": "Bearer " + this.token})
+        .headers({Authorization: 'Bearer ' + this.token})
         .get()
         .json()
         .then(data => {
           this.items = data;
-          this.totalRows = data.length
-        })
+          this.totalRows = data.length;
+        });
     },
     async postCar() {
       this.form.idSite = this.idSite;
       this.form.actif = !!this.form.actif;
       this.form.cles = [];
-      this.form.cles.push({"libelle": this.form.cleA});
-      this.form.cles.push({"libelle": this.form.cleB});
+      this.form.cles.push({libelle: this.form.cleA});
+      this.form.cles.push({libelle: this.form.cleB});
       const body = JSON.stringify(this.form);
       await api.url('/api/Vehicules')
         .headers({
-          "Authorization": "Bearer " + this.token,
-          "Content-Type": "application/json",
-          Accept: "application/json"
+          Authorization: 'Bearer ' + this.token,
+          'Content-Type': 'application/json',
+          Accept: 'application/json'
         })
         .post(body)
         .res(r => {
@@ -331,14 +339,14 @@ export default {
       this.form.idSite = this.idSite;
       this.form.actif = !!this.form.actif;
       this.form.cles = [];
-      this.form.cles.push({"id": this.form.idCleA, "libelle": this.form.cleA});
-      this.form.cles.push({"id": this.form.idCleB, "libelle": this.form.cleB});
+      this.form.cles.push({id: this.form.idCleA, libelle: this.form.cleA});
+      this.form.cles.push({id: this.form.idCleB, libelle: this.form.cleB});
       const body = JSON.stringify(this.form);
       await api.url(`/api/Vehicules/${this.form.idVehicule}`)
         .headers({
-          "Authorization": "Bearer " + this.token,
-          "Content-Type": "application/json",
-          Accept: "application/json"
+          Authorization: 'Bearer ' + this.token,
+          'Content-Type': 'application/json',
+          Accept: 'application/json'
         })
         .put(body)
         .res(r => {
@@ -350,7 +358,7 @@ export default {
     },
     async deleteCar(idVehicule) {
       await api.url(`/api/Vehicules/${idVehicule}`)
-        .headers({"Authorization": "Bearer " + this.token})
+        .headers({Authorization: 'Bearer ' + this.token})
         .delete()
         .res(r => {
           if (r.ok === true) {
@@ -361,14 +369,14 @@ export default {
     },
     async okCar(bvModalEvt) {
       bvModalEvt.preventDefault();
-      await this.submitCar()
+      await this.submitCar();
     },
     async submitCar() {
       if (!(this.action === 'put')) await this.postCar();
       else await this.putCar();
       this.$nextTick(() => {
-        this.$bvModal.hide('modal-car')
-      })
+        this.$bvModal.hide('modal-car');
+      });
     },
     resetModalCar() {
       this.form.numImmat = '';
@@ -383,7 +391,7 @@ export default {
     },
     updateCar(item) {
       this.action = 'put';
-      this.$bvModal.show("modal-car");
+      this.$bvModal.show('modal-car');
       this.form.idVehicule = item.id;
       this.form.numImmat = item.numImmat;
       this.form.modele = item.modele;
@@ -414,7 +422,7 @@ export default {
         })
         .catch(err => {
           console.log(err);
-        })
+        });
     }
   }
 };

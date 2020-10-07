@@ -1,9 +1,9 @@
 <template>
   <main id="app">
-    <AppNavbar/>
-    <AppToast ref="appToast"/>
-    <AppProfil ref="appProfil"/>
-    <router-view/>
+    <AppNavbar />
+    <AppToast ref="appToast" />
+    <AppProfil ref="appProfil" />
+    <router-view />
   </main>
 </template>
 
@@ -14,7 +14,7 @@
   import AppProfil from '@/components/app-profil/AppProfil.vue';
 
   export default {
-    name: 'app',
+    name: 'App',
     created: function() {
       if (this.$store.getters.isAuthenticated) {
         this.$store.dispatch(USER_REQUEST);
@@ -25,7 +25,7 @@
       AppToast,
       AppProfil
     }
-  }
+  };
 </script>
 
 <style lang="scss" rel="stylesheet">

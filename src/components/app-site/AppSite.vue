@@ -20,17 +20,17 @@
               :to="{ name: 'ParkCar', params: { id: dataSite.id }}"
               class="btn btn-dark"
             >
-              <i class="kmap-icons icon-see"></i>
+              <i class="kmap-icons icon-see" />
             </router-link>
             <b-button variant="primary" @click="editSiteModal(dataSite)">
-              <i class="kmap-icons icon-edit"></i>
+              <i class="kmap-icons icon-edit" />
             </b-button>
             <b-button
               variant="danger"
               @click="deleteSiteModal(dataSite)"
               :disabled="checkCanDelete(dataSite)"
             >
-              <i class="kmap-icons icon-delete" :id="'delete-site-' + dataSite.id"></i>
+              <i class="kmap-icons icon-delete" :id="'delete-site-' + dataSite.id" />
             </b-button>
             <b-popover
               :target="'delete-site-' + dataSite.id"
@@ -38,12 +38,20 @@
               placement="top"
               v-if="checkCanDelete(dataSite)"
             >
-              <template v-slot:title>Condition de suppression</template>
+              <template v-slot:title>
+                Condition de suppression
+              </template>
               Veuillez supprimer les éléments suivants en liens :
               <ul>
-                <li v-if="dataSite.nbUtilisateurs">Utilisateurs</li>
-                <li v-if="dataSite.nbReservations">Réservations</li>
-                <li v-if="dataSite.nbVehicules">Véhicules</li>
+                <li v-if="dataSite.nbUtilisateurs">
+                  Utilisateurs
+                </li>
+                <li v-if="dataSite.nbReservations">
+                  Réservations
+                </li>
+                <li v-if="dataSite.nbVehicules">
+                  Véhicules
+                </li>
               </ul>
             </b-popover>
           </b-button-group>
@@ -52,7 +60,7 @@
               :to="{ name: 'UserList', params: { id: dataSite.id }}"
               class="btn btn-dark"
             >
-              <i class="kmap-icons icon-see"></i>
+              <i class="kmap-icons icon-see" />
             </router-link>
           </b-button-group>
           <b-button-group v-if="typePage === 'reservation'">
@@ -60,7 +68,7 @@
               :to="{ name: 'ReserveListSite', params: { id: dataSite.id }}"
               class="btn btn-dark"
             >
-              <i class="kmap-icons icon-see"></i>
+              <i class="kmap-icons icon-see" />
             </router-link>
           </b-button-group>
         </div>
@@ -92,7 +100,7 @@
               id="name-input"
               v-model="formSite.libelle"
               required
-            ></b-form-input>
+            />
           </b-form-group>
         </form>
       </b-modal>

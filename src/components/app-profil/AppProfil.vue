@@ -21,7 +21,7 @@
           id="profil-nom"
           v-model="form.nom"
           disabled
-        ></b-form-input>
+        />
       </b-form-group>
       <b-form-group
         label="Prénom"
@@ -31,7 +31,7 @@
           id="profil-prenom"
           v-model="form.prenom"
           disabled
-        ></b-form-input>
+        />
       </b-form-group>
       <b-form-group
         label="Mail"
@@ -41,7 +41,7 @@
           id="profil-mail"
           v-model="form.mail"
           disabled
-        ></b-form-input>
+        />
       </b-form-group>
       <b-form-group
         label="Ancien mot de passe"
@@ -52,7 +52,7 @@
           type="password"
           :state="emptyPassError.oldPass"
           v-model="form.oldPass"
-        ></b-form-input>
+        />
         <b-form-invalid-feedback :state="emptyPassError.oldPass">
           Valeur obligatoire
         </b-form-invalid-feedback>
@@ -66,7 +66,7 @@
           type="password"
           :state="emptyPassError.newPass"
           v-model="form.newPass"
-        ></b-form-input>
+        />
         <b-form-invalid-feedback :state="emptyPassError.newPass">
           Valeur obligatoire
         </b-form-invalid-feedback>
@@ -80,7 +80,7 @@
           type="password"
           :state="emptyPassError.confirmPass"
           v-model="form.confirmPass"
-        ></b-form-input>
+        />
         <b-form-invalid-feedback :state="emptyPassError.confirmPass">
           Valeur obligatoire
         </b-form-invalid-feedback>
@@ -90,8 +90,12 @@
       </b-form-group>
     </b-form>
     <template slot="modal-footer" slot-scope="{ ok, cancel }">
-      <b-button @click="cancel" variant="danger">Annuler</b-button>
-      <b-button @click="ok" variant="primary">Valider</b-button>
+      <b-button @click="cancel" variant="danger">
+        Annuler
+      </b-button>
+      <b-button @click="ok" variant="primary">
+        Valider
+      </b-button>
     </template>
   </b-modal>
 </template>

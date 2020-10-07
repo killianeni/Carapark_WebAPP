@@ -1,9 +1,9 @@
 import { mapGetters } from 'vuex';
 import sha512 from  'js-sha512';
-import {api} from "@/config";
+import {api} from '@/config';
 
 export default {
-  name: "AppProfil",
+  name: 'AppProfil',
   data() {
     return {
       form: {
@@ -30,7 +30,7 @@ export default {
       this.form.nom = this.userLogged.nom;
       this.form.prenom = this.userLogged.prenom;
       this.form.mail = this.userLogged.mail;
-      this.$bvModal.show("modal-profil");
+      this.$bvModal.show('modal-profil');
     },
     resetModalProfil() {
       this.form.nom = '';
@@ -74,24 +74,28 @@ export default {
         .headers({
           'Content-Type': 'application/json',
           Accept: 'application/json',
-          'Authorization': 'Bearer ' + this.token
+          Authorization: 'Bearer ' + this.token
         })
         .put()
         .badRequest(err => console.log(err.status))
         .error(401, err => {
-          const text = "Code " + err.status + " : authentification invalide";
+          const text = 'Code ' + err.status + ' : authentification invalide';
           this.$parent.$refs.appToast.customToast('danger',text);
-          this.$bvModal.hide("modal-profil");
+        })
+        .error(400, err => {
+          const text = 'Code ' + err.status + ' : Ancien mot de passe invalide';
+          this.$parent.$refs.appToast.customToast('danger',text);
         })
         .res(r => {
           if (r.ok === true) {
-            this.$parent.$refs.appToast.updateToast();
-            this.$bvModal.hide("modal-profil");
+            const text = 'Votre mot de passe est mise à jour';
+            this.$parent.$refs.appToast.customToast('warning',text);
+            this.$bvModal.hide('modal-profil');
           }
-        })
+        });
     },
   },
   computed: {
     ...mapGetters(['userLogged']),
   },
-}
+};

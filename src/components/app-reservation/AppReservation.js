@@ -59,44 +59,44 @@ export default {
         disabledTimeEnd: '',
       },
 
-    }
+    };
   },
   methods: {
     customLabel({nom, prenom}) {
-      return `${nom} – ${prenom}`
+      return `${nom} – ${prenom}`;
     },
     okModalReserve(bvModalEvt) {
       bvModalEvt.preventDefault();
       this.submitModalReserve();
     },
     async submitModalReserve() {
-      let listPersonnels = [];
+      const listPersonnels = [];
       const thisPersonnels = this.formReservation.personnels;
 
       if(thisPersonnels)
       {
-        thisPersonnels.forEach((p) => {
+        thisPersonnels.forEach(p => {
           listPersonnels.push({
             id: p.id
           });
-        })
+        });
       }
 
       const bodyFormReservation = {
-        'dateDebut': this.initialDateStart,
-        'dateFin': this.initialDateEnd,
-        'utilisateur': {
+        dateDebut: this.initialDateStart,
+        dateFin: this.initialDateEnd,
+        utilisateur: {
           id: this.userLogged.id
         },
-        'vehicule': {
+        vehicule: {
           id: this.formReservation.idVehicule
         },
-        'personnels': listPersonnels,
-        'siteDestination': this.formReservation.siteDestination,
-        'description': this.formReservation.description,
-        'confirmationCle': false,
-        'isRejeted': false,
-        'isAccepted': false,
+        personnels: listPersonnels,
+        siteDestination: this.formReservation.siteDestination,
+        description: this.formReservation.description,
+        confirmationCle: false,
+        isRejeted: false,
+        isAccepted: false,
       };
 
       switch (this.action) {
@@ -106,7 +106,7 @@ export default {
             .headers({
               'Content-Type': 'application/json',
                Accept: 'application/json',
-              'Authorization': 'Bearer ' + this.token
+              Authorization: 'Bearer ' + this.token
             })
             .post(bodyFormReservation)
             .badRequest(err => {
@@ -138,7 +138,7 @@ export default {
             .headers({
               'Content-Type': 'application/json',
               Accept: 'application/json',
-              'Authorization': 'Bearer ' + this.token
+              Authorization: 'Bearer ' + this.token
             })
             .put(bodyFormReservation)
             .badRequest(err => {
@@ -273,7 +273,7 @@ export default {
         this.calendarDateFinStart = new Date(dateSelected.format('YYYY-MM-DD'));
 
         // Filtrer si on peut réserver le matin ou l'après midi
-        this.disabledDateDebutCalendar.forEach((d) => {
+        this.disabledDateDebutCalendar.forEach(d => {
           if(moment(d.date).format('YYYY-MM-DD') === dateSelected.format('YYYY-MM-DD')) {
             if(d.am === true) {
               this.hideReservation.hideTimeStart.am = false;
@@ -291,7 +291,7 @@ export default {
       let days = 0;
 
       // Désactiver les dates qui sont indisponibles
-      this.disabledDateDebutCalendar.forEach((d) => {
+      this.disabledDateDebutCalendar.forEach(d => {
         if(d.am === true
           && d.pm === true
           && moment(d.date).format('YYYY-MM-DD') === thisDate.format('YYYY-MM-DD')) {
@@ -315,7 +315,7 @@ export default {
         this.valueEnd = new Date(dateSelected.format('YYYY-MM-DD'));
 
         // Filtrer si on peut réserver le matin ou l'après midi
-        this.disabledDateFinCalendar.forEach((d) => {
+        this.disabledDateFinCalendar.forEach(d => {
           if(moment(d.date).format('YYYY-MM-DD') === dateSelected.format('YYYY-MM-DD')) {
             if(d.am === true) {
               this.hideReservation.hideTimeEnd.am = false;
@@ -332,7 +332,7 @@ export default {
       const thisDate = moment(date);
       let days = 0;
       // Désactiver les dates qui sont indisponibles
-      this.disabledDateFinCalendar.forEach((d) => {
+      this.disabledDateFinCalendar.forEach(d => {
         if(d.am === true
           && d.pm === true
           && moment(d.date).format('YYYY-MM-DD') === thisDate.format('YYYY-MM-DD')) {
@@ -370,7 +370,7 @@ export default {
       }
     },
     selectVoiture(idVehicule) {
-      this.vehiculeOptions.forEach((v) => {
+      this.vehiculeOptions.forEach(v => {
         if(v.id === idVehicule)
         {
           this.vehiculeCle = v.cles;
@@ -403,7 +403,7 @@ export default {
       this.initialDateEnd = dateFin;
 
       await api.url(`/api/Vehicules/GetVehiculesNonResaBySiteAndDate/${userSiteId}/${dateDebut}/${dateFin}`)
-        .headers({'Authorization': 'Bearer ' + this.token})
+        .headers({Authorization: 'Bearer ' + this.token})
         .get()
         .json()
         .then(data => {
@@ -439,18 +439,18 @@ export default {
         userSiteId = this.currentReserve.utilisateur.site.id;
       }
       await api.url(`/api/Personnel/GetPersonnelsNonResaBySiteAndDate/${userSiteId}/${dateDebut}/${dateFin}`)
-        .headers({'Authorization': 'Bearer ' + this.token})
+        .headers({Authorization: 'Bearer ' + this.token})
         .get()
         .json()
         .then(data => {
           this.personnelsOptions = [];
-          data.forEach((d) => {
+          data.forEach(d => {
             if(d.id !== this.userLogged.id) {
               this.personnelsOptions.push(d);
             }
           });
           if(this.action === 'edit') {
-            this.currentReserve.personnels.forEach((d) => {
+            this.currentReserve.personnels.forEach(d => {
               this.personnelsOptions.push(d);
             });
           }
@@ -460,7 +460,7 @@ export default {
       const userSiteId = this.userLogged.site.id;
 
       await api.url(`/api/Reservations/GetFullReservedDays/${userSiteId}/${date}`)
-        .headers({'Authorization': 'Bearer ' + this.token})
+        .headers({Authorization: 'Bearer ' + this.token})
         .get()
         .json()
         .then(data => {

@@ -6,7 +6,7 @@
           <h3>Choix du site :</h3>
         </div>
       </div>
-      <AppSite type-page="reservation" ></AppSite>
+      <AppSite type-page="reservation" />
     </div>
   </div>
 </template>

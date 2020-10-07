@@ -4,17 +4,17 @@
       <div class="row justify-content-between">
         <div class="col-4 col-md-6 mt-3 mb-3">
           <router-link :to="{ name: 'UserPortal' }" class="btn btn-primary">
-            <i class="kmap-icons icon-back mr-2"></i>
+            <i class="kmap-icons icon-back mr-2" />
             Retour
           </router-link>
         </div>
         <div class="col-8 col-md-6 text-right mt-3 mb-3">
           <b-button variant="primary" class="mr-3" v-b-modal.modal-personnel>
-            <i class="kmap-icons icon-add mr-2"></i>
+            <i class="kmap-icons icon-add mr-2" />
             Ajouter
           </b-button>
           <b-button variant="primary" @click="openModalUpgrade">
-            <i class="kmap-icons icon-add mr-2"></i>
+            <i class="kmap-icons icon-add mr-2" />
             Mise à niveau
           </b-button>
         </div>
@@ -30,9 +30,11 @@
                     type="search"
                     id="filterInput"
                     placeholder="Rechercher"
-                  ></b-form-input>
+                  />
                   <b-input-group-append>
-                    <b-button variant="primary" :disabled="!filterUser" @click="filterUser = ''">Effacer</b-button>
+                    <b-button variant="primary" :disabled="!filterUser" @click="filterUser = ''">
+                      Effacer
+                    </b-button>
                   </b-input-group-append>
                 </b-input-group>
               </div>
@@ -43,7 +45,7 @@
                   :per-page="perPage"
                   size="md"
                   class="my-0 justify-content-end"
-                ></b-pagination>
+                />
               </div>
             </div>
           </div>
@@ -56,14 +58,15 @@
           stacked="md"
           :current-page="currentPage"
           :per-page="perPage"
-          :filter="filterUser">
+          :filter="filterUser"
+        >
           <template v-slot:cell(actions)="{item}">
             <b-button-group>
               <b-button variant="primary" @click="editModalUser(item)">
-                <i class="kmap-icons icon-edit"></i>
+                <i class="kmap-icons icon-edit" />
               </b-button>
               <b-button variant="danger" @click="deleteModalUser(item)">
-                <i class="kmap-icons icon-delete"></i>
+                <i class="kmap-icons icon-delete" />
               </b-button>
             </b-button-group>
           </template>
@@ -80,7 +83,7 @@
                 :per-page="perPage"
                 size="md"
                 class="my-0 justify-content-end"
-              ></b-pagination>
+              />
             </div>
           </div>
         </div>
@@ -111,7 +114,7 @@
             id="personnel-nom"
             v-model="form.nom"
             required
-          ></b-form-input>
+          />
         </b-form-group>
         <b-form-group
           label="Prénom"
@@ -122,7 +125,7 @@
             id="personnel-prenom"
             v-model="form.prenom"
             required
-          ></b-form-input>
+          />
         </b-form-group>
         <b-form-group
           label="Mail"
@@ -134,7 +137,7 @@
             v-model="form.mail"
             type="email"
             required
-          ></b-form-input>
+          />
         </b-form-group>
         <b-form-group
           label="Permis"
@@ -145,7 +148,7 @@
             id="personnel-permis"
             v-model="form.permis"
             required
-          ></b-form-input>
+          />
         </b-form-group>
         <b-form-group
           label="Role"
@@ -157,9 +160,12 @@
             id="utilisateur-role"
             v-model="form.role.id"
             value-field="id"
-            text-field="modele_role">
-            <b-form-select-option :value="null" disabled>-- Choix du role --</b-form-select-option>
-            <b-form-select-option v-for="(role) in rolesAPI" v-bind:key="role.id" :value="role.id">
+            text-field="modele_role"
+          >
+            <b-form-select-option :value="null" disabled>
+              -- Choix du role --
+            </b-form-select-option>
+            <b-form-select-option v-for="(role) in rolesAPI" :key="role.id" :value="role.id">
               {{ role.libelle }}
             </b-form-select-option>
           </b-form-select>
@@ -193,7 +199,8 @@
       <form
         ref="form"
         class="form-upgrade"
-        submit.stop.prevent="submitModalUpgrade">
+        submit.stop.prevent="submitModalUpgrade"
+      >
         <b-form-group
           label="Liste des personnels"
           label-for="upgrade-personnel"
@@ -204,19 +211,21 @@
             v-model="formUpgrade.personnels"
             placeholder="Rechercher un personnel"
             label="name"
-            track-by="nom"
-            deselectLabel="Supprimer"
-            selectLabel="Sélectionner"
-            selectedLabel="Sélectionné"
+            track-by="id"
+            deselect-label="Supprimer"
+            select-label="Sélectionner"
+            selected-label="Sélectionné"
             :options="personnels"
             :multiple="true"
             :custom-label="customLabel"
-            :optionsLimit=10
+            :options-limit="10"
           >
             <template slot="option" slot-scope="props">
               <div class="option-list-personnel">
-                <b-avatar variant="primary"></b-avatar>
-                <div class="nom-prenom">{{ props.option.nom }} {{ props.option.prenom }}</div>
+                <b-avatar variant="primary" />
+                <div class="nom-prenom">
+                  {{ props.option.nom }} {{ props.option.prenom }}
+                </div>
               </div>
             </template>
             <span slot="noResult">Aucun personnel trouvé</span>
@@ -224,14 +233,18 @@
         </b-form-group>
         <b-form-group
           label="Role"
-          label-for="role">
+          label-for="role"
+        >
           <b-form-select
             id="role"
             v-model="formUpgrade.roleId"
             value-field="id"
-            text-field="modele_role">
-            <b-form-select-option :value="null" disabled>-- Choix du role --</b-form-select-option>
-            <b-form-select-option v-for="(role) in rolesAPI" v-bind:key="role.id" :value="role.id">
+            text-field="modele_role"
+          >
+            <b-form-select-option :value="null" disabled>
+              -- Choix du role --
+            </b-form-select-option>
+            <b-form-select-option v-for="(role) in rolesAPI" :key="role.id" :value="role.id">
               {{ role.libelle }}
             </b-form-select-option>
           </b-form-select>
@@ -243,7 +256,7 @@
 
 <script>
 import Multiselect from 'vue-multiselect';
-import {mapGetters} from "vuex";
+import {mapGetters} from 'vuex';
 import {api} from '@/config';
 import sha512 from 'js-sha512';
 
@@ -310,17 +323,17 @@ export default {
       personnels: [],
       rolesAPI: [
         {
-          id: "5280a0cb-71ed-4757-b1fd-f3f595dee92b",
-          libelle: "Utilisateur"
+          id: '5280a0cb-71ed-4757-b1fd-f3f595dee92b',
+          libelle: 'Utilisateur'
         },
         {
-          id: "a4828836-eff3-4151-b1b9-ab5d6a3cd3ca",
-          libelle: "Administrateur"
+          id: 'a4828836-eff3-4151-b1b9-ab5d6a3cd3ca',
+          libelle: 'Administrateur'
         },
       ],
       idSite: this.$route.params.id,
       token: localStorage.getItem('user-token')
-    }
+    };
   },
   mounted() {
     this.getUsersBySite();
@@ -331,7 +344,7 @@ export default {
   methods: {
     async getUsersBySite() {
       await api.url(`/api/Utilisateurs/GetUtilisateursbySite/${this.idSite}`)
-        .headers({"Authorization": "Bearer " + this.token})
+        .headers({Authorization: 'Bearer ' + this.token})
         .get()
         .json()
         .then(data => {
@@ -341,17 +354,17 @@ export default {
     },
     async getPersonnelsBySite() {
       await api.url(`/api/Personnel/GetPersonnelsBySite/${this.idSite}`)
-        .headers({"Authorization": "Bearer " + this.token})
+        .headers({Authorization: 'Bearer ' + this.token})
         .get()
         .json()
         .then(data => {
           this.personnels = data;
-          this.items.forEach((user) => {
-            data.filter((d) => {
+          this.items.forEach(user => {
+            data.filter(d => {
               if(user.id === d.id) {
                 data.splice(data.indexOf(d), 1);
               }
-            })
+            });
           });
         });
     },
@@ -367,27 +380,27 @@ export default {
 
       await api.url('/api/Personnel')
         .headers({
-          "Authorization": "Bearer " + this.token,
-          "Content-Type": "application/json",
-          Accept: "application/json"
+          Authorization: 'Bearer ' + this.token,
+          'Content-Type': 'application/json',
+          Accept: 'application/json'
         })
         .post(bodyPersonnel)
         .res(r => {
           if(r.ok === true) {
-            const text = "Le personnel " + bodyPersonnel.nom + " " + bodyPersonnel.prenom + " est créé";
+            const text = 'Le personnel ' + bodyPersonnel.nom + ' ' + bodyPersonnel.prenom + ' est créé';
 
             this.$parent.$refs.appToast.customToast('success',text);
             this.getPersonnelsBySite();
-            this.$bvModal.hide('modal-personnel')
+            this.$bvModal.hide('modal-personnel');
           }
         });
     },
     async upUsers(user) {
       await api.url('/api/Utilisateurs/UpUtilisateur')
         .headers({
-          "Authorization": "Bearer " + this.token,
-          "Content-Type": "application/json",
-          Accept: "application/json"
+          Authorization: 'Bearer ' + this.token,
+          'Content-Type': 'application/json',
+          Accept: 'application/json'
         })
         .post(user)
         .res(r => {
@@ -418,7 +431,7 @@ export default {
         .headers({
           'Content-Type': 'application/json',
           Accept: 'application/json',
-          'Authorization': 'Bearer ' + this.token
+          Authorization: 'Bearer ' + this.token
         })
         .put(bodyUtilisateur)
         .badRequest(err => console.log(err))
@@ -426,13 +439,13 @@ export default {
           if(r.ok === true) {
             this.getUsersBySite();
             this.$parent.$refs.appToast.updateToast();
-            this.$bvModal.hide('modal-personnel')
+            this.$bvModal.hide('modal-personnel');
           }
         });
     },
     async deleteUtilisateur(idUtilisateur) {
       await api.url(`/api/Utilisateurs/${idUtilisateur}`)
-        .headers({"Authorization": "Bearer " + this.token})
+        .headers({Authorization: 'Bearer ' + this.token})
         .delete()
         .res(r => {
           if (r.ok === true) {
@@ -442,7 +455,7 @@ export default {
         });
     },
     customLabel({nom, prenom}) {
-      return `${nom} – ${prenom}`
+      return `${nom} – ${prenom}`;
     },
     okModalUser(bvModalEvt) {
       bvModalEvt.preventDefault();
@@ -476,7 +489,7 @@ export default {
       this.form.mail = item.mail;
       this.form.permis = item.permis;
       this.form.role = {id: item.role.id};
-      this.$bvModal.show("modal-personnel");
+      this.$bvModal.show('modal-personnel');
     },
     deleteModalUser(item) {
       this.$bvModal.msgBoxConfirm('Veuillez confirmer que vous souhaitez supprimer cette utilisateur.', {
@@ -499,7 +512,7 @@ export default {
         })
         .catch(err => {
           console.log(err);
-        })
+        });
     },
     openModalUpgrade() {
       this.getPersonnelsBySite();
@@ -519,12 +532,12 @@ export default {
       const users = [];
 
       listPersonnels.forEach(p => {
-        let user = {
-          "id": p.id,
-          "role": {
-            "id": roleId
+        const user = {
+          id: p.id,
+          role: {
+            id: roleId
           },
-          "password": sha512(p.mail.substring(0, p.mail.indexOf('@')))
+          password: sha512(p.mail.substring(0, p.mail.indexOf('@')))
         };
         users.push(user);
       });
@@ -532,7 +545,7 @@ export default {
       await this.upUsers(JSON.stringify(users));
       this.$nextTick(() => {
         this.$bvModal.hide('modal-upgrade');
-      })
+      });
     },
   }
 };
