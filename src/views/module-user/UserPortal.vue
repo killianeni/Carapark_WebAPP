@@ -6,7 +6,7 @@
           <h3>Choix du site :</h3>
         </div>
       </div>
-      <AppSite type-page="user"></AppSite>
+      <AppSite type-page="user" />
     </div>
   </div>
 </template>

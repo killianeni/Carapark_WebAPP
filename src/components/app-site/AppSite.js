@@ -1,5 +1,5 @@
 import {api} from '@/config';
-import {mapGetters} from "vuex";
+import {mapGetters} from 'vuex';
 
 export default {
   name: 'AppSite',
@@ -16,12 +16,12 @@ export default {
         isEdit: false,
         libelle: ''
       },
-    }
+    };
   },
   methods: {
     okSite(bvModalEvt) {
       bvModalEvt.preventDefault();
-      this.submitSite()
+      this.submitSite();
     },
     submitSite() {
       if(this.formSite.isEdit)
@@ -33,7 +33,7 @@ export default {
         this.updateSite(this.formSite.idSite, bodySite);
 
       }else {
-        //add
+        // add
         const bodySite = {
           libelle: this.formSite.libelle,
           entreprise: {
@@ -53,14 +53,14 @@ export default {
     addSiteModal()
     {
       this.titleSiteModal = 'Ajouter un site';
-      this.$bvModal.show("modal-site");
+      this.$bvModal.show('modal-site');
     },
     editSiteModal(item) {
       this.formSite.idSite = item.id;
       this.formSite.isEdit = true;
       this.formSite.libelle = item.libelle;
       this.titleSiteModal = 'Modifier le site';
-      this.$bvModal.show("modal-site");
+      this.$bvModal.show('modal-site');
     },
     deleteSiteModal(item) {
       this.$bvModal.msgBoxConfirm('Veuillez confirmer que vous souhaitez supprimer ce site.', {
@@ -82,7 +82,7 @@ export default {
         })
         .catch(err => {
           console.log(err);
-        })
+        });
     },
     checkCanDelete(dataSite) {
       const total = dataSite.nbVehicules + dataSite.nbUtilisateurs + dataSite.nbReservations;
@@ -97,20 +97,20 @@ export default {
       switch (pageCourante) {
         case 'ParkPortal':
           this.dataSites = await api.url(`/api/Sites/GetSitesbyEntreprise/${idEntreprise}/all`)
-            .headers({"Authorization": "Bearer " + this.token})
+            .headers({Authorization: 'Bearer ' + this.token})
             .get()
             .json();
           break;
         case 'ReservePortal': {
           this.dataSites = await api.url(`/api/Sites/GetSitesbyEntreprise/${idEntreprise}/reservation`)
-            .headers({"Authorization": "Bearer " + this.token})
+            .headers({Authorization: 'Bearer ' + this.token})
             .get()
             .json();
           break;
         }
         case 'UserPortal':
           this.dataSites = await api.url(`/api/Sites/GetSitesbyEntreprise/${idEntreprise}/utilisateur`)
-            .headers({"Authorization": "Bearer " + this.token})
+            .headers({Authorization: 'Bearer ' + this.token})
             .get()
             .json();
           break;
@@ -121,14 +121,14 @@ export default {
         .headers({
           'Content-Type': 'application/json',
           Accept: 'application/json',
-          'Authorization': 'Bearer ' + this.token
+          Authorization: 'Bearer ' + this.token
         })
         .post(bodySite)
         .badRequest(err => console.log(err))
         .res(r => {
           if(r.ok === true) {
             this.$parent.$parent.$refs.appToast.successToast();
-            this.$bvModal.hide("modal-site");
+            this.$bvModal.hide('modal-site');
             this.dataSites = [];
             this.getSiteByEntreprise();
           }
@@ -139,14 +139,14 @@ export default {
         .headers({
           'Content-Type': 'application/json',
           Accept: 'application/json',
-          'Authorization': 'Bearer ' + this.token
+          Authorization: 'Bearer ' + this.token
         })
         .put(bodySite)
         .badRequest(err => console.log(err))
         .res(r => {
           if (r.ok === true) {
             this.$parent.$parent.$refs.appToast.updateToast();
-            this.$bvModal.hide("modal-site");
+            this.$bvModal.hide('modal-site');
             this.dataSites = [];
             this.getSiteByEntreprise();
           }
@@ -157,14 +157,14 @@ export default {
         .headers({
           'Content-Type': 'application/json',
           Accept: 'application/json',
-          'Authorization': 'Bearer ' + this.token
+          Authorization: 'Bearer ' + this.token
         })
         .delete()
         .badRequest(err => console.log(err))
         .res(r => {
           if (r.ok === true) {
             this.$parent.$parent.$refs.appToast.updateToast();
-            this.$bvModal.hide("modal-site");
+            this.$bvModal.hide('modal-site');
             this.dataSites = [];
             this.getSiteByEntreprise();
           }
@@ -175,6 +175,6 @@ export default {
     ...mapGetters(['userLogged']),
   },
   mounted() {
-    this.getSiteByEntreprise()
+    this.getSiteByEntreprise();
   }
-}
+};

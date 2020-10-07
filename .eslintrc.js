@@ -6,44 +6,44 @@ module.exports = {
     jest: true
   },
   extends: [
-    "plugin:vue/strongly-recommended",
-    "eslint:recommended"
+    'plugin:vue/strongly-recommended',
+    'eslint:recommended'
   ],
   rules: {
-    "vue/max-attributes-per-line": ["warn", {
-      "singleline": 4,
-      "multiline": {
-        "max": 1,
-        "allowFirstLine": false
+    'vue/max-attributes-per-line': ['warn', {
+      singleline: 4,
+      multiline: {
+        max: 1,
+        allowFirstLine: false
       }
     }],
-    "vue/html-self-closing": ["warn", {
-      "html": {
-        "void": "any",
-        "normal": "always",
-        "component": "always"
+    'vue/html-self-closing': ['warn', {
+      html: {
+        void: 'any',
+        normal: 'always',
+        component: 'always'
       },
-      "svg": "always",
-      "math": "always"
+      svg: 'always',
+      math: 'always'
     }],
-    "no-console": ["off"],
-    "quotes": ["warn", "single", { "allowTemplateLiterals": true }],
-    "guard-for-in": "error",
-    "quote-props": ["warn", "as-needed"],
-    "arrow-parens": ["warn", "as-needed"],
-    "no-unneeded-ternary": ["error", { "defaultAssignment": true }],
-    "prefer-const": "warn",
-    "spaced-comment": "warn",
-    "no-param-reassign": ["warn", { "props": false }],
+    'no-console': ['off'],
+    quotes: ['warn', 'single', { allowTemplateLiterals: true }],
+    'guard-for-in': 'error',
+    'quote-props': ['warn', 'as-needed'],
+    'arrow-parens': ['warn', 'as-needed'],
+    'no-unneeded-ternary': ['error', { defaultAssignment: true }],
+    'prefer-const': 'warn',
+    'spaced-comment': 'warn',
+    'no-param-reassign': ['warn', { props: false }],
 
-    "getter-return": "off",
-    "semi": [1, "always"],
-    "consistent-return": "error"
+    'getter-return': 'off',
+    semi: [1, 'always'],
+    'consistent-return': 'error'
   },
   parserOptions: {
-    "ecmaFeatures": {
-      "legacyDecorators": true
+    ecmaFeatures: {
+      legacyDecorators: true
     },
-    parser: "babel-eslint"
+    parser: 'babel-eslint'
   }
 };

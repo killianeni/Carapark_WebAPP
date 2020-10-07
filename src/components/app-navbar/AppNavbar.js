@@ -1,7 +1,7 @@
 import moment from 'moment';
 import {mapGetters} from 'vuex';
 import {AUTH_LOGOUT} from '../../store/actions/auth';
-import {api} from "@/config";
+import {api} from '@/config';
 
 export default {
   name: 'AppNavbar',
@@ -81,13 +81,13 @@ export default {
       const userId = this.userLogged.id;
 
       await api.url(`/api/Notifications/GetNotificationsByUser/${userId}`)
-        .headers({'Authorization': 'Bearer ' + this.token})
+        .headers({Authorization: 'Bearer ' + this.token})
         .get()
         .json()
         .then(data => {
           this.notifications = [];
           this.countNotification = 0;
-          data.forEach((d) => {
+          data.forEach(d => {
             this.notifications.push(d);
             if (d.checked === false) {
               this.countNotification += 1;
@@ -97,13 +97,13 @@ export default {
     },
     async updateNotification(idNotif) {
       const bodyNotification = {
-        'checked': true
+        checked: true
       };
       await api.url(`/api/Notifications/CheckNotif/${idNotif}`)
         .headers({
           'Content-Type': 'application/json',
           Accept: 'application/json',
-          'Authorization': 'Bearer ' + this.token
+          Authorization: 'Bearer ' + this.token
         })
         .put(bodyNotification)
         .badRequest(err => console.log(err))
@@ -122,7 +122,7 @@ export default {
       ) {
         const idSite = this.$route.params.id;
         await api.url(`/api/Sites/${idSite}`)
-          .headers({"Authorization": "Bearer " + this.token})
+          .headers({Authorization: 'Bearer ' + this.token})
           .get()
           .json()
           .then(data => {

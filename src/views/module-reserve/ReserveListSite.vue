@@ -4,7 +4,7 @@
       <div class="row justify-content-between">
         <div class="col-4 col-md-6 mt-3 mb-3">
           <router-link :to="{ name: 'ReservePortal' }" class="btn btn-primary">
-            <i class="kmap-icons icon-back mr-2"></i>
+            <i class="kmap-icons icon-back mr-2" />
             Retour
           </router-link>
         </div>
@@ -20,9 +20,10 @@
                     type="search"
                     id="filterInput"
                     placeholder="Rechercher"
-                  ></b-form-input>
+                  />
                   <b-input-group-append>
-                    <b-button variant="primary" :disabled="!filterReservation" @click="filterReservation = ''">Effacer
+                    <b-button variant="primary" :disabled="!filterReservation" @click="filterReservation = ''">
+                      Effacer
                     </b-button>
                   </b-input-group-append>
                 </b-input-group>
@@ -34,7 +35,7 @@
                   :per-page="perPage"
                   size="md"
                   class="my-0 justify-content-end"
-                ></b-pagination>
+                />
               </div>
             </div>
           </div>
@@ -47,7 +48,8 @@
           stacked="md"
           :current-page="currentPage"
           :per-page="perPage"
-          :filter="filterReservation">
+          :filter="filterReservation"
+        >
           <template v-slot:cell(dateDebut)="{item}">
             {{ customDate(item.dateDebut,item.timeStart) }}
           </template>
@@ -59,32 +61,40 @@
           </template>
           <template v-slot:cell(personnels)="{item}">
             <b-avatar-group variant="primary">
-              <b-avatar :title="customAvatar(p)" v-for="(p, idxP) in item.personnels" v-bind:key="idxP"></b-avatar>
+              <b-avatar :title="customAvatar(p)" v-for="(p, idxP) in item.personnels" :key="idxP" />
             </b-avatar-group>
           </template>
           <template v-slot:cell(status)="{item}">
-            <b-badge v-if="item.status === 1" variant="warning">En attente</b-badge>
-            <b-badge v-if="item.status === 2" variant="success">Validé</b-badge>
-            <b-badge v-if="item.status === 3" variant="danger">Annulé</b-badge>
-            <b-badge v-if="item.status === 4" variant="dark">Clôturé</b-badge>
+            <b-badge v-if="item.status === 1" variant="warning">
+              En attente
+            </b-badge>
+            <b-badge v-if="item.status === 2" variant="success">
+              Validé
+            </b-badge>
+            <b-badge v-if="item.status === 3" variant="danger">
+              Annulé
+            </b-badge>
+            <b-badge v-if="item.status === 4" variant="dark">
+              Clôturé
+            </b-badge>
           </template>
           <template v-slot:cell(actions)="{item}">
             <b-button-group>
               <b-button variant="primary" @click="editReserveModal(item)">
-                <i class="kmap-icons icon-edit" v-if="item.status === 1"></i>
-                <i class="kmap-icons icon-see" v-else></i>
+                <i class="kmap-icons icon-edit" v-if="item.status === 1" />
+                <i class="kmap-icons icon-see" v-else />
               </b-button>
               <b-button v-if="item.status === 1" variant="success" @click="validateReserveModal(item)">
-                <i class="kmap-icons icon-true"></i>
+                <i class="kmap-icons icon-true" />
               </b-button>
               <b-button v-if="item.status === 1" variant="danger" @click="annulerReserveModal(item)">
-                <i class="kmap-icons icon-false"></i>
+                <i class="kmap-icons icon-false" />
               </b-button>
               <b-button v-if="item.status === 2" variant="dark" @click="cloturerReserveModal(item)">
-                <i class="kmap-icons icon-lock"></i>
+                <i class="kmap-icons icon-lock" />
               </b-button>
               <b-button v-if="item.status >= 1" variant="info" @click="addNotificationReserveModal(item)">
-                <i class="kmap-icons icon-message"></i>
+                <i class="kmap-icons icon-message" />
               </b-button>
             </b-button-group>
           </template>
@@ -98,14 +108,14 @@
                 :per-page="perPage"
                 size="md"
                 class="my-0 justify-content-end"
-              ></b-pagination>
+              />
             </div>
           </div>
         </div>
       </div>
     </div>
-    <AppReservation ref="formReservation"></AppReservation>
-    <AppReservationAction ref="formReservationAction"></AppReservationAction>
+    <AppReservation ref="formReservation" />
+    <AppReservationAction ref="formReservationAction" />
   </div>
 </template>
 
@@ -170,17 +180,17 @@
         currentPage: 1,
         perPage: 10,
         filterReservation: null,
-      }
+      };
     },
     methods: {
       customAvatar(p) {
         return `${p.nom} – ${p.prenom}`;
       },
       customDate(date,reserveTime){
-        let d = moment(date).format('DD/MM/YYYY');
-        let t = reserveTime === 'AM' ? 'Matin'  : 'Après midi';
+        const d = moment(date).format('DD/MM/YYYY');
+        const t = reserveTime === 'AM' ? 'Matin'  : 'Après midi';
 
-        return d + " - " + t;
+        return d + ' - ' + t;
       },
       editReserveModal(reserve) {
         this.$refs.formReservation.seeModalReserve(reserve);
@@ -203,7 +213,7 @@
       async getReservationsBySite() {
         const idSite = this.$route.params.id;
         await api.url(`/api/Reservations/GetReservationsBySite/${idSite}`)
-          .headers({"Authorization": "Bearer " + this.token})
+          .headers({Authorization: 'Bearer ' + this.token})
           .get()
           .json()
           .then(data => {

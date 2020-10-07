@@ -1,5 +1,5 @@
 import moment from 'moment';
-import {api} from "@/config";
+import {api} from '@/config';
 
 export default {
   name: 'AppReservationAction',
@@ -19,7 +19,7 @@ export default {
         idCle: '',
         cles: []
       }
-    }
+    };
   },
   methods: {
     deleteModalReserve(reserve) {
@@ -39,18 +39,18 @@ export default {
           if (value) {
             const idReservation = reserve.id;
             const bodyReservation = {
-              'confirmationCle': false,
-              'isRejeted': true,
-              'isAccepted': false,
+              confirmationCle: false,
+              isRejeted: true,
+              isAccepted: false,
             };
             const modalName = null;
 
-            this.updateReservationStatut(idReservation, bodyReservation, modalName)
+            this.updateReservationStatut(idReservation, bodyReservation, modalName);
           }
         })
         .catch(err => {
           console.log(err);
-        })
+        });
     },
     cloturerModalReserve(reserve) {
       this.$bvModal.msgBoxConfirm('Veuillez confirmer la réception de la clé pour clôturer cette réservation.', {
@@ -69,24 +69,24 @@ export default {
           if (value) {
             const idReservation = reserve.id;
             const bodyReservation = {
-              'confirmationCle': true,
-              'isRejeted': false,
-              'isAccepted': false,
+              confirmationCle: true,
+              isRejeted: false,
+              isAccepted: false,
             };
             const modalName = null;
 
-            this.updateReservationStatut(idReservation, bodyReservation, modalName)
+            this.updateReservationStatut(idReservation, bodyReservation, modalName);
           }
         })
         .catch(err => {
           console.log(err);
-        })
+        });
     },
     annulerModalNotification(reserve) {
       this.formReservationNotification.currentReserve = reserve;
       this.formReservationNotification.isRejeted = true;
       this.getNotificationsByReservation(reserve.id);
-      this.$bvModal.show("modal-notification");
+      this.$bvModal.show('modal-notification');
     },
     addModalNotification(reserve) {
       this.formReservationNotification.currentReserve = reserve;
@@ -95,7 +95,7 @@ export default {
         this.formReservationNotification.isVisible = false;
         this.formReservationNotification.disabled = true;
       }
-      this.$bvModal.show("modal-notification");
+      this.$bvModal.show('modal-notification');
     },
     infoModalNotification(reserve, type) {
       if (type === 'reserve') {
@@ -106,7 +106,7 @@ export default {
       }
       this.formReservationNotification.disabled = true;
       this.formReservationNotification.isVisible = false;
-      this.$bvModal.show("modal-notification");
+      this.$bvModal.show('modal-notification');
     },
     resetModalNotification() {
       this.formReservationNotification.currentReserve = '';
@@ -117,7 +117,7 @@ export default {
     },
     okModalNotification(bvModalEvt) {
       bvModalEvt.preventDefault();
-      this.submitModalNotification()
+      this.submitModalNotification();
     },
     submitModalNotification() {
       if(this.formReservationNotification.commentaire) {
@@ -126,14 +126,14 @@ export default {
         if(this.formReservationNotification.isRejeted) {
           const idReservation = reserve.id;
           const bodyReservation = {
-            'confirmationCle': false,
-            'isRejeted': true,
-            'isAccepted': false,
-            'commentaire': this.formReservationNotification.commentaire,
+            confirmationCle: false,
+            isRejeted: true,
+            isAccepted: false,
+            commentaire: this.formReservationNotification.commentaire,
           };
           const modalName = 'modal-notification';
 
-          this.updateReservationStatut(idReservation, bodyReservation, modalName)
+          this.updateReservationStatut(idReservation, bodyReservation, modalName);
         }else {
           const bodyNotif = {
             idUser: reserve.utilisateur.id,
@@ -147,12 +147,12 @@ export default {
       }
     },
     dateNotification(dateNotif) {
-      return moment(dateNotif).format("DD/MM/YYYY HH:mm:ss");
+      return moment(dateNotif).format('DD/MM/YYYY HH:mm:ss');
     },
     editModalValider(reserve) {
       this.formReservationValider.id = reserve.id;
       this.formReservationValider.cles = reserve.vehicule.cles;
-      this.$bvModal.show("modal-valider");
+      this.$bvModal.show('modal-valider');
     },
     resetModalValider() {
       this.formReservationValider.id = null;
@@ -161,17 +161,17 @@ export default {
     },
     okModalValider(bvModalEvt) {
       bvModalEvt.preventDefault();
-      this.submitModalValider()
+      this.submitModalValider();
     },
     submitModalValider() {
       const idReservation = this.formReservationValider.id;
       const bodyReservation = {
-        'cle': {
-          'id': this.formReservationValider.idCle
+        cle: {
+          id: this.formReservationValider.idCle
         },
-        'confirmationCle': false,
-        'isRejeted': false,
-        'isAccepted': true,
+        confirmationCle: false,
+        isRejeted: false,
+        isAccepted: true,
       };
       const modalName = 'modal-valider';
 
@@ -182,7 +182,7 @@ export default {
         .headers({
           'Content-Type': 'application/json',
           Accept: 'application/json',
-          'Authorization': 'Bearer ' + this.token
+          Authorization: 'Bearer ' + this.token
         })
         .put(bodyReservation)
         .badRequest(err => console.log(err))
@@ -209,7 +209,7 @@ export default {
         .headers({
           'Content-Type': 'application/json',
           Accept: 'application/json',
-          'Authorization': 'Bearer ' + this.token
+          Authorization: 'Bearer ' + this.token
         })
         .post(bodyNotif)
         .badRequest(err => console.log(err))
@@ -222,15 +222,15 @@ export default {
     },
     async getNotificationsByReservation(idReservation) {
       await api.url(`/api/Notifications/GetNotificationsByReservation/${idReservation}`)
-        .headers({'Authorization': 'Bearer ' + this.token})
+        .headers({Authorization: 'Bearer ' + this.token})
         .get()
         .json()
         .then(data => {
           this.listNotification = [];
-          data.forEach((d) => {
+          data.forEach(d => {
             this.listNotification.push(d);
           });
         });
     }
   }
-}
+};

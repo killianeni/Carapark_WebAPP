@@ -1,4 +1,4 @@
-import 'babel-polyfill'
+import 'babel-polyfill';
 import Vue from 'vue';
 import App from './App.vue';
 import router from './router';
@@ -6,7 +6,7 @@ import store from './store';
 import {BootstrapVue} from 'bootstrap-vue';
 
 import './assets/fonts/icons/kmap-icons.css';
-import {AUTH_SUCCESS} from "@/store/actions/auth";
+import {AUTH_SUCCESS} from '@/store/actions/auth';
 
 Vue.use(BootstrapVue);
 

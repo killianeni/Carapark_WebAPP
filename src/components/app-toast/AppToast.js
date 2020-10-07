@@ -33,4 +33,4 @@ export default {
       this.$bvToast.show('app-toast');
     },
    }
-}
+};

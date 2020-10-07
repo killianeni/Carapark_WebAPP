@@ -25,11 +25,11 @@ const actions = {
     return new Promise((resolve, reject) => {
       commit(AUTH_REQUEST);
       const body = {
-        "Mail": user.username,
-        "Password": user.hashPassword
+        Mail: user.username,
+        Password: user.hashPassword
       };
       const token = api.url('/api/token')
-        .headers({"Content-Type": "application/json", Accept: "application/json"})
+        .headers({'Content-Type': 'application/json', Accept: 'application/json'})
         .post(body)
         .json()
         .then(data => {
@@ -44,8 +44,8 @@ const actions = {
           commit(AUTH_ERROR, err);
           localStorage.clear();
           reject(err);
-        })
-    })
+        });
+    });
   },
   [AUTH_LOGOUT]: ({commit}) => {
     return new Promise(resolve => {
