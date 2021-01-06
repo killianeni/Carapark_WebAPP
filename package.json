@@ -10,7 +10,7 @@
     "build:fontagon": "node src/assets/js/icons.js"
   },
   "dependencies": {
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "babel-polyfill": "^6.26.0",
     "bcryptjs": "^2.4.3",
     "bootstrap": "^4.5.0",
